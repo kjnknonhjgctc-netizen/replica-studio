@@ -57,11 +57,11 @@ export const AssistantOrb: React.FC<AssistantOrbProps> = ({
         </g>
         {/* Floating arm: detached from the head, sized to stay balanced with the mascot. */}
         <motion.g style={{ transformOrigin: '220px 82px' }} initial={false}
-          animate={waving ? { opacity: 1, rotate: [0, -24, 13, -21, 10, 0], x: [0, 1, 2, 1, 0, 0], y: [0, -2, -5, -3, -1, 0] } : { opacity: 0, rotate: 0, x: 0, y: 0 }}
-          transition={waving ? { opacity: { duration: .12 }, rotate: { duration: 1.05, ease: 'easeInOut' }, x: { duration: 1.05 }, y: { duration: 1.05 } } : { duration: .18 }}>
+          animate={waving ? { opacity: 1, rotate: [0, -30, 16, -27, 13, -22, 0], x: [0, 1, 2, 1, 0, -1, 0], y: [0, -2, -5, -3, -1, -2, 0] } : { opacity: 0, rotate: 0, x: 0, y: 0 }}
+          transition={waving ? { opacity: { duration: .12 }, rotate: { duration: 1.1, ease: 'easeInOut', repeat: Infinity, repeatDelay: .12 }, x: { duration: 1.1, ease: 'easeInOut', repeat: Infinity, repeatDelay: .12 }, y: { duration: 1.1, ease: 'easeInOut', repeat: Infinity, repeatDelay: .12 } } : { duration: .18 }}>
           <g transform="translate(220 82) scale(1.45) translate(-220 -82)">
-            <path d="M207 91 C210 81 215 70 220 60 C223 54 229 54 233 58 C237 62 235 68 233 73 L224 98 C221 105 215 108 210 104 C206 101 205 96 207 91 Z" fill={`url(#arm${uid})`} stroke="#d6dae1" strokeWidth="1.3"/>
-            <path d="M221 61 C224 58 229 59 231 63" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round"/>
+            <path d="M203 91 C206 81 211 68 217 57 C220 51 226 49 232 52 C239 55 240 62 237 69 L228 101 C225 110 217 114 210 109 C204 105 201 98 203 91 Z" fill={`url(#arm${uid})`} stroke="#d6dae1" strokeWidth="1.3" strokeLinejoin="round"/>
+            <path d="M218 59 C222 54 229 54 233 59" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/>
           </g>
         </motion.g>
       </svg>
