@@ -37,7 +37,7 @@ export const AssistantOrb: React.FC<AssistantOrbProps> = ({
         animate={{ opacity: waving ? [0.15, 0.4, 0.15] : [0.1, 0.2, 0.1], scale: waving ? [1, 1.14, 1] : [1, 1.04, 1] }}
         transition={{ duration: waving ? 0.8 : 3.5, repeat: Infinity, ease: 'easeInOut' }}
         style={{ background: 'radial-gradient(circle, rgba(190,205,230,.75) 0%, rgba(255,255,255,0) 72%)' }} />
-      <svg viewBox="0 0 220 170" role="img" aria-label={title} className="relative z-10 w-full h-full overflow-visible">
+      <svg viewBox="0 0 250 170" preserveAspectRatio="xMinYMid meet" role="img" aria-label={title} className="relative z-10 w-full h-full overflow-visible">
         <defs>
           <radialGradient id={`head${uid}`} cx="48%" cy="34%" r="72%">
             <stop offset="0%" stopColor="#fff"/><stop offset="62%" stopColor="#f8f9fb"/><stop offset="88%" stopColor="#e3e6eb"/><stop offset="100%" stopColor="#bfc4cc"/>
@@ -55,11 +55,12 @@ export const AssistantOrb: React.FC<AssistantOrbProps> = ({
           <ellipse cx="78" cy="83" rx="9.5" ry="16" fill={`url(#eye${uid})`}/><ellipse cx="145" cy="83" rx="9.5" ry="16" fill={`url(#eye${uid})`}/>
           <ellipse cx="81" cy="73" rx="2.2" ry="4" fill="#fff" opacity=".95"/><ellipse cx="148" cy="73" rx="2.2" ry="4" fill="#fff" opacity=".95"/>
         </g>
-        <motion.g style={{ transformOrigin: '181px 117px' }} initial={false}
+        {/* Floating arm: detached from the head, sized to stay balanced with the mascot. */}
+        <motion.g style={{ transformOrigin: '220px 82px' }} initial={false}
           animate={waving ? { opacity: 1, rotate: [0, -24, 13, -21, 10, 0], x: [0, 1, 2, 1, 0, 0], y: [0, -2, -5, -3, -1, 0] } : { opacity: 0, rotate: 0, x: 0, y: 0 }}
           transition={waving ? { opacity: { duration: .12 }, rotate: { duration: 1.05, ease: 'easeInOut' }, x: { duration: 1.05 }, y: { duration: 1.05 } } : { duration: .18 }}>
-          <path d="M176 113 C180 96 185 76 194 60 C198 53 206 53 212 59 C218 64 216 72 213 79 L200 124 C196 135 186 138 178 131 C173 127 173 119 176 113 Z" fill={`url(#arm${uid})`} stroke="#d6dae1" strokeWidth="1.3"/>
-          <path d="M197 61 C201 57 207 59 210 64" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/>
+          <path d="M207 91 C210 81 215 70 220 60 C223 54 229 54 233 58 C237 62 235 68 233 73 L224 98 C221 105 215 108 210 104 C206 101 205 96 207 91 Z" fill={`url(#arm${uid})`} stroke="#d6dae1" strokeWidth="1.3"/>
+          <path d="M221 61 C224 58 229 59 231 63" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round"/>
         </motion.g>
       </svg>
       {(size === 'lg' || size === 'xl') && <span className={`absolute -bottom-0.5 -right-0.5 z-30 h-3.5 w-3.5 rounded-full border-2 border-white shadow-sm ${isGenerating ? 'bg-blue-500' : 'bg-emerald-500'}`}/>}
