@@ -1285,28 +1285,177 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
   const userPrefs = db.preferences.find(p => p.user_id === user.id);
 
   let assistantContent = '';
+  const goalsSummary = userGoals.map(g => '- [' + g.category + '] "' + g.title + '" (Resultado pretendido: ' + g.desired_outcome + ')').join('\n');
+  const missionsSummary = userMissions.slice(0, 5).map(m => '- "' + m.title + '" (' + m.estimated_minutes + ' min, prioridade: ' + m.priority + ')').join('\n');
+  const normalizedMessage = message.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const asksForPlan = /\b(crie|criar|monte|montar|faca|planeje|planejar|organize|organizar|estruture|estruturar|gere|gerar|prepare|preparar|quero|preciso)\b.{0,70}\b(plano|planejamento|cronograma|rotina|agenda|semana|missao|tarefas)\b/.test(normalizedMessage)
+    || /\b(plano|cronograma|rotina|agenda semanal)\b.{0,55}\b(para mim|pra mim|da semana|semanal|de estudos|de treino|de trabalho)\b/.test(normalizedMessage);
 
-  const goalsSummary = userGoals.map(g => `- [${g.category}] "${g.title}" (Resultado pretendido: ${g.desired_outcome})`).join('\n');
-  const missionsSummary = userMissions.slice(0, 5).map(m => `- "${m.title}" (${m.estimated_minutes} min, prioridade: ${m.priority})`).join('\n');
+  const systemPrompt = 'Você é o Assistente Delux, mentor executivo de desenvolvimento pessoal e consistência da plataforma Delux.\n' +
+    'Ajude o usuário (' + user.full_name + ') a transformar metas em ações práticas.\n' +
+    'Tom sofisticado, empático, direto e encorajador; tópicos curtos, sem rodeios.\n' +
+    'Estilo preferido: ' + (userPrefs?.assistant_response_style || 'progressivo') + '.\n' +
+    'Tempo diário disponível: ' + (userPrefs?.daily_available_minutes || 30) + ' minutos.\n' +
+    'Metas ativas:\n' + (goalsSummary || 'Nenhuma meta ativa.') + '\nMissões pendentes:\n' + (missionsSummary || 'Nenhuma missão pendente.');
 
-  const systemPrompt = `Você é o Assistente Delux, mentor executivo de desenvolvimento pessoal e consistência da plataforma Delux.
-Sua missão é ajudar o usuário (${user.full_name}) a descomplicar metas e transformá-las em ações práticas imediatas.
-Diretrizes:
-- Tom de voz: Sofisticado, empático, direto e encorajador (estilo Apple/executive coach).
-- Formatação: Use tópicos curtos e parágrafos enxutos. Sem rodeios vazios.
-- Estilo preferido do usuário: ${userPrefs?.assistant_response_style || 'progressivo'}.
-- Tempo diário disponível: ${userPrefs?.daily_available_minutes || 30} minutos.
-- Metas ativas no momento:\n${goalsSummary || 'Nenhuma meta ativa no momento.'}
-- Próximas missões pendentes:\n${missionsSummary || 'Nenhuma missão pendente hoje.'}
-- Se o usuário pedir para criar um plano ou missão, sugira de forma concreta passos realistas de 15 a 45 minutos.`;
+  if (asksForPlan) {
+    const fallbackTitle = message.trim()
+      .replace(/^(por favor[, ]*)?(quero|preciso|pode|poderia|me ajude a|me ajuda a)?\s*(criar|montar|fazer|planejar|organizar|estruturar)?\s*(um|uma|o|a)?\s*(plano|planejamento|cronograma|rotina|agenda)?\s*(de|do|da|para|pra)?\s*/i, '')
+      .replace(/[?.!]+$/, '').trim().slice(0, 90) || 'Plano de ação personalizado';
+    let plan: any = {
+      goal_title: fallbackTitle,
+      goal_description: 'Plano criado a partir do pedido: ' + message.trim(),
+      category: 'personal_dev',
+      desired_outcome: fallbackTitle,
+      current_state: '',
+      steps: [
+        { title: 'Preparar e definir o foco', description: 'Separar os recursos e definir um resultado claro para a sessão.', success_criteria: 'Ambiente e próxima ação definidos.' },
+        { title: 'Executar a prática principal', description: 'Realizar a atividade mais importante em um bloco de foco realista.', success_criteria: 'Atividade principal concluída e registrada.' },
+        { title: 'Revisar e ajustar', description: 'Avaliar o que funcionou e preparar o próximo passo.', success_criteria: 'Progresso registrado e próxima ação definida.' }
+      ],
+      missions: [
+        { title: 'Preparar materiais e ambiente', instructions: 'Organize os materiais necessários e deixe a primeira tarefa pronta.', estimated_minutes: 15, priority: 'high', day_offset: 0, scheduled_time: '09:00', step_index: 0 },
+        { title: 'Executar a primeira sessão de foco', instructions: 'Trabalhe na atividade principal sem distrações e anote obstáculos.', estimated_minutes: 25, priority: 'high', day_offset: 1, scheduled_time: '09:00', step_index: 1 },
+        { title: 'Praticar e consolidar', instructions: 'Repita a atividade principal e aplique o que aprendeu.', estimated_minutes: 25, priority: 'medium', day_offset: 2, scheduled_time: '09:00', step_index: 1 },
+        { title: 'Aplicar em uma tarefa concreta', instructions: 'Use o que praticou em uma entrega pequena e verificável.', estimated_minutes: 25, priority: 'medium', day_offset: 3, scheduled_time: '09:00', step_index: 2 },
+        { title: 'Revisar resultados e próximos passos', instructions: 'Revise o progresso e ajuste a próxima semana.', estimated_minutes: 15, priority: 'medium', day_offset: 4, scheduled_time: '09:00', step_index: 2 }
+      ]
+    };
 
-  if (genAI) {
+    if (genAI) {
+      try {
+        const planPrompt = 'Transforme o pedido em um plano REALISTA para salvar no app Delux.\nPedido: "' + message.trim() + '"\n' +
+          'Tempo diário disponível: ' + (userPrefs?.daily_available_minutes || 30) + ' minutos.\n' +
+          'Horário preferido: ' + (userPrefs?.preferred_time || 'flexible') + '.\nMetas existentes:\n' + (goalsSummary || 'nenhuma') + '\n' +
+          'Distribua tarefas pelos próximos 7 dias. day_offset é inteiro de 0 (hoje) a 6; horário HH:MM; respeite o tempo disponível. ' +
+          'Se o pedido se refere claramente a uma meta existente, reutilize seu título; caso contrário, dê título curto e específico.\n' +
+          'Responda SOMENTE JSON válido: {"goal_title":"...","goal_description":"...","category":"health|learning|career|finance|organization|personal_dev|other","desired_outcome":"...","current_state":"...","steps":[{"title":"...","description":"...","success_criteria":"..."}],"missions":[{"title":"...","instructions":"...","estimated_minutes":25,"priority":"high|medium|low","day_offset":0,"scheduled_time":"09:00","step_index":0}]}. ' +
+          'Inclua 3 etapas e 5 a 7 tarefas concretas distribuídas em vários dias.';
+        const response = await genAI.models.generateContent({
+          model: 'gemini-3.8-flash',
+          contents: [{ role: 'user', parts: [{ text: planPrompt }] }],
+          config: { responseMimeType: 'application/json' }
+        });
+        if (response.text) {
+          const match = response.text.match(/\{[\s\S]*\}/);
+          const parsed = JSON.parse(match ? match[0] : response.text);
+          if (parsed && Array.isArray(parsed.steps) && parsed.steps.length && Array.isArray(parsed.missions) && parsed.missions.length) {
+            plan = { ...plan, ...parsed };
+          }
+        }
+      } catch (planErr) {
+        console.error('Falha ao gerar plano estruturado; usando plano de contingência:', planErr);
+      }
+    }
+
+    try {
+      const allowedCategories = ['health', 'learning', 'career', 'finance', 'organization', 'personal_dev', 'other'];
+      const safeCategory = allowedCategories.includes(plan.category) ? plan.category : 'personal_dev';
+      const normalizedTitle = String(plan.goal_title || fallbackTitle).trim().toLocaleLowerCase('pt-BR');
+      let goal = db.goals.find(g => g.user_id === user.id && g.title.trim().toLocaleLowerCase('pt-BR') === normalizedTitle);
+      const now = new Date().toISOString();
+
+      if (!goal) {
+        goal = {
+          id: 'goal_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+          user_id: user.id,
+          title: String(plan.goal_title || fallbackTitle).trim().slice(0, 120),
+          description: String(plan.goal_description || '').trim(),
+          category: safeCategory,
+          desired_outcome: String(plan.desired_outcome || plan.goal_title || fallbackTitle).trim(),
+          current_state: String(plan.current_state || '').trim(),
+          priority: 'medium',
+          status: 'active',
+          created_at: now,
+          updated_at: now
+        };
+        db.goals.push(goal);
+        db.activity_events.push({
+          id: 'evt_' + Date.now() + '_goal',
+          user_id: user.id,
+          goal_id: goal.id,
+          event_type: 'goal_created',
+          metadata: { title: goal.title, source: 'assistant_plan' },
+          created_at: now
+        });
+      } else {
+        goal.updated_at = now;
+        if (plan.goal_description) goal.description = String(plan.goal_description);
+        if (plan.desired_outcome) goal.desired_outcome = String(plan.desired_outcome);
+      }
+
+      const existingStepCount = db.steps.filter(s => s.goal_id === goal.id && s.user_id === user.id).length;
+      const createdSteps: GoalStep[] = (Array.isArray(plan.steps) ? plan.steps : []).slice(0, 5).map((st: any, idx: number) => ({
+        id: 'step_' + Date.now() + '_' + idx + '_' + Math.random().toString(36).slice(2, 5),
+        goal_id: goal!.id,
+        user_id: user.id,
+        title: String(st.title || ('Etapa ' + (idx + 1))).trim(),
+        description: String(st.description || '').trim(),
+        position: existingStepCount + idx + 1,
+        success_criteria: String(st.success_criteria || '').trim(),
+        status: existingStepCount === 0 && idx === 0 ? 'in_progress' : 'pending',
+        created_at: now,
+        updated_at: now
+      }));
+      db.steps.push(...createdSteps);
+
+      const existingMissionCount = db.missions.filter(m => m.goal_id === goal.id && m.user_id === user.id).length;
+      const localDateAtOffset = (offset: number) => {
+        const date = new Date();
+        date.setHours(12, 0, 0, 0);
+        date.setDate(date.getDate() + Math.max(0, Math.min(6, Math.floor(Number(offset) || 0))));
+        return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+      };
+      const createdMissions: Mission[] = (Array.isArray(plan.missions) ? plan.missions : []).slice(0, 14).map((m: any, idx: number) => {
+        const stepIndex = Number.isInteger(Number(m.step_index)) ? Number(m.step_index) : 0;
+        const step = createdSteps[stepIndex] || createdSteps[0];
+        const duration = Math.max(5, Math.min(180, Number(m.estimated_minutes) || (userPrefs?.daily_available_minutes || 30)));
+        const priority = ['low', 'medium', 'high'].includes(m.priority) ? m.priority : 'medium';
+        const time = /^([01]\d|2[0-3]):[0-5]\d$/.test(String(m.scheduled_time || '')) ? String(m.scheduled_time) : '09:00';
+        return {
+          id: 'mis_' + Date.now() + '_' + idx + '_' + Math.random().toString(36).slice(2, 5),
+          goal_id: goal!.id,
+          goal_step_id: step?.id,
+          user_id: user.id,
+          title: String(m.title || ('Tarefa ' + (idx + 1))).trim(),
+          instructions: String(m.instructions || '').trim(),
+          estimated_minutes: duration,
+          scheduled_date: localDateAtOffset(m.day_offset),
+          scheduled_time: time,
+          priority,
+          status: 'pending',
+          position: existingMissionCount + idx + 1,
+          created_at: now,
+          updated_at: now
+        };
+      });
+      if (!createdMissions.length) throw new Error('O plano não contém tarefas válidas.');
+      db.missions.push(...createdMissions);
+      saveDb(db);
+
+      const dayLabel = (date: string) => {
+        const d = new Date(date + 'T12:00:00');
+        return d.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: '2-digit' });
+      };
+      const grouped: Record<string, Mission[]> = {};
+      createdMissions.forEach(mission => {
+        const date = mission.scheduled_date!;
+        if (!grouped[date]) grouped[date] = [];
+        grouped[date].push(mission);
+      });
+      const scheduleSummary = Object.entries(grouped).map(([date, items]) =>
+        '- ' + dayLabel(date) + ': ' + items.map(item => item.scheduled_time + ' — ' + item.title + ' (' + item.estimated_minutes + ' min)').join('; ')
+      ).join('\n');
+      assistantContent = 'Plano salvo no Delux! Criei/atualizei o objetivo **"' + goal.title + '"**, registrei ' + createdSteps.length + ' etapas e ' + createdMissions.length + ' tarefas com datas e horários no Planejamento.\n\n**Agenda registrada:**\n' + scheduleSummary + '\n\nVocê já pode abrir a aba **Planejamento** para ver e acompanhar as tarefas. Posso ajustar os dias, horários ou a carga diária.';
+    } catch (persistErr) {
+      console.error('Não foi possível salvar o plano no Delux:', persistErr);
+      assistantContent = 'Consegui preparar uma sugestão, mas não consegui gravá-la no Planejamento. Não vou confirmar o salvamento. Tente novamente; se continuar, vamos investigar o erro.';
+    }
+  } else if (genAI) {
     try {
       const response = await genAI.models.generateContent({
         model: 'gemini-3.8-flash',
-        contents: [
-          { role: 'user', parts: [{ text: `${systemPrompt}\n\nUsuário diz:\n${message.trim()}` }] }
-        ]
+        contents: [{ role: 'user', parts: [{ text: systemPrompt + '\n\nUsuário diz:\n' + message.trim() + '\n\nNão afirme que criou ou salvou dados se o sistema não confirmou.' }] }]
       });
       assistantContent = response.text || 'Estou à disposição para apoiar seus objetivos no Delux. Como posso ajudar com sua próxima missão?';
     } catch (aiErr: any) {
@@ -1314,7 +1463,6 @@ Diretrizes:
       assistantContent = getDeterministicAssistantResponse(message.trim(), user.full_name, userGoals, userMissions);
     }
   } else {
-    // Intelligent deterministic response when API key is not yet set
     assistantContent = getDeterministicAssistantResponse(message.trim(), user.full_name, userGoals, userMissions);
   }
 
