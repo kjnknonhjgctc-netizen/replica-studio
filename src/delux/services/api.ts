@@ -37,23 +37,14 @@ export const api = {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch(endpoint, {
-      ...options,
-      headers
-    });
-
-    if (!response.ok) {
-      let errMessage = 'Erro na requisição.';
-      try {
-        const errorData = await response.json();
-        errMessage = errorData.error || errMessage;
-      } catch {
-        // ignore
-      }
-      throw new Error(errMessage);
+    void headers;
+    const { handleLocalRequest } = await import('./localServer');
+    const body = typeof options.body === 'string' ? JSON.parse(options.body) : undefined;
+    const { status, payload } = await handleLocalRequest((options.method || 'GET').toUpperCase(), endpoint, body, token);
+    if (status >= 400) {
+      throw new Error(payload?.error || 'Erro na requisição.');
     }
-
-    return response.json();
+    return JSON.parse(JSON.stringify(payload));
   },
 
   // Auth

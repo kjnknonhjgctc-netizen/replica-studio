@@ -1,43 +1,62 @@
-import express, { Request, Response } from 'express';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
-import { GoogleGenAI } from '@google/genai';
+// Browser-side port of the original Express server. Data persists in localStorage;
+// AI calls go through a server function.
+import { generateAi } from '@/delux/ai.functions';
 import {
-  Goal,
-  GoalDiagnostic,
-  GoalStep,
-  Mission,
-  UserProfile,
-  UserPreferences,
-  ActivityEvent,
-  AssistantConversation,
-  AssistantMessage,
-  AppNotification,
-  Subscription
-} from './src/types';
+  Goal, GoalDiagnostic, GoalStep, Mission, UserProfile, UserPreferences, ActivityEvent,
+  AssistantConversation, AssistantMessage, AppNotification, Subscription
+} from '../types';
 
-dotenv.config();
+type Request = any;
+type Response = any;
+type Handler = (req: any, res: any, next: () => void) => any;
+const routes: { method: string; parts: string[]; handlers: Handler[] }[] = [];
+const reg = (method: string) => (path: string, ...handlers: Handler[]) => {
+  routes.push({ method, parts: path.split('/').filter(Boolean), handlers });
+};
+const app = { get: reg('GET'), post: reg('POST'), put: reg('PUT'), delete: reg('DELETE') };
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const app = express();
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
-const DB_FILE = path.join(__dirname, 'delux_database.json');
-
-app.use(express.json());
-
-// Initialize GenAI client if GEMINI_API_KEY is available
-let genAI: GoogleGenAI | null = null;
-if (process.env.GEMINI_API_KEY) {
-  try {
-    genAI = new GoogleGenAI();
-  } catch (err) {
-    console.warn('Failed to initialize GoogleGenAI with environment key:', err);
+const genAI = {
+  models: {
+    async generateContent(opts: any): Promise<{ text: string }> {
+      const prompt = opts.contents.map((c: any) => c.parts.map((p: any) => p.text).join('\n')).join('\n');
+      const r = await generateAi({ data: { prompt, json: opts.config?.responseMimeType === 'application/json' } });
+      return { text: r.text };
+    }
   }
+};
+
+export async function handleLocalRequest(method: string, url: string, body: any, token: string | null) {
+  const u = new URL(url, 'http://local');
+  const parts = u.pathname.split('/').filter(Boolean);
+  for (const r of routes) {
+    if (r.method !== method || r.parts.length !== parts.length) continue;
+    const params: Record<string, string> = {};
+    let ok = true;
+    r.parts.forEach((rp, i) => {
+      if (rp.startsWith(':')) params[rp.slice(1)] = decodeURIComponent(parts[i]);
+      else if (rp !== parts[i]) ok = false;
+    });
+    if (!ok) continue;
+    let status = 200;
+    let payload: any = undefined;
+    const res = { status(c: number) { status = c; return res; }, json(d: any) { payload = d; return res; } };
+    const req: any = { params, body: body || {}, query: Object.fromEntries(u.searchParams), headers: { authorization: token ? `Bearer ${token}` : undefined } };
+    let i = 0;
+    const run = async (): Promise<void> => { const h = r.handlers[i++]; if (h) await h(req, res, () => { void 0; }) ; };
+    // run middleware chain sequentially
+    for (i = 0; i < r.handlers.length; ) {
+      const h = r.handlers[i++];
+      let called = false;
+      await h(req, res, () => { called = true; });
+      if (!called) break;
+    }
+    void run;
+    return { status, payload };
+  }
+  return { status: 404, payload: { error: 'Rota não encontrada.' } };
 }
+
+const DB_KEY = 'delux_database';
 
 // Database schema definition
 interface DatabaseSchema {
@@ -261,12 +280,12 @@ const defaultSubscription: Subscription = {
 };
 
 function initDb(): DatabaseSchema {
-  if (fs.existsSync(DB_FILE)) {
+  const content = localStorage.getItem(DB_KEY);
+  if (content) {
     try {
-      const content = fs.readFileSync(DB_FILE, 'utf-8');
       return JSON.parse(content);
     } catch (e) {
-      console.error('Error reading DB_FILE, creating fresh database:', e);
+      console.error('Error reading database, creating fresh one:', e);
     }
   }
 
@@ -291,7 +310,7 @@ function initDb(): DatabaseSchema {
 
 function saveDb(data: DatabaseSchema) {
   try {
-    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
+    localStorage.setItem(DB_KEY, JSON.stringify(data));
   } catch (err) {
     console.error('Error persisting database:', err);
   }
@@ -1463,30 +1482,3 @@ Forneça exatamente 3 etapas progressivas e 3 missões iniciais práticas.`;
   });
 });
 
-// ========================
-// VITE DEV SERVER INTEGRATION & STATIC ASSETS
-// ========================
-async function startServer() {
-  const isProd = process.env.NODE_ENV === 'production';
-
-  if (!isProd) {
-    const { createServer: createViteServer } = await import('vite');
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: 'spa'
-    });
-    app.use(vite.middlewares);
-  } else {
-    const distPath = path.join(__dirname, 'dist');
-    app.use(express.static(distPath));
-    app.get('*', (req: Request, res: Response) => {
-      res.sendFile(path.join(distPath, 'index.html'));
-    });
-  }
-
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Delux Full-Stack Server running on http://0.0.0.0:${PORT}`);
-  });
-}
-
-startServer();
