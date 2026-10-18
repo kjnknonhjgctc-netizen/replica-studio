@@ -319,6 +319,31 @@ function saveDb(data: DatabaseSchema) {
 
 let db = initDb();
 
+// Availability helpers: never schedule a mission on a day the user marked unavailable.
+const WEEKDAY_KEYS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
+function getPreferredDays(userId: string): string[] {
+  const pref = db.preferences.find(p => p.user_id === userId);
+  const days = Array.isArray(pref?.preferred_days)
+    ? pref.preferred_days.map((day: any) => String(day).toLowerCase().slice(0, 3))
+      .filter((day: string) => WEEKDAY_KEYS.includes(day))
+    : [];
+  return days.length ? days : ['seg', 'ter', 'qua', 'qui', 'sex'];
+}
+function localDateString(date: Date): string {
+  return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+}
+function nextAvailableDate(userId: string, startOffset = 0): string {
+  const allowed = getPreferredDays(userId);
+  const date = new Date();
+  date.setHours(12, 0, 0, 0);
+  date.setDate(date.getDate() + Math.max(0, Math.floor(Number(startOffset) || 0)));
+  for (let i = 0; i < 14; i++) {
+    if (allowed.includes(WEEKDAY_KEYS[date.getDay()])) return localDateString(date);
+    date.setDate(date.getDate() + 1);
+  }
+  return localDateString(date);
+}
+
 // Authentication middleware helper
 function getUserFromRequest(req: Request): UserProfile | null {
   const authHeader = req.headers.authorization;
@@ -532,7 +557,7 @@ app.post('/api/auth/complete-onboarding', requireAuth, (req: Request, res: Respo
       title: `Iniciar primeiro bloco prático: ${firstGoal.title}`,
       instructions: 'Dedique o tempo estipulado sem distrações. Anote as sensações e os pontos de melhora.',
       estimated_minutes: preferences?.daily_available_minutes || 30,
-      scheduled_date: new Date().toISOString().split('T')[0],
+      scheduled_date: nextAvailableDate(user.id),
       scheduled_time: '09:00',
       priority: 'high',
       status: 'pending',
@@ -1326,7 +1351,8 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
       try {
         const planPrompt = 'Transforme o pedido em um plano REALISTA para salvar no app Delux.\nPedido: "' + message.trim() + '"\n' +
           'Tempo diário disponível: ' + (userPrefs?.daily_available_minutes || 30) + ' minutos.\n' +
-          'Horário preferido: ' + (userPrefs?.preferred_time || 'flexible') + '.\nMetas existentes:\n' + (goalsSummary || 'nenhuma') + '\n' +
+          'Horário preferido: ' + (userPrefs?.preferred_time || 'flexible') + '.\n' +
+          'Dias DISPONÍVEIS do usuário: ' + getPreferredDays(user.id).join(', ') + '. Não agende tarefas em outros dias da semana; o código validará e moverá datas para dias disponíveis.\nMetas existentes:\n' + (goalsSummary || 'nenhuma') + '\n' +
           'Distribua tarefas pelos próximos 7 dias. day_offset é inteiro de 0 (hoje) a 6; horário HH:MM; respeite o tempo disponível. ' +
           'Se o pedido se refere claramente a uma meta existente, reutilize seu título; caso contrário, dê título curto e específico.\n' +
           'Responda SOMENTE JSON válido: {"goal_title":"...","goal_description":"...","category":"health|learning|career|finance|organization|personal_dev|other","desired_outcome":"...","current_state":"...","steps":[{"title":"...","description":"...","success_criteria":"..."}],"missions":[{"title":"...","instructions":"...","estimated_minutes":25,"priority":"high|medium|low","day_offset":0,"scheduled_time":"09:00","step_index":0}]}. ' +
@@ -1400,12 +1426,6 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
       db.steps.push(...createdSteps);
 
       const existingMissionCount = db.missions.filter(m => m.goal_id === goal.id && m.user_id === user.id).length;
-      const localDateAtOffset = (offset: number) => {
-        const date = new Date();
-        date.setHours(12, 0, 0, 0);
-        date.setDate(date.getDate() + Math.max(0, Math.min(6, Math.floor(Number(offset) || 0))));
-        return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
-      };
       const createdMissions: Mission[] = (Array.isArray(plan.missions) ? plan.missions : []).slice(0, 14).map((m: any, idx: number) => {
         const stepIndex = Number.isInteger(Number(m.step_index)) ? Number(m.step_index) : 0;
         const step = createdSteps[stepIndex] || createdSteps[0];
@@ -1420,7 +1440,7 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
           title: String(m.title || ('Tarefa ' + (idx + 1))).trim(),
           instructions: String(m.instructions || '').trim(),
           estimated_minutes: duration,
-          scheduled_date: localDateAtOffset(m.day_offset),
+          scheduled_date: nextAvailableDate(user.id, Math.max(0, Math.min(6, Math.floor(Number(m.day_offset) || 0)))),
           scheduled_time: time,
           priority,
           status: 'pending',
