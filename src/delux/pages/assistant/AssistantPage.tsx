@@ -375,13 +375,13 @@ export const AssistantPage: React.FC = () => {
 
     // Clean Markdown so the voice sounds more natural.
     const cleanText = text
-      .replace(/```[\\s\\S]*?```/g, ' Bloco de código omitido na leitura. ')
-      .replace(/\\[([^\\]]+)\\]\\([^)]+\\)/g, '$1')
-      .replace(/[\\*_~#>]/g, '')
-      .replace(/^\\s*[-+]\\s+/gm, '')
-      .replace(/^\\s*\\d+[.)]\\s+/gm, '')
-      .replace(/\\n{2,}/g, '. ')
-      .replace(/\\n/g, ', ')
+      .replace(/```[\s\S]*?```/g, ' Bloco de código omitido na leitura. ')
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .replace(/[*_~#>]/g, '')
+      .replace(/^\s*[-+]\s+/gm, '')
+      .replace(/^\s*\d+[.)]\s+/gm, '')
+      .replace(/\n{2,}/g, '. ')
+      .replace(/\n/g, ', ')
       .trim();
 
     const utterance = new SpeechSynthesisUtterance(cleanText);
