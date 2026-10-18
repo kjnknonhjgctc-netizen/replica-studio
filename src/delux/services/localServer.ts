@@ -1328,8 +1328,8 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
     'Nome do usuário: ' + (user.full_name || 'não informado') + '.',
     'Estilo preferido: ' + (userPrefs?.assistant_response_style || 'progressivo') + '.',
     'Tempo diário disponível: ' + (userPrefs?.daily_available_minutes || 30) + ' minutos.',
-    'Metas ativas:\\n' + (goalsSummary || 'Nenhuma meta ativa.') + '\\nMissões pendentes:\\n' + (missionsSummary || 'Nenhuma missão pendente.')
-  ].join('\\n');
+    'Metas ativas:\n' + (goalsSummary || 'Nenhuma meta ativa.') + '\nMissões pendentes:\n' + (missionsSummary || 'Nenhuma missão pendente.')
+  ].join('\n');
 
   if (asksForPlan) {
     const fallbackTitle = message.trim()
