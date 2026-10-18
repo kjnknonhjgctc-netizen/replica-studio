@@ -1288,7 +1288,7 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
   const goalsSummary = userGoals.map(g => '- [' + g.category + '] "' + g.title + '" (Resultado pretendido: ' + g.desired_outcome + ')').join('\n');
   const missionsSummary = userMissions.slice(0, 5).map(m => '- "' + m.title + '" (' + m.estimated_minutes + ' min, prioridade: ' + m.priority + ')').join('\n');
   const normalizedMessage = message.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-  const asksForPlan = /\b(crie|criar|monte|montar|faca|planeje|planejar|organize|organizar|estruture|estruturar|gere|gerar|prepare|preparar|quero|preciso)\b.{0,70}\b(plano|planejamento|cronograma|rotina|agenda|semana|missao|tarefas)\b/.test(normalizedMessage)
+  const asksForPlan = /\b(crie|cria|criar|monte|monta|montar|faca|faz|fazer|planeje|planeja|planejar|organize|organiza|organizar|estruture|estrutura|estruturar|gere|gera|gerar|prepare|prepara|preparar|quero|preciso)\b.{0,70}\b(plano|planejamento|cronograma|rotina|agenda|semana|missao|tarefas)\b/.test(normalizedMessage)
     || /\b(plano|cronograma|rotina|agenda semanal)\b.{0,55}\b(para mim|pra mim|da semana|semanal|de estudos|de treino|de trabalho)\b/.test(normalizedMessage);
 
   const systemPrompt = 'Você é o Assistente Delux, mentor executivo de desenvolvimento pessoal e consistência da plataforma Delux.\n' +
