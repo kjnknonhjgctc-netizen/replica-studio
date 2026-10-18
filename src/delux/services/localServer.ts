@@ -1432,6 +1432,10 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
       if (!createdMissions.length) throw new Error('O plano não contém tarefas válidas.');
       db.missions.push(...createdMissions);
       saveDb(db);
+      const persistedDb = JSON.parse(localStorage.getItem(DB_KEY) || '{}');
+      if (!Array.isArray(persistedDb.missions) || !persistedDb.missions.some((item: Mission) => item.id === createdMissions[0].id)) {
+        throw new Error('O armazenamento local não confirmou a gravação do plano.');
+      }
 
       const dayLabel = (date: string) => {
         const d = new Date(date + 'T12:00:00');
