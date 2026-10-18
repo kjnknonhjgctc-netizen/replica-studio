@@ -49,15 +49,17 @@ export const AssistantOrb: React.FC<AssistantOrbProps> = ({
           <filter id={`shadow${uid}`}><feGaussianBlur stdDeviation="2.5"/></filter>
         </defs>
         <ellipse cx="109" cy="151" rx="91" ry="10" fill="#7c8491" opacity=".18" filter={`url(#shadow${uid})`}/>
-        <path d="M27 48 C32 22 58 12 87 10 L135 10 C169 11 192 27 197 53 C203 77 204 111 194 132 C184 151 163 156 137 157 L82 157 C49 156 27 145 20 123 C14 100 17 69 27 48 Z" fill={`url(#head${uid})`} stroke="#d5d9e0" strokeWidth="1.5"/>
-        <path d="M30 45 C39 24 60 17 88 15 L134 15 C164 16 187 31 192 55" fill="none" stroke="#fff" strokeWidth="3" opacity=".8" strokeLinecap="round"/>
-        <ellipse cx="78" cy="83" rx="9.5" ry="16" fill={`url(#eye${uid})`}/><ellipse cx="145" cy="83" rx="9.5" ry="16" fill={`url(#eye${uid})`}/>
-        <ellipse cx="81" cy="73" rx="2.2" ry="4" fill="#fff" opacity=".95"/><ellipse cx="148" cy="73" rx="2.2" ry="4" fill="#fff" opacity=".95"/>
+        <g transform="translate(11 8) scale(.9)">
+          <path d="M27 48 C32 22 58 12 87 10 L135 10 C169 11 192 27 197 53 C203 77 204 111 194 132 C184 151 163 156 137 157 L82 157 C49 156 27 145 20 123 C14 100 17 69 27 48 Z" fill={`url(#head${uid})`} stroke="#d5d9e0" strokeWidth="1.5"/>
+          <path d="M30 45 C39 24 60 17 88 15 L134 15 C164 16 187 31 192 55" fill="none" stroke="#fff" strokeWidth="3" opacity=".8" strokeLinecap="round"/>
+          <ellipse cx="78" cy="83" rx="9.5" ry="16" fill={`url(#eye${uid})`}/><ellipse cx="145" cy="83" rx="9.5" ry="16" fill={`url(#eye${uid})`}/>
+          <ellipse cx="81" cy="73" rx="2.2" ry="4" fill="#fff" opacity=".95"/><ellipse cx="148" cy="73" rx="2.2" ry="4" fill="#fff" opacity=".95"/>
+        </g>
         <motion.g style={{ transformOrigin: '181px 117px' }} initial={false}
           animate={waving ? { opacity: 1, rotate: [0, -24, 13, -21, 10, 0], x: [0, 1, 2, 1, 0, 0], y: [0, -2, -5, -3, -1, 0] } : { opacity: 0, rotate: 0, x: 0, y: 0 }}
           transition={waving ? { opacity: { duration: .12 }, rotate: { duration: 1.05, ease: 'easeInOut' }, x: { duration: 1.05 }, y: { duration: 1.05 } } : { duration: .18 }}>
-          <path d="M178 111 C182 98 188 82 195 69 C198 63 204 62 209 66 C213 69 212 75 210 80 L198 119 C195 128 187 131 180 126 C176 123 176 117 178 111 Z" fill={`url(#arm${uid})`} stroke="#d6dae1" strokeWidth="1.3"/>
-          <path d="M198 69 C201 66 205 68 207 71" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/>
+          <path d="M176 113 C180 96 185 76 194 60 C198 53 206 53 212 59 C218 64 216 72 213 79 L200 124 C196 135 186 138 178 131 C173 127 173 119 176 113 Z" fill={`url(#arm${uid})`} stroke="#d6dae1" strokeWidth="1.3"/>
+          <path d="M197 61 C201 57 207 59 210 64" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/>
         </motion.g>
       </svg>
       {(size === 'lg' || size === 'xl') && <span className={`absolute -bottom-0.5 -right-0.5 z-30 h-3.5 w-3.5 rounded-full border-2 border-white shadow-sm ${isGenerating ? 'bg-blue-500' : 'bg-emerald-500'}`}/>}
