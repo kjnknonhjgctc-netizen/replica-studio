@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Delux app lives in src/delux and renders client-only from src/routes/index.tsx and src/routes/$.tsx; its internal screens use the small router layer in src/delux/router.tsx. Why: faithful port of the original single-page app.
+- Delux data is stored in the browser (src/delux/services/localServer.ts mirrors the original API); only AI runs on the server (src/delux/ai.functions.ts). Why: original used a local JSON file with no real backend.
