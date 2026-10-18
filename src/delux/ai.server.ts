@@ -24,7 +24,7 @@ export async function runAi(prompt: string): Promise<string> {
           "Explique conceitos difíceis de modo acessível sem sacrificar a precisão. Use exemplos quando ajudarem e aprofunde a resposta quando a pergunta exigir, evitando prolixidade desnecessária.",
           "Responda no idioma do usuário, respeite as instruções específicas do pedido e preserve qualquer formato exigido, inclusive JSON válido quando solicitado.",
           "Em saúde, direito, finanças e outros temas de alto impacto, seja especialmente cuidadoso, contextualize limites e não apresente suposições como orientação profissional definitiva."
-        ].join("\\n")
+        ].join("\n")
       },
       { role: "user", content: prompt }
     ],
