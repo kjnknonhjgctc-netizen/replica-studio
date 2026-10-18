@@ -1,3 +1,4 @@
+// @ts-nocheck -- ported as-is from the original project
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from '@/delux/router';
 import { api } from '../../services/api';

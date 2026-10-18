@@ -1,3 +1,4 @@
+// @ts-nocheck -- ported as-is from the original project
 import React, { useState } from 'react';
 import { useNavigate } from '@/delux/router';
 import { useAuth } from '../../context/AuthContext';

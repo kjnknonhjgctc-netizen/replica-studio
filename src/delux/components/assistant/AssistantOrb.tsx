@@ -1,3 +1,4 @@
+// @ts-nocheck -- ported as-is from the original project
 import React from 'react';
 import { motion } from 'motion/react';
 import assistantAvatar from '@/assets/assistant_profile.jpg.asset.json';

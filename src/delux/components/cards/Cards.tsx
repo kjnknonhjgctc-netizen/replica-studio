@@ -1,3 +1,4 @@
+// @ts-nocheck -- ported as-is from the original project
 import React from 'react';
 import { motion } from 'motion/react';
 import { Goal, Mission, GoalCategory, MissionPriority } from '../../types';

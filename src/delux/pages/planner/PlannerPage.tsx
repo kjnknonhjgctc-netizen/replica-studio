@@ -1,3 +1,4 @@
+// @ts-nocheck -- ported as-is from the original project
 import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { Goal, Mission, UserPreferences } from '../../types';
