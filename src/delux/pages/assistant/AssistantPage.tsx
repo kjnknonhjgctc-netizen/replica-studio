@@ -914,6 +914,7 @@ export const AssistantPage: React.FC = () => {
                           size="sm"
                           isSpeaking={isThisMsgSpeaking}
                           isGenerating={false}
+                          isWaving={msg.id === messages[messages.length - 1]?.id}
                           onClick={() => handleToggleSpeak(msg)}
                           title={isThisMsgSpeaking ? 'Pausar áudio' : 'Ouvir resposta'}
                         />
