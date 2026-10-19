@@ -3,7 +3,7 @@
 // AI calls go through a server function.
 import { generateAi } from '@/delux/ai.functions';
 import { buildAssistantContext, recentConversation } from '../ai/context';
-import { requestsSavedPlan } from '../ai/intent';
+import { requestsSavedPlan, resolveNavigationIntent } from '../ai/intent';
 import {
   Goal, GoalDiagnostic, GoalStep, Mission, UserProfile, UserPreferences, ActivityEvent,
   AssistantConversation, AssistantMessage, AppNotification, Subscription
@@ -1312,9 +1312,11 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
   const userPrefs = db.preferences.find(p => p.user_id === user.id);
 
   let assistantContent = '';
+  let action: { type: 'navigate'; path: string; label: string } | null = null;
   const goalsSummary = userGoals.map(g => '- [' + g.category + '] "' + g.title + '" (Resultado pretendido: ' + g.desired_outcome + ')').join('\n');
   const missionsSummary = userMissions.slice(0, 5).map(m => '- "' + m.title + '" (' + m.estimated_minutes + ' min, prioridade: ' + m.priority + ')').join('\n');
   const asksForPlan = requestsSavedPlan(message.trim());
+  const navigation = resolveNavigationIntent(message.trim());
 
   const personalContext = JSON.stringify(buildAssistantContext({ userId: user.id, timezone: user.timezone, preferences: userPrefs, goals: db.goals, diagnostics: db.diagnostics, steps: db.steps, missions: db.missions })).slice(0, 20000);
   const history = recentConversation(db.messages.filter(m => m.id !== userMsg.id), user.id, conv.id);
@@ -1324,7 +1326,10 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
     return res.status(502).json({ error: error?.message || 'Não foi possível obter a resposta do assistente.' });
   };
 
-  if (asksForPlan) {
+  if (navigation) {
+    action = navigation;
+    assistantContent = 'Claro — abrindo ' + navigation.label + ' agora.';
+  } else if (asksForPlan) {
     const fallbackTitle = message.trim()
       .replace(/^(por favor[, ]*)?(quero|preciso|pode|poderia|me ajude a|me ajuda a)?\s*(criar|montar|fazer|planejar|organizar|estruturar)?\s*(um|uma|o|a)?\s*(plano|planejamento|cronograma|rotina|agenda)?\s*(de|do|da|para|pra)?\s*/i, '')
       .replace(/[?.!]+$/, '').trim().slice(0, 90) || 'Plano de ação personalizado';
@@ -1508,7 +1513,8 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
   return res.json({
     conversation: conv,
     userMessage: userMsg,
-    assistantMessage: assistantMsg
+    assistantMessage: assistantMsg,
+    action
   });
 });
 
