@@ -10,9 +10,12 @@ describe('Assistant action intent', () => {
     expect(requestsSavedPlan('Quero um plano de estudos')).toBe(true);
     expect(requestsSavedPlan('Preciso de um plano para economizar')).toBe(true);
     expect(requestsSavedPlan('Quero entender um plano de estudos')).toBe(false);
+    expect(requestsSavedPlan('Não quero que você crie um plano')).toBe(false);
+    expect(requestsSavedPlan('Não quero um plano agora')).toBe(false);
   });
   it('does not navigate when the user explicitly says not to', () => {
     expect(resolveNavigationIntent('Não quero acessar o planejamento')).toBeNull();
+    expect(resolveNavigationIntent('Não quero que você abra o planejamento')).toBeNull();
     expect(resolveNavigationIntent('Abra o planejamento')).toEqual({
       type: 'navigate',
       path: '/app/planejamento',
