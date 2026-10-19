@@ -7,6 +7,9 @@ describe('Assistant action intent', () => {
   });
   it('recognizes an explicit plan creation request', () => {
     expect(requestsSavedPlan('Crie um plano de estudos para aprender inglês')).toBe(true);
+    expect(requestsSavedPlan('Quero um plano de estudos')).toBe(true);
+    expect(requestsSavedPlan('Preciso de um plano para economizar')).toBe(true);
+    expect(requestsSavedPlan('Quero entender um plano de estudos')).toBe(false);
   });
   it('does not navigate when the user explicitly says not to', () => {
     expect(resolveNavigationIntent('Não quero acessar o planejamento')).toBeNull();
