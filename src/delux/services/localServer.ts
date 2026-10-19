@@ -604,14 +604,11 @@ app.put('/api/auth/profile', requireAuth, (req: Request, res: Response) => {
 
 // Forgot password mock/token
 app.post('/api/auth/forgot-password', (req: Request, res: Response) => {
-  const { email } = req.body;
-  const exists = db.profiles.some(p => p.email.toLowerCase() === (email || '').trim().toLowerCase());
   return res.json({
-    success: true,
-    message: exists
-      ? 'A recuperação de senha não está configurada neste ambiente de demonstração. Nenhuma senha foi alterada.'
-      : 'Se o e-mail estiver cadastrado, as instruções serão encaminhadas.'
+    success: false,
+    message: 'A recuperação de senha não está configurada neste ambiente de demonstração. Nenhuma senha foi alterada.'
   });
+
 });
 
 // ========================
