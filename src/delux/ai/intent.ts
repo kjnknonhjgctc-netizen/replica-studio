@@ -10,29 +10,29 @@ export function requestsSavedPlan(message: string) {
  * Keep this deterministic: navigation should not depend on the language model guessing.
  */
 export function resolveNavigationIntent(message: string): { type: 'navigate'; path: string; label: string } | null {
-  const text = message.normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().replace(/\\s+/g, ' ').trim();
-  const asksToNavigate = /\\b(abre|abrir|mostra|mostrar|vai|ir|va|acessa|acessar|entrar|navega|navegar|leva|levar|volta|voltar|manda|quero ver|quero acessar|me leva|me manda)\\b/.test(text);
+  const text = message.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+  const asksToNavigate = /\b(abre|abrir|mostra|mostrar|vai|ir|va|acessa|acessar|entrar|navega|navegar|leva|levar|volta|voltar|manda|quero ver|quero acessar|me leva|me manda)\b/.test(text);
   if (!asksToNavigate) return null;
 
-  if (/\\b(assinatura|premium|mensalidade|pagamento|cobranca|plano pago|meu plano atual)\\b/.test(text)) {
+  if (/\b(assinatura|premium|mensalidade|pagamento|cobranca|plano pago|meu plano atual)\b/.test(text)) {
     return { type: 'navigate', path: '/assinatura', label: 'Assinatura e plano Premium' };
   }
-  if (/\\b(novo objetivo|nova meta|criar objetivo|criar meta)\\b/.test(text)) {
+  if (/\b(novo objetivo|nova meta|criar objetivo|criar meta)\b/.test(text)) {
     return { type: 'navigate', path: '/app/objetivos/novo', label: 'Novo objetivo' };
   }
-  if (/\\b(planejamento|planos?|agenda|cronograma|tarefas|missoes?)\\b/.test(text)) {
+  if (/\b(planejamento|planos?|agenda|cronograma|tarefas|missoes?)\b/.test(text)) {
     return { type: 'navigate', path: '/app/planejamento', label: 'Planejamento' };
   }
-  if (/\\b(objetivos|metas|mapas)\\b/.test(text)) {
+  if (/\b(objetivos|metas|mapas)\b/.test(text)) {
     return { type: 'navigate', path: '/app/objetivos', label: 'Objetivos' };
   }
-  if (/\\b(perfil|rotina|preferencias|configuracoes|conta)\\b/.test(text)) {
+  if (/\b(perfil|rotina|preferencias|configuracoes|conta)\b/.test(text)) {
     return { type: 'navigate', path: '/app/perfil', label: 'Perfil e rotina' };
   }
-  if (/\\b(inicio|home|pagina inicial|dashboard)\\b/.test(text)) {
+  if (/\b(inicio|home|pagina inicial|dashboard)\b/.test(text)) {
     return { type: 'navigate', path: '/app/inicio', label: 'Início' };
   }
-  if (/\\b(assistente|chat)\\b/.test(text)) {
+  if (/\b(assistente|chat)\b/.test(text)) {
     return { type: 'navigate', path: '/app/assistente', label: 'Assistente' };
   }
   return null;
