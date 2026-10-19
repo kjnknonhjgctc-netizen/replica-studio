@@ -182,6 +182,55 @@ begin
 end;
 $$;
 
+-- Child records must belong to a goal owned by the same authenticated user.
+drop policy if exists owner_insert on public.goal_diagnostics;
+drop policy if exists owner_update on public.goal_diagnostics;
+create policy owner_insert on public.goal_diagnostics for insert to authenticated
+with check (auth.uid() = user_id and exists (select 1 from public.goals g where g.id = goal_id and g.user_id = auth.uid()));
+create policy owner_update on public.goal_diagnostics for update to authenticated
+using (auth.uid() = user_id and exists (select 1 from public.goals g where g.id = goal_id and g.user_id = auth.uid()))
+with check (auth.uid() = user_id and exists (select 1 from public.goals g where g.id = goal_id and g.user_id = auth.uid()));
+
+drop policy if exists owner_insert on public.goal_steps;
+drop policy if exists owner_update on public.goal_steps;
+create policy owner_insert on public.goal_steps for insert to authenticated
+with check (auth.uid() = user_id and exists (select 1 from public.goals g where g.id = goal_id and g.user_id = auth.uid()));
+create policy owner_update on public.goal_steps for update to authenticated
+using (auth.uid() = user_id and exists (select 1 from public.goals g where g.id = goal_id and g.user_id = auth.uid()))
+with check (auth.uid() = user_id and exists (select 1 from public.goals g where g.id = goal_id and g.user_id = auth.uid()));
+
+drop policy if exists owner_insert on public.missions;
+drop policy if exists owner_update on public.missions;
+create policy owner_insert on public.missions for insert to authenticated
+with check (
+  auth.uid() = user_id
+  and exists (select 1 from public.goals g where g.id = goal_id and g.user_id = auth.uid())
+  and (goal_step_id is null or exists (select 1 from public.goal_steps s where s.id = goal_step_id and s.goal_id = missions.goal_id and s.user_id = auth.uid()))
+);
+create policy owner_update on public.missions for update to authenticated
+using (auth.uid() = user_id and exists (select 1 from public.goals g where g.id = goal_id and g.user_id = auth.uid()))
+with check (
+  auth.uid() = user_id
+  and exists (select 1 from public.goals g where g.id = goal_id and g.user_id = auth.uid())
+  and (goal_step_id is null or exists (select 1 from public.goal_steps s where s.id = goal_step_id and s.goal_id = missions.goal_id and s.user_id = auth.uid()))
+);
+
+drop policy if exists owner_insert on public.activity_events;
+drop policy if exists owner_update on public.activity_events;
+create policy owner_insert on public.activity_events for insert to authenticated
+with check (
+  auth.uid() = user_id
+  and (goal_id is null or exists (select 1 from public.goals g where g.id = goal_id and g.user_id = auth.uid()))
+  and (mission_id is null or exists (select 1 from public.missions m where m.id = mission_id and m.user_id = auth.uid()))
+);
+create policy owner_update on public.activity_events for update to authenticated
+using (auth.uid() = user_id)
+with check (
+  auth.uid() = user_id
+  and (goal_id is null or exists (select 1 from public.goals g where g.id = goal_id and g.user_id = auth.uid()))
+  and (mission_id is null or exists (select 1 from public.missions m where m.id = mission_id and m.user_id = auth.uid()))
+);
+
 -- Conversation messages can only be read/changed by their owner.
 drop policy if exists owner_select on public.assistant_messages;
 drop policy if exists owner_insert on public.assistant_messages;
