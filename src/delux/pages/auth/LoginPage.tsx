@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useSearchParams } from '@/delux/router';
+import { Link, useNavigate, useSearchParams } from '@/delux/router';
 import { useAuth } from '../../context/AuthContext';
 import { DeluxLogo } from '../../components/common/DeluxLogo';
 import { PrimaryButton } from '../../components/common/Buttons';
@@ -161,6 +161,14 @@ export const LoginPage: React.FC = () => {
             {mode === 'register' ? 'Criar e Acessar Agora' : 'Entrar no Delux'}
           </PrimaryButton>
         </form>
+
+        {mode === 'login' && (
+          <div className="mt-4 text-right">
+            <Link to="/recuperar-senha" className="text-xs font-semibold text-[#356AE6] dark:text-[#60A5FA] hover:underline">
+              Esqueci minha senha
+            </Link>
+          </div>
+        )}
 
         {/* Toggle Mode Footer */}
         <div className="mt-6 text-center text-xs text-[#777D87] dark:text-slate-400">
