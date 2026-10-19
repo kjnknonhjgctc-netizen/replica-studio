@@ -21,6 +21,10 @@ export const ForgotPasswordPage: React.FC = () => {
 
     try {
       const res = await api.forgotPassword(email);
+      if (!res.success) {
+        setError(res.message);
+        return;
+      }
       setMessage(res.message);
       setSubmitted(true);
     } catch {
