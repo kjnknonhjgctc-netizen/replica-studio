@@ -154,20 +154,30 @@ for each row execute procedure public.handle_new_user();
 
 -- Enable RLS on every user-owned table. Ownership is determined by the
 -- authenticated JWT subject, never by a client-supplied user_id.
+alter table public.profiles enable row level security;
+drop policy if exists owner_select on public.profiles;
+drop policy if exists owner_insert on public.profiles;
+drop policy if exists owner_update on public.profiles;
+drop policy if exists owner_delete on public.profiles;
+create policy owner_select on public.profiles for select to authenticated using (auth.uid() = id);
+create policy owner_insert on public.profiles for insert to authenticated with check (auth.uid() = id);
+create policy owner_update on public.profiles for update to authenticated using (auth.uid() = id) with check (auth.uid() = id);
+create policy owner_delete on public.profiles for delete to authenticated using (auth.uid() = id);
+
 do $$
 declare t text;
 begin
-  foreach t in array array['profiles','preferences','goals','goal_diagnostics','goal_steps','missions','activity_events','assistant_conversations','assistant_messages','notifications']
+  foreach t in array array['preferences','goals','goal_diagnostics','goal_steps','missions','activity_events','assistant_conversations','assistant_messages','notifications']
   loop
     execute format('alter table public.%I enable row level security', t);
     execute format('drop policy if exists owner_select on public.%I', t);
     execute format('drop policy if exists owner_insert on public.%I', t);
     execute format('drop policy if exists owner_update on public.%I', t);
     execute format('drop policy if exists owner_delete on public.%I', t);
-    execute format('create policy owner_select on public.%I for select to authenticated using (auth.uid() = user_id OR ( %L = ''profiles'' AND auth.uid() = id ))', t, t);
-    execute format('create policy owner_insert on public.%I for insert to authenticated with check (auth.uid() = user_id OR ( %L = ''profiles'' AND auth.uid() = id ))', t, t);
-    execute format('create policy owner_update on public.%I for update to authenticated using (auth.uid() = user_id OR ( %L = ''profiles'' AND auth.uid() = id )) with check (auth.uid() = user_id OR ( %L = ''profiles'' AND auth.uid() = id ))', t, t, t);
-    execute format('create policy owner_delete on public.%I for delete to authenticated using (auth.uid() = user_id OR ( %L = ''profiles'' AND auth.uid() = id ))', t, t);
+    execute format('create policy owner_select on public.%I for select to authenticated using (auth.uid() = user_id)', t);
+    execute format('create policy owner_insert on public.%I for insert to authenticated with check (auth.uid() = user_id)', t);
+    execute format('create policy owner_update on public.%I for update to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id)', t);
+    execute format('create policy owner_delete on public.%I for delete to authenticated using (auth.uid() = user_id)', t);
   end loop;
 end;
 $$;
