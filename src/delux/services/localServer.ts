@@ -1449,6 +1449,12 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
       const existingMissionCount = db.missions.filter(m => m.goal_id === goal.id && m.user_id === user.id).length;
       const dailyCapacity = Math.max(5, Number(userPrefs?.daily_available_minutes) || 30);
       const plannedMinutesByDate: Record<string, number> = {};
+      db.missions
+        .filter(m => m.user_id === user.id && m.scheduled_date && ['pending', 'in_progress', 'postponed'].includes(m.status))
+        .forEach(m => {
+          const date = m.scheduled_date as string;
+          plannedMinutesByDate[date] = (plannedMinutesByDate[date] || 0) + Math.max(0, Number(m.estimated_minutes) || 0);
+        });
       const createdMissions: Mission[] = (Array.isArray(plan.missions) ? plan.missions : []).slice(0, 14).map((m: any, idx: number) => {
         const stepIndex = Number.isInteger(Number(m.step_index)) ? Number(m.step_index) : 0;
         const step = createdSteps[stepIndex] || createdSteps[0];
