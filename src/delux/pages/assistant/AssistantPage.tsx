@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from '@/delux/router';
 import { motion, AnimatePresence } from 'motion/react';
 import { api } from '../../services/api';
+import { synthesizeSpeech } from '../../ai.functions';
 import { AssistantConversation, AssistantMessage } from '../../types';
 import { AssistantOrb } from '../../components/assistant/AssistantOrb';
 import { ThemeToggle } from '../../components/common/ThemeToggle';
@@ -206,6 +207,7 @@ export const AssistantPage: React.FC = () => {
   const [speechError, setSpeechError] = useState<string | null>(null);
   const recognitionRef = useRef<any>(null);
   const speechVoicesRef = useRef<SpeechSynthesisVoice[]>([]);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -362,18 +364,11 @@ export const AssistantPage: React.FC = () => {
     }
   };
 
-  // Speech synthesis: prefer a masculine-sounding Brazilian Portuguese system voice when available.
-  const speakText = (text: string, msgId?: string) => {
-    if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
-      setSpeechError('Este navegador não oferece reprodução de voz. Tente abrir o Delux no Chrome.');
-      return;
-    }
+  // OpenAI TTS keeps the assistant voice consistent across supported browsers.
+  const speakText = async (text: string, msgId?: string) => {
+    stopSpeaking();
+    setSpeechError(null);
 
-    window.speechSynthesis.cancel();
-    setIsSpeakingGeneral(false);
-    setSpeakingMessageId(null);
-
-    // Clean Markdown so the voice sounds more natural.
     const cleanText = text
       .replace(/```[\s\S]*?```/g, ' Bloco de código omitido na leitura. ')
       .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
@@ -382,49 +377,50 @@ export const AssistantPage: React.FC = () => {
       .replace(/^\s*\d+[.)]\s+/gm, '')
       .replace(/\n{2,}/g, '. ')
       .replace(/\n/g, ', ')
-      .trim();
+      .trim()
+      .slice(0, 4096);
 
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.lang = 'pt-BR';
-    utterance.rate = 0.92;
-    utterance.pitch = 0.84;
-    utterance.volume = 1;
-
-    const availableVoices = [...speechVoicesRef.current, ...window.speechSynthesis.getVoices()]
-      .filter((voice, index, all) => all.findIndex(item => item.name === voice.name && item.lang === voice.lang) === index);
-    const portugueseVoices = availableVoices.filter(voice => /^pt([-_]|$)/i.test(voice.lang));
-    const brazilianVoices = portugueseVoices.filter(voice => /pt[-_]br/i.test(voice.lang));
-    const masculineVoiceHints = /daniel|antonio|antônio|ricardo|lucas|felipe|mascul|male|homem/i;
-    const selectedVoice =
-      brazilianVoices.find(voice => masculineVoiceHints.test(voice.name)) ||
-      portugueseVoices.find(voice => masculineVoiceHints.test(voice.name)) ||
-      brazilianVoices.find(voice => !/female|femin/i.test(voice.name)) ||
-      portugueseVoices[0];
-    if (selectedVoice) utterance.voice = selectedVoice;
-
-    utterance.onstart = () => {
-      setSpeechError(null);
-      setIsSpeakingGeneral(true);
-      if (msgId) setSpeakingMessageId(msgId);
-    };
-    utterance.onend = () => {
+    try {
+      const result = await synthesizeSpeech({ data: { text: cleanText } });
+      if (!result?.audioBase64) throw new Error('A API não retornou áudio.');
+      const audio = new Audio(`data:audio/mpeg;base64,${result.audioBase64}`);
+      audioRef.current = audio;
+      audio.onplay = () => {
+        setSpeechError(null);
+        setIsSpeakingGeneral(true);
+        if (msgId) setSpeakingMessageId(msgId);
+      };
+      audio.onended = () => {
+        setIsSpeakingGeneral(false);
+        setSpeakingMessageId(null);
+        audioRef.current = null;
+      };
+      audio.onerror = () => {
+        setIsSpeakingGeneral(false);
+        setSpeakingMessageId(null);
+        setSpeechError('Não foi possível reproduzir o áudio neste dispositivo.');
+        audioRef.current = null;
+      };
+      await audio.play();
+    } catch (error) {
+      console.error('OpenAI TTS error:', error);
       setIsSpeakingGeneral(false);
       setSpeakingMessageId(null);
-    };
-    utterance.onerror = (event) => {
-      setIsSpeakingGeneral(false);
-      setSpeakingMessageId(null);
-      if (event.error !== 'canceled' && event.error !== 'interrupted') {
-        setSpeechError('Não foi possível reproduzir a voz. Verifique o volume e as vozes instaladas no dispositivo.');
-      }
-    };
-    window.speechSynthesis.speak(utterance);
+      setSpeechError(
+        error instanceof Error && error.message.includes('OPENAI_API_KEY')
+          ? 'Configure OPENAI_API_KEY nos segredos do servidor para ativar a voz.'
+          : 'Não foi possível gerar a voz. Verifique a configuração da API OpenAI e tente novamente.'
+      );
+    }
   };
 
   const stopSpeaking = () => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current = null;
     }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     setIsSpeakingGeneral(false);
     setSpeakingMessageId(null);
   };
