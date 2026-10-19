@@ -27,9 +27,8 @@ export const AssistantOrb: React.FC<AssistantOrbProps> = ({
   const waving = waveActive || isSpeaking || isGenerating;
   const uid = React.useId().replace(/:/g, '');
   return (
-    <motion.div onClick={onClick} title={title}
+    <motion.div {...(onClick ? { onClick, whileTap: { scale: 0.95 } } : {})} title={title}
       whileHover={onClick ? { scale: 1.06, y: -1 } : { scale: 1.02 }}
-      whileTap={onClick ? { scale: 0.95 } : undefined}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       className={`relative inline-flex items-center justify-center shrink-0 select-none ${sizeClass} ${onClick ? 'cursor-pointer' : ''} ${className}`}
       style={{ overflow: 'visible' }}>
