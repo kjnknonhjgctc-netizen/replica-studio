@@ -299,7 +299,7 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
     const inserted = await insertRows('missions', [{
       user_id: userId,
       goal_id: goal.id,
-      goal_step_id: m.goal_step_id || step?.id || null,
+      goal_step_id: createdSteps.find((candidate: any) => candidate.id === m.goal_step_id)?.id || step?.id || null,
       title: String(m.title || ('Tarefa ' + (i + 1))).trim(),
       instructions: String(m.instructions || ''),
       estimated_minutes: minutes,
@@ -476,7 +476,17 @@ export async function handleSupabaseRequest(method: string, endpoint: string, bo
     }, 'user_id');
     if (payload.firstGoal?.title) {
       const pref = await getPreferencesFor(user.id);
-      await createGoal(payload.firstGoal, user.id, pref.preferred_days);
+      const firstGoal = payload.firstGoal.diagnostic ? payload.firstGoal : {
+        ...payload.firstGoal,
+        diagnostic: {
+          current_situation: payload.firstGoal.current_state || 'Iniciando trajetória',
+          obstacles: payload.firstGoal.obstacles || ['Constância na rotina'],
+          available_resources: [String(pref.daily_available_minutes || 30) + ' minutos/dia'],
+          constraints: payload.firstGoal.constraints || 'Horário de estudos/prática',
+          answers: payload.firstGoal.answers,
+        },
+      };
+      await createGoal(firstGoal, user.id, pref.preferred_days);
     }
     return { success: true, user: updated[0] || { ...user, ...data } };
   }
@@ -648,8 +658,8 @@ export async function handleSupabaseRequest(method: string, endpoint: string, bo
     }
     if (method === 'POST' && actionOrId === 'rebalance') {
       const today = localDateString(new Date());
-      const missions = await selectRows('missions', { status: 'eq.pending' }, 'scheduled_date.asc,scheduled_time.asc');
-      const overdue = missions.filter((m: any) => m.scheduled_date && m.scheduled_date < today);
+      const missions = await selectRows('missions', {}, 'scheduled_date.asc,scheduled_time.asc');
+      const overdue = missions.filter((m: any) => m.status === 'pending' && m.scheduled_date && m.scheduled_date < today);
       const allowed = preferences.preferred_days || ['seg', 'ter', 'qua', 'qui', 'sex'];
       const byDate: Record<string, number> = {};
       missions.forEach((m: any) => {
