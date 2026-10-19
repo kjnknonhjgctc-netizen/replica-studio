@@ -60,7 +60,6 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ email, password, full_name })
     });
-    this.setToken(data.token);
     return data;
   },
 
