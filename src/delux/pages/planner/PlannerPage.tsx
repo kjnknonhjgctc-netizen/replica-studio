@@ -5,6 +5,7 @@ import { Goal, Mission, UserPreferences } from '../../types';
 import { PageHeader, LoadingSkeleton, ConfirmationDialog } from '../../components/common/CommonComponents';
 import { PrimaryButton, SecondaryButton } from '../../components/common/Buttons';
 import { TaskRow } from '../../components/cards/Cards';
+import { addDaysToDateOnly } from '../../utils/date';
 import { 
   Calendar, 
   Clock, 
@@ -54,9 +55,7 @@ export const PlannerPage: React.FC = () => {
 
   const handleMoveMissionDate = async (mission: Mission, daysOffset: number) => {
     try {
-      const current = new Date(mission.scheduled_date || new Date().toISOString().split('T')[0]);
-      current.setDate(current.getDate() + daysOffset);
-      const newDateStr = current.toISOString().split('T')[0];
+      const newDateStr = addDaysToDateOnly(mission.scheduled_date, daysOffset);
       await api.updateMission(mission.id, { scheduled_date: newDateStr });
       await fetchPlanner();
     } catch (err) {
