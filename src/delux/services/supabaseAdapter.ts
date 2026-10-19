@@ -525,10 +525,11 @@ export async function handleSupabaseRequest(method: string, endpoint: string, bo
   if (area === 'auth' && actionOrId === 'forgot-password' && method === 'POST') {
     if (!payload.email) throw new Error('Informe o e-mail da sua conta.');
     const { url, key } = config();
-    const response = await fetch(url + '/auth/v1/recover', {
+    const redirectTo = window.location.origin + '/redefinir-senha';
+    const response = await fetch(url + '/auth/v1/recover?redirect_to=' + encodeURIComponent(redirectTo), {
       method: 'POST',
       headers: { apikey: key, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: String(payload.email).trim().toLowerCase(), redirect_to: window.location.origin + '/redefinir-senha' }),
+      body: JSON.stringify({ email: String(payload.email).trim().toLowerCase() }),
     });
     await parseResponse(response, 'Não foi possível solicitar a recuperação de senha.');
     return { success: true, message: 'Se o e-mail estiver cadastrado, você receberá as instruções de recuperação.' };
