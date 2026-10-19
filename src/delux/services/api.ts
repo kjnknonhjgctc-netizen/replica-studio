@@ -88,6 +88,13 @@ export const api = {
     });
   },
 
+  async updatePassword(password: string): Promise<{ success: boolean; message: string }> {
+    return this.request<{ success: boolean; message: string }>('/api/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ password })
+    });
+  },
+
   // Preferences
   async getPreferences(): Promise<{ preferences: UserPreferences }> {
     return this.request<{ preferences: UserPreferences }>('/api/preferences');
