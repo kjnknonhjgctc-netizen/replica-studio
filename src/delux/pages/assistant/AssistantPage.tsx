@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from '@/delux/router';
 import { motion, AnimatePresence } from 'motion/react';
 import { api } from '../../services/api';
-import { synthesizeSpeech } from '../../ai.functions';
 import { AssistantConversation, AssistantMessage } from '../../types';
 import { AssistantOrb } from '../../components/assistant/AssistantOrb';
 import { ThemeToggle } from '../../components/common/ThemeToggle';
@@ -12,8 +11,6 @@ import {
   Send, 
   Plus, 
   ArrowLeft,
-  Volume2, 
-  VolumeX, 
   MessageSquare, 
   History, 
   PanelLeftClose, 
@@ -196,9 +193,6 @@ export const AssistantPage: React.FC = () => {
   const [historySearch, setHistorySearch] = useState('');
   const [selectedMode, setSelectedMode] = useState<AssistantMode>('estrategia');
 
-  // Speech synthesis & audio visualizer
-  const [speakingMessageId, setSpeakingMessageId] = useState<string | null>(null);
-  const [isSpeakingGeneral, setIsSpeakingGeneral] = useState(false);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
 
   // Speech recognition (Voice input)
@@ -206,8 +200,6 @@ export const AssistantPage: React.FC = () => {
   const [speechSupported, setSpeechSupported] = useState(false);
   const [speechError, setSpeechError] = useState<string | null>(null);
   const recognitionRef = useRef<any>(null);
-  const speechVoicesRef = useRef<SpeechSynthesisVoice[]>([]);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -218,13 +210,6 @@ export const AssistantPage: React.FC = () => {
 
   useEffect(() => {
     loadConversations();
-
-    // Voices are often loaded asynchronously by mobile browsers.
-    const refreshSpeechVoices = () => {
-      if ('speechSynthesis' in window) speechVoicesRef.current = window.speechSynthesis.getVoices();
-    };
-    refreshSpeechVoices();
-    if ('speechSynthesis' in window) window.speechSynthesis.addEventListener?.('voiceschanged', refreshSpeechVoices);
 
     // Check speech recognition support
     const SpeechRecognitionAPI = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -265,11 +250,6 @@ export const AssistantPage: React.FC = () => {
     }
 
     return () => {
-      if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.removeEventListener?.('voiceschanged', refreshSpeechVoices);
-      }
       if (recognitionRef.current) {
         try {
           recognitionRef.current.abort();
@@ -365,74 +345,8 @@ export const AssistantPage: React.FC = () => {
     }
   };
 
-  // OpenAI TTS keeps the assistant voice consistent across supported browsers.
-  const speakText = async (text: string, msgId?: string) => {
-    stopSpeaking();
-    setSpeechError(null);
-
-    const cleanText = text
-      .replace(/```[\s\S]*?```/g, ' Bloco de código omitido na leitura. ')
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-      .replace(/[*_~#>]/g, '')
-      .replace(/^\s*[-+]\s+/gm, '')
-      .replace(/^\s*\d+[.)]\s+/gm, '')
-      .replace(/\n{2,}/g, '. ')
-      .replace(/\n/g, ', ')
-      .trim()
-      .slice(0, 4096);
-
-    try {
-      const result = await synthesizeSpeech({ data: { text: cleanText } });
-      if (!result?.audioBase64) throw new Error('A API não retornou áudio.');
-      const audio = new Audio(`data:audio/mpeg;base64,${result.audioBase64}`);
-      audioRef.current = audio;
-      audio.onplay = () => {
-        setSpeechError(null);
-        setIsSpeakingGeneral(true);
-        if (msgId) setSpeakingMessageId(msgId);
-      };
-      audio.onended = () => {
-        setIsSpeakingGeneral(false);
-        setSpeakingMessageId(null);
-        audioRef.current = null;
-      };
-      audio.onerror = () => {
-        setIsSpeakingGeneral(false);
-        setSpeakingMessageId(null);
-        setSpeechError('Não foi possível reproduzir o áudio neste dispositivo.');
-        audioRef.current = null;
-      };
-      await audio.play();
-    } catch (error) {
-      console.error('OpenAI TTS error:', error);
-      setIsSpeakingGeneral(false);
-      setSpeakingMessageId(null);
-      setSpeechError(
-        error instanceof Error && error.message.includes('OPENAI_API_KEY')
-          ? 'Configure OPENAI_API_KEY nos segredos do servidor para ativar a voz.'
-          : 'Não foi possível gerar a voz. Verifique a configuração da API OpenAI e tente novamente.'
-      );
-    }
-  };
-
-  const stopSpeaking = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      audioRef.current = null;
-    }
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-    setIsSpeakingGeneral(false);
-    setSpeakingMessageId(null);
-  };
-
-  const handleToggleSpeak = (msg: AssistantMessage) => {
-    if (speakingMessageId === msg.id) {
-      stopSpeaking();
-    } else {
-      speakText(msg.content, msg.id);
-    }
-  };
+  // Audio playback is disabled.
+  const stopSpeaking = () => {};
 
   const handleCopyMessage = (msgId: string, content: string) => {
     navigator.clipboard.writeText(content);
@@ -745,7 +659,7 @@ export const AssistantPage: React.FC = () => {
             <div className="shrink-0">
               <AssistantOrb
                 size="sm"
-                isSpeaking={isSpeakingGeneral}
+                isSpeaking={false}
                 isGenerating={loading}
                 title="Assistente Delux"
               />
@@ -779,30 +693,6 @@ export const AssistantPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            {/* Voice Waveform Player pill when speaking */}
-            {isSpeakingGeneral && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 rounded-xl bg-gradient-to-r from-[#7033FF]/10 to-[#2563EB]/10 border border-[#4E56FF]/30 text-[#4E56FF] dark:text-[#889BFF]"
-              >
-                <div className="flex items-center gap-0.5 h-3">
-                  <span className="w-0.5 h-full bg-[#4E56FF] rounded-full animate-bounce [animation-delay:0s]" />
-                  <span className="w-0.5 h-full bg-[#2563EB] rounded-full animate-bounce [animation-delay:0.15s]" />
-                  <span className="w-0.5 h-full bg-[#7033FF] rounded-full animate-bounce [animation-delay:0.3s]" />
-                  <span className="w-0.5 h-full bg-[#38BDF8] rounded-full animate-bounce [animation-delay:0.45s]" />
-                </div>
-                <span className="text-[10px] sm:text-[11px] font-bold hidden md:inline">Voz ativa</span>
-                <button
-                  onClick={stopSpeaking}
-                  className="p-1 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors cursor-pointer"
-                  title="Silenciar áudio"
-                >
-                  <VolumeX className="w-3.5 h-3.5" />
-                </button>
-              </motion.div>
-            )}
-
             {/* New conversation button */}
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -829,14 +719,14 @@ export const AssistantPage: React.FC = () => {
                 <div className="sm:hidden">
                   <AssistantOrb
                     size="lg"
-                    isSpeaking={isSpeakingGeneral}
+                    isSpeaking={false}
                     isGenerating={loading}
                   />
                 </div>
                 <div className="hidden sm:block">
                   <AssistantOrb
                     size="xl"
-                    isSpeaking={isSpeakingGeneral}
+                    isSpeaking={false}
                     isGenerating={loading}
                   />
                 </div>
@@ -919,7 +809,6 @@ export const AssistantPage: React.FC = () => {
             <div className="w-full max-w-4xl xl:max-w-5xl mx-auto space-y-4 sm:space-y-5">
               {messages.map(msg => {
                 const isUser = msg.role === 'user';
-                const isThisMsgSpeaking = speakingMessageId === msg.id;
                 const isCopied = copiedMessageId === msg.id;
 
                 return (
@@ -935,11 +824,9 @@ export const AssistantPage: React.FC = () => {
                       <div className="shrink-0 mt-1">
                         <AssistantOrb
                           size="sm"
-                          isSpeaking={isThisMsgSpeaking}
+                          isSpeaking={false}
                           isGenerating={false}
                           isWaving={msg.id === messages[messages.length - 1]?.id}
-                          onClick={() => handleToggleSpeak(msg)}
-                          title={isThisMsgSpeaking ? 'Pausar áudio' : 'Ouvir resposta'}
                         />
                       </div>
                     )}
@@ -990,27 +877,7 @@ export const AssistantPage: React.FC = () => {
                               )}
                             </button>
 
-                            {/* Audio listen toggle button */}
-                            <button
-                              onClick={() => handleToggleSpeak(msg)}
-                              className={`px-2 py-1 text-xs rounded-lg transition-colors flex items-center gap-1 cursor-pointer font-semibold active:scale-95 ${
-                                isThisMsgSpeaking
-                                  ? 'bg-blue-50 dark:bg-blue-950/40 text-[#2563EB] dark:text-[#60A5FA]'
-                                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-                              }`}
-                            >
-                              {isThisMsgSpeaking ? (
-                                <>
-                                  <VolumeX className="w-3.5 h-3.5 text-[#2563EB] dark:text-[#60A5FA]" />
-                                  <span className="text-[11px]">Pausar voz</span>
-                                </>
-                              ) : (
-                                <>
-                                  <Volume2 className="w-3.5 h-3.5" />
-                                  <span className="text-[11px]">Ouvir · IA</span>
-                                </>
-                              )}
-                            </button>
+
                           </div>
                         </div>
                       )}
