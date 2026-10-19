@@ -24,8 +24,8 @@ export const RegisterPage: React.FC = () => {
       setError('Preencha seu e-mail e sua senha.');
       return;
     }
-    if (cleanPassword.length < 4) {
-      setError('A senha deve ter no mínimo 4 caracteres.');
+    if (cleanPassword.length < 8) {
+      setError('A senha deve ter no mínimo 8 caracteres.');
       return;
     }
     setError(null);
@@ -56,13 +56,13 @@ export const RegisterPage: React.FC = () => {
             Comece no Delux
           </h1>
           <p className="text-xs sm:text-sm text-[#777D87] dark:text-slate-400 mt-1 max-w-xs">
-            Acesso imediato com e-mail e senha. Sem confirmação no e-mail.
+            Crie sua conta para salvar seus dados com segurança.
           </p>
         </div>
 
         <div className="mb-5 flex items-center gap-2 p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-300 text-[11px] font-medium transition-colors">
           <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-          <span>Acesso direto sem verificação de e-mail: crie e use instantaneamente.</span>
+          <span>A conta pode pedir confirmação por e-mail, conforme as configurações do projeto.</span>
         </div>
 
         {error && (
@@ -84,7 +84,7 @@ export const RegisterPage: React.FC = () => {
           />
 
           <FormField
-            label="Senha (mínimo 4 caracteres)"
+            label="Senha (mínimo 8 caracteres)"
             id="password"
             type="password"
             autoComplete="new-password"

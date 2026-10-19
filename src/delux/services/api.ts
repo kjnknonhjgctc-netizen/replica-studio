@@ -24,17 +24,26 @@ export const api = {
 
   clearToken() {
     localStorage.removeItem(TOKEN_KEY);
+    // Supabase session storage is independent from the legacy demo token.
+    localStorage.removeItem('delux_supabase_session');
   },
 
   async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    const token = this.getToken();
-    const { handleLocalRequest } = await import('./localServer');
+    const method = (options.method || 'GET').toUpperCase();
     const body = typeof options.body === 'string' ? JSON.parse(options.body) : undefined;
-    const { status, payload } = await handleLocalRequest((options.method || 'GET').toUpperCase(), endpoint, body, token);
-    if (status >= 400) {
-      throw new Error(payload?.error || 'Erro na requisição.');
+
+    // Billing/subscription code is deliberately left on its existing legacy path.
+    // The user-data API below no longer uses the browser-side demo server.
+    if (endpoint.startsWith('/api/subscription')) {
+      const token = this.getToken();
+      const { handleLocalRequest } = await import('./localServer');
+      const { status, payload } = await handleLocalRequest(method, endpoint, body, token);
+      if (status >= 400) throw new Error(payload?.error || 'Erro na requisição.');
+      return JSON.parse(JSON.stringify(payload));
     }
-    return JSON.parse(JSON.stringify(payload));
+
+    const { handleSupabaseRequest } = await import('./supabaseAdapter');
+    return await handleSupabaseRequest(method, endpoint, body) as T;
   },
 
   // Auth
@@ -43,7 +52,6 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ email, password })
     });
-    this.setToken(data.token);
     return data;
   },
 
@@ -52,7 +60,6 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ email, password, full_name })
     });
-    this.setToken(data.token);
     return data;
   },
 
@@ -78,6 +85,13 @@ export const api = {
     return this.request<{ success: boolean; message: string }>('/api/auth/forgot-password', {
       method: 'POST',
       body: JSON.stringify({ email })
+    });
+  },
+
+  async updatePassword(password: string): Promise<{ success: boolean; message: string }> {
+    return this.request<{ success: boolean; message: string }>('/api/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ password })
     });
   },
 

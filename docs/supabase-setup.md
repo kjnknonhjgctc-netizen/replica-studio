@@ -1,30 +1,47 @@
 # Delux: configurar Supabase
 
-Esta integração prepara a base de autenticação e persistência real do Delux. O projeto atual ainda contém uma API de demonstração em `src/delux/services/localServer.ts`; **não publique para usuários reais até concluir a migração do cliente para Supabase e testar todas as operações**.
+O app usa Supabase Auth para cadastro/login e recuperação de senha, e o banco Supabase para perfis, preferências, objetivos, etapas, missões, planejamento, eventos, notificações e conversas. A implementação usa a API REST/Auth do Supabase com a chave pública; não é necessário adicionar uma dependência de cliente ao bundle.
 
-## 1. Criar projeto
+## 1. Configuração do projeto
 
-1. Crie um projeto no Supabase.
-2. Em **Project Settings → API**, copie a Project URL e a chave pública/anon (publishable).
-3. Configure `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` nas variáveis de ambiente do ambiente de desenvolvimento e da hospedagem. O prefixo `VITE_` significa que os valores ficam visíveis no navegador; só use a chave pública.
-4. Configure `LOVABLE_API_KEY` como segredo de servidor da hospedagem. Nunca use essa chave no cliente.
+1. Em Supabase → Project Settings → API, copie a Project URL e a chave pública anon/publishable.
+2. Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY nas variáveis de ambiente do Lovable e em qualquer ambiente de build/deploy. Esses valores ficam visíveis no navegador; use apenas a chave pública.
+3. Nunca use service_role ou qualquer chave secreta com prefixo VITE_.
+4. Mantenha LOVABLE_API_KEY como segredo de servidor para as chamadas do assistente.
 
-## 2. Criar tabelas e regras de segurança
+Se essas duas variáveis públicas não estiverem configuradas, o app mostrará um erro explícito de configuração em vez de gravar os dados pessoais no servidor de demonstração.
 
-Execute `supabase/migrations/20261019000000_initial_schema.sql` no SQL Editor do projeto Supabase. A migração cria tabelas de perfis, preferências, objetivos, etapas, missões, atividade, conversas, mensagens e notificações, além de políticas RLS por usuário.
+## 2. Criar as tabelas e ativar RLS
 
-A migração **não** cria tabelas de cobrança ou assinaturas.
+Execute supabase/migrations/20261019000000_initial_schema.sql no SQL Editor do projeto Supabase. Ela cria as tabelas de perfis, preferências, objetivos, diagnósticos, etapas, missões, atividade, conversas, mensagens e notificações, com políticas RLS para limitar as linhas ao usuário autenticado.
 
-## 3. Auth e recuperação de senha
+A migração não cria nem altera tabelas de cobrança/assinatura.
 
-Em **Authentication → URL Configuration**, defina a URL do app e as URLs de redirecionamento permitidas. Configure SMTP de produção para que a recuperação de senha envie e-mails reais. Mantenha confirmação de e-mail habilitada em produção.
+## 3. Configurar Auth e recuperação de senha
 
-## 4. Antes de lançar
+Em Authentication → URL Configuration, configure a Site URL do app e adicione as URLs de redirecionamento permitidas:
+- a URL raiz do app;
+- https://SEU-DOMINIO/redefinir-senha (substitua pelo domínio real; use a mesma origem em desenvolvimento).
 
-- Migrar todos os métodos de `src/delux/services/api.ts` para operações autenticadas no Supabase.
-- Remover a persistência de senhas e dados pessoais em `localStorage` da API de demonstração.
-- Testar isolamento entre duas contas, recuperação de senha, onboarding, metas, missões, planner e conversas.
-- Não expor a chave `service_role` no navegador nem no repositório.
-- Confirmar backup, limites, monitoramento e políticas de exclusão/privacidade.
+O cadastro entra imediatamente no app quando o Supabase devolve uma sessão. Se a confirmação de e-mail estiver habilitada, o app pede ao usuário que confirme o endereço antes de entrar. O callback de confirmação e o fluxo de recuperação de senha são tratados pela camada de autenticação do app.
 
-O esquema é a primeira etapa de infraestrutura; por si só, não muda o comportamento da aplicação até a camada de serviços ser migrada e as variáveis do projeto real serem configuradas.
+Para a recuperação funcionar em produção, configure um provedor SMTP confiável em Authentication → SMTP Settings e teste o recebimento do link. A tela /redefinir-senha só aceita alteração de senha a partir de uma sessão criada pelo fluxo de recuperação.
+
+## 4. Dados existentes e assinaturas
+
+Dados que estejam apenas no localStorage de uma versão anterior não são migrados automaticamente para o Supabase. Antes de remover qualquer dado legado, exporte-o e planeje a migração das contas existentes.
+
+Os métodos e a tela de assinatura foram deliberadamente mantidos fora desta etapa, conforme o escopo. Essa parte ainda usa o caminho legado de demonstração; não considere o estado apresentado por ele uma cobrança real nem use esse fluxo como integração de pagamentos de produção. O schema Supabase desta etapa não contém tabela de assinaturas.
+
+## 5. Checklist antes de publicar
+
+- [ ] Configurar as duas variáveis VITE_SUPABASE_* no ambiente certo.
+- [ ] Aplicar a migration SQL no projeto Supabase.
+- [ ] Conferir as políticas RLS e as URLs permitidas do Auth.
+- [ ] Testar cadastro, login, renovação de sessão e recuperação de senha em domínio de teste.
+- [ ] Testar duas contas diferentes e confirmar que uma não consegue ler nem alterar os dados da outra.
+- [ ] Testar onboarding, objetivos/diagnósticos/etapas, missões, planejamento, notificações e conversas com dados reais.
+- [ ] Confirmar backup, monitoramento e processo de exclusão/privacidade.
+- [ ] Migrar separadamente os dados locais antigos e implementar cobrança real antes de qualquer lançamento comercial.
+
+A integração de cliente não pode aplicar a migration no projeto Supabase conectado nem ler seus segredos automaticamente. Esses passos precisam ser verificados no painel do projeto e no ambiente de deploy.
