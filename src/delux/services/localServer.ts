@@ -110,7 +110,7 @@ const defaultGoal: Goal = {
   category: 'learning',
   desired_outcome: 'Falar com confiança por 30 minutos em reuniões e entender podcasts sem legenda.',
   current_state: 'Consigo ler textos básicos, mas travo na conversação e não entendo nativos falando rápido.',
-  target_date: new Date(Date.now() + 90 * 86400000).toISOString().split('T')[0],
+  target_date: localDateString(new Date(Date.now() + 90 * 86400000)),
   priority: 'high',
   status: 'active',
   created_at: new Date(Date.now() - 7 * 86400000).toISOString(),
@@ -167,9 +167,9 @@ const defaultSteps: GoalStep[] = [
   }
 ];
 
-const todayStr = new Date().toISOString().split('T')[0];
-const yesterdayStr = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-const tomorrowStr = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+const todayStr = localDateString(new Date());
+const yesterdayStr = localDateString(new Date(Date.now() - 86400000));
+const tomorrowStr = localDateString(new Date(Date.now() + 86400000));
 
 const defaultMissions: Mission[] = [
   {
@@ -511,7 +511,7 @@ app.post('/api/auth/complete-onboarding', requireAuth, (req: Request, res: Respo
       current_state: firstGoal.current_state || '',
       priority: firstGoal.priority || 'high',
       status: 'active',
-      target_date: firstGoal.target_date || new Date(Date.now() + 60 * 86400000).toISOString().split('T')[0],
+      target_date: firstGoal.target_date || localDateString(new Date(Date.now() + 60 * 86400000)),
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };
@@ -609,7 +609,7 @@ app.post('/api/auth/forgot-password', (req: Request, res: Response) => {
   return res.json({
     success: true,
     message: exists
-      ? 'Um link de recuperação seguro foi enviado para seu e-mail (em ambiente de teste, sua senha provisória é 123456).'
+      ? 'A recuperação de senha não está configurada neste ambiente de demonstração. Nenhuma senha foi alterada.'
       : 'Se o e-mail estiver cadastrado, as instruções serão encaminhadas.'
   });
 });
@@ -783,7 +783,7 @@ app.post('/api/goals', requireAuth, (req: Request, res: Response) => {
         title: m.title,
         instructions: m.instructions || '',
         estimated_minutes: m.estimated_minutes || 30,
-        scheduled_date: m.scheduled_date || new Date().toISOString().split('T')[0],
+        scheduled_date: m.scheduled_date || localDateString(new Date()),
         scheduled_time: m.scheduled_time || '09:00',
         priority: m.priority || 'medium',
         status: 'pending',
@@ -967,7 +967,7 @@ app.post('/api/missions', requireAuth, (req: Request, res: Response) => {
     title: title.trim(),
     instructions: instructions || '',
     estimated_minutes: estimated_minutes ? parseInt(estimated_minutes, 10) : 30,
-    scheduled_date: scheduled_date || new Date().toISOString().split('T')[0],
+    scheduled_date: scheduled_date || localDateString(new Date()),
     scheduled_time: scheduled_time || undefined,
     priority: priority || 'medium',
     status: 'pending',
