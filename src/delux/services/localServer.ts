@@ -1123,10 +1123,14 @@ app.post('/api/planner/rebalance', requireAuth, (req: Request, res: Response) =>
     const targetOffset = (idx % 3);
     const targetDate = new Date();
     targetDate.setHours(12, 0, 0, 0);
-    let moved = 0;
-    while (moved <= targetOffset || !getPreferredDays(user.id).includes(WEEKDAY_KEYS[targetDate.getDay()])) {
+    const allowedDays = getPreferredDays(user.id);
+    let availableIndex = -1;
+    for (let day = 0; day < 35; day++) {
+      if (allowedDays.includes(WEEKDAY_KEYS[targetDate.getDay()])) {
+        availableIndex++;
+        if (availableIndex === targetOffset) break;
+      }
       targetDate.setDate(targetDate.getDate() + 1);
-      if (getPreferredDays(user.id).includes(WEEKDAY_KEYS[targetDate.getDay()])) moved++;
     }
     m.scheduled_date = localDateString(targetDate);
     m.updated_at = new Date().toISOString();
