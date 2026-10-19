@@ -344,7 +344,8 @@ function nextAvailableDate(userId: string, startOffset = 0): string {
   const date = new Date();
   date.setHours(12, 0, 0, 0);
   let availableIndex = -1;
-  for (let i = 0; i < 35; i++) {
+  // A user may have only one available weekday; 370 days safely covers 34 weekly slots.
+  for (let i = 0; i < 370; i++) {
     if (allowed.includes(WEEKDAY_KEYS[date.getDay()])) {
       availableIndex++;
       if (availableIndex === targetIndex) return localDateString(date);
