@@ -13,6 +13,6 @@ describe('addDaysToDateOnly', () => {
   });
 
   it('uses the supplied current date when no date is set', () => {
-    expect(addDaysToDateOnly(undefined, 1, new Date('2026-10-18T12:00:00'))).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(addDaysToDateOnly(undefined, 1, new Date('2026-10-18T12:00:00'))).toBe('2026-10-19');
   });
 });
