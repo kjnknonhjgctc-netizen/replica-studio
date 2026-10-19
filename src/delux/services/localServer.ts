@@ -3,6 +3,7 @@
 // AI calls go through a server function.
 import { generateAi } from '@/delux/ai.functions';
 import { buildAssistantContext, recentConversation } from '../ai/context';
+import { requestsSavedPlan } from '../ai/intent';
 import {
   Goal, GoalDiagnostic, GoalStep, Mission, UserProfile, UserPreferences, ActivityEvent,
   AssistantConversation, AssistantMessage, AppNotification, Subscription
@@ -1313,9 +1314,7 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
   let assistantContent = '';
   const goalsSummary = userGoals.map(g => '- [' + g.category + '] "' + g.title + '" (Resultado pretendido: ' + g.desired_outcome + ')').join('\n');
   const missionsSummary = userMissions.slice(0, 5).map(m => '- "' + m.title + '" (' + m.estimated_minutes + ' min, prioridade: ' + m.priority + ')').join('\n');
-  const normalizedMessage = message.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-  const asksForPlan = /\b(crie|cria|criar|monte|monta|montar|faca|faz|fazer|planeje|planeja|planejar|organize|organiza|organizar|estruture|estrutura|estruturar|gere|gera|gerar|prepare|prepara|preparar|quero|preciso)\b.{0,70}\b(plano|planejamento|cronograma|rotina|agenda|semana|missao|tarefas)\b/.test(normalizedMessage)
-    || /\b(plano|cronograma|rotina|agenda semanal)\b.{0,55}\b(para mim|pra mim|da semana|semanal|de estudos|de treino|de trabalho)\b/.test(normalizedMessage);
+  const asksForPlan = requestsSavedPlan(message.trim());
 
   const personalContext = JSON.stringify(buildAssistantContext({ userId: user.id, timezone: user.timezone, preferences: userPrefs, goals: db.goals, diagnostics: db.diagnostics, steps: db.steps, missions: db.missions })).slice(0, 20000);
   const history = recentConversation(db.messages.filter(m => m.id !== userMsg.id), user.id, conv.id);
