@@ -8,6 +8,7 @@ type Session = {
   refresh_token: string;
   expires_at: number;
   user: SessionUser;
+  flowType?: string;
 };
 const SESSION_KEY = 'delux_supabase_session';
 const WEEKDAY_KEYS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
@@ -74,7 +75,7 @@ async function authRequest(path: string, body: unknown) {
   return parseResponse(response, 'Falha na autenticação do Supabase.');
 }
 
-function saveAuthSession(raw: any): Session {
+function saveAuthSession(raw: any, flowType?: string): Session {
   if (!raw?.access_token || !raw?.refresh_token || !raw?.user?.id) {
     throw new Error('O Supabase não retornou uma sessão ativa. Confira a confirmação de e-mail nas configurações de Auth.');
   }
@@ -83,18 +84,43 @@ function saveAuthSession(raw: any): Session {
     refresh_token: raw.refresh_token,
     expires_at: Math.floor(Date.now() / 1000) + Number(raw.expires_in || 3600),
     user: raw.user,
+    flowType,
   };
   writeSession(session);
   return session;
 }
 
+async function restoreSessionFromUrl(): Promise<Session | null> {
+  if (typeof window === 'undefined' || !window.location.hash) return null;
+  const values = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+  const accessToken = values.get('access_token');
+  const refreshToken = values.get('refresh_token');
+  if (!accessToken || !refreshToken) return null;
+
+  const { url, key } = config();
+  const response = await fetch(url + '/auth/v1/user', {
+    headers: { apikey: key, Authorization: 'Bearer ' + accessToken },
+  });
+  const user = await parseResponse(response, 'Não foi possível validar o link de autenticação.');
+  const session = saveAuthSession({
+    access_token: accessToken,
+    refresh_token: refreshToken,
+    expires_in: Number(values.get('expires_in') || 3600),
+    user,
+  }, values.get('type') || undefined);
+
+  window.history.replaceState(null, document.title, window.location.pathname + window.location.search);
+  return session;
+}
+
 async function currentSession(): Promise<Session> {
-  const session = readSession();
+  const callbackSession = await restoreSessionFromUrl();
+  const session = callbackSession || readSession();
   if (!session) throw new Error('Sessão encerrada. Entre novamente para continuar.');
   if (session.expires_at > Math.floor(Date.now() / 1000) + 60) return session;
   try {
     const refreshed = await authRequest('token?grant_type=refresh_token', { refresh_token: session.refresh_token });
-    return saveAuthSession(refreshed);
+    return saveAuthSession(refreshed, session.flowType);
   } catch {
     clearSession();
     throw new Error('Sua sessão expirou. Entre novamente.');
@@ -498,14 +524,23 @@ export async function handleSupabaseRequest(method: string, endpoint: string, bo
   }
   if (area === 'auth' && actionOrId === 'forgot-password' && method === 'POST') {
     if (!payload.email) throw new Error('Informe o e-mail da sua conta.');
-    const { url } = config();
+    const { url, key } = config();
     const response = await fetch(url + '/auth/v1/recover', {
       method: 'POST',
-      headers: { apikey: config().key, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: String(payload.email).trim().toLowerCase(), redirect_to: window.location.origin }),
+      headers: { apikey: key, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: String(payload.email).trim().toLowerCase(), redirect_to: window.location.origin + '/redefinir-senha' }),
     });
     await parseResponse(response, 'Não foi possível solicitar a recuperação de senha.');
     return { success: true, message: 'Se o e-mail estiver cadastrado, você receberá as instruções de recuperação.' };
+  }
+  if (area === 'auth' && actionOrId === 'reset-password' && method === 'POST') {
+    const password = String(payload.password || '');
+    if (password.length < 8) throw new Error('A nova senha deve ter no mínimo 8 caracteres.');
+    const session = await currentSession();
+    if (session.flowType !== 'recovery') throw new Error('Abra o link de recuperação enviado ao seu e-mail antes de escolher uma nova senha.');
+    await authFetch('/auth/v1/user', { method: 'PUT', body: JSON.stringify({ password }) });
+    writeSession({ ...session, flowType: undefined });
+    return { success: true, message: 'Sua senha foi atualizada. Você já pode entrar com a nova senha.' };
   }
 
   if (area === 'preferences') {
