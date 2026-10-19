@@ -334,13 +334,21 @@ function getPreferredDays(userId: string): string[] {
 function localDateString(date: Date): string {
   return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
 }
+/**
+ * day_offset indexes available workdays, not calendar days.
+ * This prevents offsets 0 and 1 from collapsing onto the same Monday when today is Sunday.
+ */
 function nextAvailableDate(userId: string, startOffset = 0): string {
   const allowed = getPreferredDays(userId);
+  const targetIndex = Math.max(0, Math.floor(Number(startOffset) || 0));
   const date = new Date();
   date.setHours(12, 0, 0, 0);
-  date.setDate(date.getDate() + Math.max(0, Math.floor(Number(startOffset) || 0)));
-  for (let i = 0; i < 14; i++) {
-    if (allowed.includes(WEEKDAY_KEYS[date.getDay()])) return localDateString(date);
+  let availableIndex = -1;
+  for (let i = 0; i < 35; i++) {
+    if (allowed.includes(WEEKDAY_KEYS[date.getDay()])) {
+      availableIndex++;
+      if (availableIndex === targetIndex) return localDateString(date);
+    }
     date.setDate(date.getDate() + 1);
   }
   return localDateString(date);
@@ -1073,7 +1081,7 @@ app.get('/api/planner', requireAuth, (req: Request, res: Response) => {
   for (let i = 0; i < 7; i++) {
     const d = new Date(today);
     d.setDate(today.getDate() + i);
-    const dateStr = d.toISOString().split('T')[0];
+    const dateStr = localDateString(d);
     const dayMissions = userMissions.filter(m => m.scheduled_date === dateStr);
     const totalMinutes = dayMissions.reduce((acc, m) => acc + (m.estimated_minutes || 0), 0);
     const completedMinutes = dayMissions.filter(m => m.status === 'completed').reduce((acc, m) => acc + (m.estimated_minutes || 0), 0);
@@ -1102,7 +1110,7 @@ app.get('/api/planner', requireAuth, (req: Request, res: Response) => {
 app.post('/api/planner/rebalance', requireAuth, (req: Request, res: Response) => {
   const user = (req as any).user as UserProfile;
   const userPreferences = db.preferences.find(p => p.user_id === user.id) || defaultPreferences;
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = localDateString(new Date());
 
   // Find pending missions scheduled before today or over capacity today
   const overdueMissions = db.missions.filter(
@@ -1114,8 +1122,13 @@ app.post('/api/planner/rebalance', requireAuth, (req: Request, res: Response) =>
   overdueMissions.forEach((m, idx) => {
     const targetOffset = (idx % 3);
     const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + targetOffset);
-    m.scheduled_date = targetDate.toISOString().split('T')[0];
+    targetDate.setHours(12, 0, 0, 0);
+    let moved = 0;
+    while (moved <= targetOffset || !getPreferredDays(user.id).includes(WEEKDAY_KEYS[targetDate.getDay()])) {
+      targetDate.setDate(targetDate.getDate() + 1);
+      if (getPreferredDays(user.id).includes(WEEKDAY_KEYS[targetDate.getDay()])) moved++;
+    }
+    m.scheduled_date = localDateString(targetDate);
     m.updated_at = new Date().toISOString();
     rescheduledCount++;
   });
@@ -1359,7 +1372,7 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
           'Tempo diário disponível: ' + (userPrefs?.daily_available_minutes || 30) + ' minutos.\n' +
           'Horário preferido: ' + (userPrefs?.preferred_time || 'flexible') + '.\n' +
           'Dias DISPONÍVEIS do usuário: ' + getPreferredDays(user.id).join(', ') + '. Não agende tarefas em outros dias da semana; o código validará e moverá datas para dias disponíveis.\nMetas existentes:\n' + (goalsSummary || 'nenhuma') + '\n' +
-          'Distribua tarefas pelos próximos 7 dias. day_offset é inteiro de 0 (hoje) a 6; horário HH:MM; respeite o tempo disponível. ' +
+          'Distribua tarefas pelos próximos dias disponíveis. day_offset é o índice do dia de trabalho disponível: 0 = primeiro dia disponível a partir de hoje, 1 = próximo dia disponível, 2 = seguinte, etc. NÃO trate day_offset como dias corridos; isso evita colocar tarefas em dias errados. Se o usuário pedir segunda a sexta, distribua as tarefas sequencialmente nesses dias úteis disponíveis. Horário HH:MM; respeite o tempo disponível. ' +
           'Se o pedido se refere claramente a uma meta existente, reutilize seu título; caso contrário, dê título curto e específico.\n' +
           'Responda SOMENTE JSON válido: {"goal_title":"...","goal_description":"...","category":"health|learning|career|finance|organization|personal_dev|other","desired_outcome":"...","current_state":"...","steps":[{"title":"...","description":"...","success_criteria":"..."}],"missions":[{"title":"...","instructions":"...","estimated_minutes":25,"priority":"high|medium|low","day_offset":0,"scheduled_time":"09:00","step_index":0}]}. ' +
           'Inclua 3 etapas e 5 a 7 tarefas concretas distribuídas em vários dias.';
