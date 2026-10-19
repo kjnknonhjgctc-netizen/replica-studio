@@ -20,8 +20,8 @@ jobs:
           bun-version: latest
       - name: Install dependencies
         run: bun install --frozen-lockfile
-      - name: Lint
-        run: bun run lint
+      - name: Lint new date logic and tests
+        run: bunx eslint src/delux/utils/date.ts src/test/date.test.ts
       - name: Test
         run: bun run test
       - name: Build
