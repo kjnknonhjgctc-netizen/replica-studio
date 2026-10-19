@@ -120,7 +120,7 @@ export const LoginPage: React.FC = () => {
           <span>
             {mode === 'register'
               ? 'Acesso direto e instantâneo: sem esperar link ou confirmação no e-mail.'
-              : 'Login seguro e rápido direto no seu espaço de metas.'}
+              : 'Entre com seu e-mail e senha para continuar seu progresso.'}
           </span>
         </div>
 

@@ -5,6 +5,7 @@ import { Goal, Mission, UserPreferences } from '../../types';
 import { PageHeader, LoadingSkeleton, ConfirmationDialog } from '../../components/common/CommonComponents';
 import { PrimaryButton, SecondaryButton } from '../../components/common/Buttons';
 import { TaskRow } from '../../components/cards/Cards';
+import { addDaysToDateOnly } from '../../utils/date';
 import { 
   Calendar, 
   Clock, 
@@ -26,14 +27,17 @@ export const PlannerPage: React.FC = () => {
   const [showRebalanceModal, setShowRebalanceModal] = useState(false);
   const [rebalancing, setRebalancing] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const fetchPlanner = async () => {
     try {
       setLoading(true);
+      setLoadError(null);
       const res = await api.getPlanner();
       setPlannerData(res);
     } catch (err) {
       console.error(err);
+      setLoadError('Não foi possível carregar o planejamento. Tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -49,18 +53,18 @@ export const PlannerPage: React.FC = () => {
       await fetchPlanner();
     } catch (err) {
       console.error(err);
+      setToastMessage('Não foi possível atualizar a tarefa. Tente novamente.');
     }
   };
 
   const handleMoveMissionDate = async (mission: Mission, daysOffset: number) => {
     try {
-      const current = new Date(mission.scheduled_date || new Date().toISOString().split('T')[0]);
-      current.setDate(current.getDate() + daysOffset);
-      const newDateStr = current.toISOString().split('T')[0];
+      const newDateStr = addDaysToDateOnly(mission.scheduled_date, daysOffset);
       await api.updateMission(mission.id, { scheduled_date: newDateStr });
       await fetchPlanner();
     } catch (err) {
       console.error(err);
+      setToastMessage('Não foi possível reagendar a tarefa. Tente novamente.');
     }
   };
 
@@ -78,8 +82,21 @@ export const PlannerPage: React.FC = () => {
     }
   };
 
-  if (loading || !plannerData) {
+  if (loading) {
     return <LoadingSkeleton rows={4} />;
+  }
+
+  if (!plannerData) {
+    return (
+      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111622] p-6 text-center">
+        <p role="alert" className="text-sm text-slate-600 dark:text-slate-300 mb-4">
+          {loadError || 'O planejamento não está disponível no momento.'}
+        </p>
+        <SecondaryButton size="sm" onClick={fetchPlanner}>
+          Tentar novamente
+        </SecondaryButton>
+      </div>
+    );
   }
 
   const { days, goals, preferences } = plannerData;

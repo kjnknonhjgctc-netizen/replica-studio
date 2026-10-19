@@ -28,16 +28,6 @@ export const api = {
 
   async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const token = this.getToken();
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      ...(options.headers as Record<string, string> || {})
-    };
-
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-
-    void headers;
     const { handleLocalRequest } = await import('./localServer');
     const body = typeof options.body === 'string' ? JSON.parse(options.body) : undefined;
     const { status, payload } = await handleLocalRequest((options.method || 'GET').toUpperCase(), endpoint, body, token);

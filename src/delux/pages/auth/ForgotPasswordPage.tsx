@@ -11,19 +11,24 @@ export const ForgotPasswordPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [message, setMessage] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
+    setError(null);
     setLoading(true);
 
     try {
       const res = await api.forgotPassword(email);
+      if (!res.success) {
+        setError(res.message);
+        return;
+      }
       setMessage(res.message);
       setSubmitted(true);
     } catch {
-      setMessage('Instruções enviadas para seu endereço de e-mail.');
-      setSubmitted(true);
+      setError('Não foi possível processar a solicitação. Tente novamente mais tarde.');
     } finally {
       setLoading(false);
     }
@@ -38,14 +43,14 @@ export const ForgotPasswordPage: React.FC = () => {
             Recuperação de Acesso
           </h1>
           <p className="text-xs sm:text-sm text-[#777D87] dark:text-slate-400 mt-1 max-w-xs">
-            Digite seu e-mail para receber as orientações de redefinição de senha.
+            Informe seu e-mail. A recuperação real de senha ainda não está configurada neste ambiente de demonstração.
           </p>
         </div>
 
         {submitted ? (
           <div className="text-center p-6 bg-[#F7F9FD] dark:bg-slate-900/60 border border-[#D9E3FC] dark:border-slate-800 rounded-2xl">
             <CheckCircle2 className="w-10 h-10 text-[#356AE6] dark:text-[#60A5FA] mx-auto mb-3" />
-            <p className="text-sm font-semibold text-[#17191D] dark:text-white mb-1">Verifique seu e-mail</p>
+            <p className="text-sm font-semibold text-[#17191D] dark:text-white mb-1">Status da recuperação</p>
             <p className="text-xs text-[#777D87] dark:text-slate-400 leading-relaxed mb-6">{message}</p>
             <Link
               to="/login"
@@ -57,6 +62,11 @@ export const ForgotPasswordPage: React.FC = () => {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div role="alert" className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-300 text-xs">
+                {error}
+              </div>
+            )}
             <FormField
               label="E-mail cadastrado"
               id="email"

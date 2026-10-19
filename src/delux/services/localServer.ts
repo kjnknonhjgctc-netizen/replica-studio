@@ -110,7 +110,7 @@ const defaultGoal: Goal = {
   category: 'learning',
   desired_outcome: 'Falar com confiança por 30 minutos em reuniões e entender podcasts sem legenda.',
   current_state: 'Consigo ler textos básicos, mas travo na conversação e não entendo nativos falando rápido.',
-  target_date: new Date(Date.now() + 90 * 86400000).toISOString().split('T')[0],
+  target_date: localDateString(new Date(Date.now() + 90 * 86400000)),
   priority: 'high',
   status: 'active',
   created_at: new Date(Date.now() - 7 * 86400000).toISOString(),
@@ -167,9 +167,9 @@ const defaultSteps: GoalStep[] = [
   }
 ];
 
-const todayStr = new Date().toISOString().split('T')[0];
-const yesterdayStr = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-const tomorrowStr = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+const todayStr = localDateString(new Date());
+const yesterdayStr = localDateString(new Date(Date.now() - 86400000));
+const tomorrowStr = localDateString(new Date(Date.now() + 86400000));
 
 const defaultMissions: Mission[] = [
   {
@@ -344,7 +344,8 @@ function nextAvailableDate(userId: string, startOffset = 0): string {
   const date = new Date();
   date.setHours(12, 0, 0, 0);
   let availableIndex = -1;
-  for (let i = 0; i < 35; i++) {
+  // A user may have only one available weekday; 370 days safely covers 34 weekly slots.
+  for (let i = 0; i < 370; i++) {
     if (allowed.includes(WEEKDAY_KEYS[date.getDay()])) {
       availableIndex++;
       if (availableIndex === targetIndex) return localDateString(date);
@@ -511,7 +512,7 @@ app.post('/api/auth/complete-onboarding', requireAuth, (req: Request, res: Respo
       current_state: firstGoal.current_state || '',
       priority: firstGoal.priority || 'high',
       status: 'active',
-      target_date: firstGoal.target_date || new Date(Date.now() + 60 * 86400000).toISOString().split('T')[0],
+      target_date: firstGoal.target_date || localDateString(new Date(Date.now() + 60 * 86400000)),
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };
@@ -604,14 +605,11 @@ app.put('/api/auth/profile', requireAuth, (req: Request, res: Response) => {
 
 // Forgot password mock/token
 app.post('/api/auth/forgot-password', (req: Request, res: Response) => {
-  const { email } = req.body;
-  const exists = db.profiles.some(p => p.email.toLowerCase() === (email || '').trim().toLowerCase());
   return res.json({
-    success: true,
-    message: exists
-      ? 'Um link de recuperação seguro foi enviado para seu e-mail (em ambiente de teste, sua senha provisória é 123456).'
-      : 'Se o e-mail estiver cadastrado, as instruções serão encaminhadas.'
+    success: false,
+    message: 'A recuperação de senha não está configurada neste ambiente de demonstração. Nenhuma senha foi alterada.'
   });
+
 });
 
 // ========================
@@ -783,7 +781,7 @@ app.post('/api/goals', requireAuth, (req: Request, res: Response) => {
         title: m.title,
         instructions: m.instructions || '',
         estimated_minutes: m.estimated_minutes || 30,
-        scheduled_date: m.scheduled_date || new Date().toISOString().split('T')[0],
+        scheduled_date: m.scheduled_date || localDateString(new Date()),
         scheduled_time: m.scheduled_time || '09:00',
         priority: m.priority || 'medium',
         status: 'pending',
@@ -967,7 +965,7 @@ app.post('/api/missions', requireAuth, (req: Request, res: Response) => {
     title: title.trim(),
     instructions: instructions || '',
     estimated_minutes: estimated_minutes ? parseInt(estimated_minutes, 10) : 30,
-    scheduled_date: scheduled_date || new Date().toISOString().split('T')[0],
+    scheduled_date: scheduled_date || localDateString(new Date()),
     scheduled_time: scheduled_time || undefined,
     priority: priority || 'medium',
     status: 'pending',
@@ -1450,12 +1448,30 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
       db.steps.push(...createdSteps);
 
       const existingMissionCount = db.missions.filter(m => m.goal_id === goal.id && m.user_id === user.id).length;
+      const dailyCapacity = Math.max(5, Number(userPrefs?.daily_available_minutes) || 30);
+      const plannedMinutesByDate: Record<string, number> = {};
+      db.missions
+        .filter(m => m.user_id === user.id && m.scheduled_date && ['pending', 'in_progress', 'postponed'].includes(m.status))
+        .forEach(m => {
+          const date = m.scheduled_date as string;
+          plannedMinutesByDate[date] = (plannedMinutesByDate[date] || 0) + Math.max(0, Number(m.estimated_minutes) || 0);
+        });
       const createdMissions: Mission[] = (Array.isArray(plan.missions) ? plan.missions : []).slice(0, 14).map((m: any, idx: number) => {
         const stepIndex = Number.isInteger(Number(m.step_index)) ? Number(m.step_index) : 0;
         const step = createdSteps[stepIndex] || createdSteps[0];
-        const duration = Math.max(5, Math.min(180, Number(m.estimated_minutes) || (userPrefs?.daily_available_minutes || 30)));
+        const requestedDuration = Number(m.estimated_minutes) || dailyCapacity;
+        const duration = Math.max(5, Math.min(180, dailyCapacity, requestedDuration));
         const priority = ['low', 'medium', 'high'].includes(m.priority) ? m.priority : 'medium';
-        const time = /^([01]\d|2[0-3]):[0-5]\d$/.test(String(m.scheduled_time || '')) ? String(m.scheduled_time) : '09:00';
+        const time = /^([01]\\d|2[0-3]):[0-5]\\d$/.test(String(m.scheduled_time || '')) ? String(m.scheduled_time) : '09:00';
+        let dayOffset = Math.max(0, Math.min(34, Math.floor(Number(m.day_offset) || 0)));
+        let scheduledDate = nextAvailableDate(user.id, dayOffset);
+        let attempts = 0;
+        while ((plannedMinutesByDate[scheduledDate] || 0) + duration > dailyCapacity && attempts < 35) {
+          dayOffset += 1;
+          scheduledDate = nextAvailableDate(user.id, dayOffset);
+          attempts += 1;
+        }
+        plannedMinutesByDate[scheduledDate] = (plannedMinutesByDate[scheduledDate] || 0) + duration;
         return {
           id: 'mis_' + Date.now() + '_' + idx + '_' + Math.random().toString(36).slice(2, 5),
           goal_id: goal.id,
@@ -1464,7 +1480,7 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
           title: String(m.title || ('Tarefa ' + (idx + 1))).trim(),
           instructions: String(m.instructions || '').trim(),
           estimated_minutes: duration,
-          scheduled_date: nextAvailableDate(user.id, Math.max(0, Math.min(6, Math.floor(Number(m.day_offset) || 0)))),
+          scheduled_date: scheduledDate,
           scheduled_time: time,
           priority,
           status: 'pending',
