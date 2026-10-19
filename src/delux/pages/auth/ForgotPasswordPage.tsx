@@ -43,7 +43,7 @@ export const ForgotPasswordPage: React.FC = () => {
             Recuperação de Acesso
           </h1>
           <p className="text-xs sm:text-sm text-[#777D87] dark:text-slate-400 mt-1 max-w-xs">
-            Informe seu e-mail. A recuperação real de senha ainda não está configurada neste ambiente de demonstração.
+            Informe seu e-mail e enviaremos um link seguro para criar uma nova senha.
           </p>
         </div>
 
