@@ -31,8 +31,8 @@ export const LoginPage: React.FC = () => {
       return;
     }
 
-    if (cleanPassword.length < 4) {
-      setError('A senha deve ter no mínimo 4 caracteres.');
+    if (mode === 'register' && cleanPassword.length < 8) {
+      setError('A senha deve ter no mínimo 8 caracteres.');
       return;
     }
 
@@ -77,7 +77,7 @@ export const LoginPage: React.FC = () => {
           </h1>
           <p className="text-xs sm:text-sm text-[#777D87] dark:text-slate-400 mt-1 max-w-xs">
             {mode === 'register'
-              ? 'Acesso imediato com e-mail e senha. Sem confirmação de e-mail.'
+              ? 'Crie sua conta para salvar seus dados com segurança.'
               : 'Digite seu e-mail e senha para continuar seu progresso.'}
           </p>
         </div>
@@ -119,7 +119,7 @@ export const LoginPage: React.FC = () => {
           <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
           <span>
             {mode === 'register'
-              ? 'Acesso direto e instantâneo: sem esperar link ou confirmação no e-mail.'
+              ? 'A conta pode pedir confirmação por e-mail, conforme as configurações do projeto.'
               : 'Entre com seu e-mail e senha para continuar seu progresso.'}
           </span>
         </div>
