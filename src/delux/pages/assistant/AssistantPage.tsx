@@ -265,6 +265,7 @@ export const AssistantPage: React.FC = () => {
     }
 
     return () => {
+      if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         window.speechSynthesis.removeEventListener?.('voiceschanged', refreshSpeechVoices);
@@ -1006,7 +1007,7 @@ export const AssistantPage: React.FC = () => {
                               ) : (
                                 <>
                                   <Volume2 className="w-3.5 h-3.5" />
-                                  <span className="text-[11px]">Ouvir</span>
+                                  <span className="text-[11px]">Ouvir · IA</span>
                                 </>
                               )}
                             </button>
