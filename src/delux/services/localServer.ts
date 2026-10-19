@@ -2,6 +2,7 @@
 // Browser-side port of the original Express server. Data persists in localStorage;
 // AI calls go through a server function.
 import { generateAi } from '@/delux/ai.functions';
+import { buildAssistantContext, recentConversation } from '../ai/context';
 import {
   Goal, GoalDiagnostic, GoalStep, Mission, UserProfile, UserPreferences, ActivityEvent,
   AssistantConversation, AssistantMessage, AppNotification, Subscription
@@ -20,7 +21,7 @@ const genAI = {
   models: {
     async generateContent(opts: any): Promise<{ text: string }> {
       const prompt = opts.contents.map((c: any) => c.parts.map((p: any) => p.text).join('\n')).join('\n');
-      const r = await generateAi({ data: { prompt, json: opts.config?.responseMimeType === 'application/json' } });
+      const r = await generateAi({ data: { prompt, json: opts.config?.responseMimeType === 'application/json', history: opts.history || [], context: opts.context || '' } });
       return { text: r.text };
     }
   }
@@ -1316,20 +1317,13 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
   const asksForPlan = /\b(crie|cria|criar|monte|monta|montar|faca|faz|fazer|planeje|planeja|planejar|organize|organiza|organizar|estruture|estrutura|estruturar|gere|gera|gerar|prepare|prepara|preparar|quero|preciso)\b.{0,70}\b(plano|planejamento|cronograma|rotina|agenda|semana|missao|tarefas)\b/.test(normalizedMessage)
     || /\b(plano|cronograma|rotina|agenda semanal)\b.{0,55}\b(para mim|pra mim|da semana|semanal|de estudos|de treino|de trabalho)\b/.test(normalizedMessage);
 
-  const systemPrompt = [
-    'Você é o Assistente Delux: um assistente de conhecimento geral de altíssimo nível, multidisciplinar, rigoroso, curioso e prático. Ajude bem em qualquer assunto que o usuário trouxer, não apenas produtividade ou desenvolvimento pessoal.',
-    'Adote a perspectiva de um especialista experiente no domínio relevante, usando conhecimento técnico profundo quando necessário e explicações simples quando forem mais úteis. Nunca finja possuir diplomas, experiência pessoal ou acesso a informações que não tem.',
-    'Entenda primeiro o objetivo real da pergunta. Analise cuidadosamente o contexto, conecte conceitos relevantes, confira a lógica e os cálculos e responda de forma precisa, organizada e diretamente útil.',
-    'Não invente fatos, fontes, citações, estatísticas ou resultados. Quando houver incerteza, informação faltante ou conhecimento possivelmente desatualizado, diga isso com clareza. Separe fatos, estimativas e hipóteses.',
-    'Adapte a profundidade ao pedido: seja conciso em perguntas simples e detalhado em problemas complexos. Use exemplos, analogias, passos numerados, tabelas ou código apenas quando melhorarem a resposta.',
-    'Responda no idioma do usuário e acompanhe seu tom com naturalidade, mantendo respeito, clareza e profissionalismo. Não force o tema de produtividade quando a pessoa estiver perguntando sobre outro assunto.',
-    'Em programação, priorize soluções corretas, seguras e testáveis. Em matemática, valide os cálculos. Em assuntos atuais, indique limites de atualidade quando não houver verificação em tempo real. Em saúde, direito e finanças, seja cuidadoso e contextualize riscos e limites.',
-    'Quando o usuário pedir um plano ou ações dentro do Delux, use o contexto pessoal abaixo para personalizar a ajuda. Não diga que salvou ou alterou dados a menos que a operação tenha sido confirmada.',
-    'Nome do usuário: ' + (user.full_name || 'não informado') + '.',
-    'Estilo preferido: ' + (userPrefs?.assistant_response_style || 'progressivo') + '.',
-    'Tempo diário disponível: ' + (userPrefs?.daily_available_minutes || 30) + ' minutos.',
-    'Metas ativas:\n' + (goalsSummary || 'Nenhuma meta ativa.') + '\nMissões pendentes:\n' + (missionsSummary || 'Nenhuma missão pendente.')
-  ].join('\n');
+  const personalContext = JSON.stringify(buildAssistantContext({ userId: user.id, timezone: user.timezone, preferences: userPrefs, goals: db.goals, diagnostics: db.diagnostics, steps: db.steps, missions: db.missions })).slice(0, 20000);
+  const history = recentConversation(db.messages.filter(m => m.id !== userMsg.id), user.id, conv.id);
+  const failChat = (error: any) => {
+    db.messages = db.messages.filter(m => m.id !== userMsg.id);
+    saveDb(db);
+    return res.status(502).json({ error: error?.message || 'Não foi possível obter a resposta do assistente.' });
+  };
 
   if (asksForPlan) {
     const fallbackTitle = message.trim()
@@ -1368,6 +1362,7 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
         const response = await genAI.models.generateContent({
           model: 'gemini-3.8-flash',
           contents: [{ role: 'user', parts: [{ text: planPrompt }] }],
+          context: personalContext, history,
           config: { responseMimeType: 'application/json' }
         });
         if (response.text) {
@@ -1378,7 +1373,7 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
           }
         }
       } catch (planErr) {
-        console.error('Falha ao gerar plano estruturado; usando plano de contingência:', planErr);
+        return failChat(planErr);
       }
     }
 
@@ -1421,7 +1416,7 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
       const existingStepCount = db.steps.filter(s => s.goal_id === goal.id && s.user_id === user.id).length;
       const createdSteps: GoalStep[] = (Array.isArray(plan.steps) ? plan.steps : []).slice(0, 5).map((st: any, idx: number) => ({
         id: 'step_' + Date.now() + '_' + idx + '_' + Math.random().toString(36).slice(2, 5),
-        goal_id: goal!.id,
+        goal_id: goal.id,
         user_id: user.id,
         title: String(st.title || ('Etapa ' + (idx + 1))).trim(),
         description: String(st.description || '').trim(),
@@ -1442,7 +1437,7 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
         const time = /^([01]\d|2[0-3]):[0-5]\d$/.test(String(m.scheduled_time || '')) ? String(m.scheduled_time) : '09:00';
         return {
           id: 'mis_' + Date.now() + '_' + idx + '_' + Math.random().toString(36).slice(2, 5),
-          goal_id: goal!.id,
+          goal_id: goal.id,
           goal_step_id: step?.id,
           user_id: user.id,
           title: String(m.title || ('Tarefa ' + (idx + 1))).trim(),
@@ -1471,7 +1466,8 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
       };
       const grouped: Record<string, Mission[]> = {};
       createdMissions.forEach(mission => {
-        const date = mission.scheduled_date!;
+        const date = mission.scheduled_date;
+        if (!date) return;
         if (!grouped[date]) grouped[date] = [];
         grouped[date].push(mission);
       });
@@ -1487,12 +1483,12 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
     try {
       const response = await genAI.models.generateContent({
         model: 'gemini-3.8-flash',
-        contents: [{ role: 'user', parts: [{ text: systemPrompt + '\n\nUsuário diz:\n' + message.trim() + '\n\nNão afirme que criou ou salvou dados se o sistema não confirmou.' }] }]
+        contents: [{ role: 'user', parts: [{ text: message.trim() }] }],
+        context: personalContext, history
       });
       assistantContent = response.text || 'Estou à disposição para apoiar seus objetivos no Delux. Como posso ajudar com sua próxima missão?';
     } catch (aiErr: any) {
-      console.error('Error invoking Gemini in /api/assistant/chat:', aiErr);
-      assistantContent = getDeterministicAssistantResponse(message.trim(), user.full_name, userGoals, userMissions);
+      return failChat(aiErr);
     }
   } else {
     assistantContent = getDeterministicAssistantResponse(message.trim(), user.full_name, userGoals, userMissions);
@@ -1573,6 +1569,8 @@ Como prefere avançar hoje?`;
 
 // Generate smart plan API
 app.post('/api/assistant/generate-plan', requireAuth, async (req: Request, res: Response) => {
+  const user = req.user as UserProfile;
+  const personalContext = JSON.stringify(buildAssistantContext({ userId: user.id, timezone: user.timezone, preferences: db.preferences.find(p => p.user_id === user.id), goals: db.goals, diagnostics: db.diagnostics, steps: db.steps, missions: db.missions })).slice(0, 20000);
   const { title, current_state, desired_outcome, available_minutes } = req.body;
 
   if (!title) {
@@ -1642,6 +1640,7 @@ Forneça exatamente 3 etapas progressivas e 3 missões iniciais práticas.`;
       const response = await genAI.models.generateContent({
         model: 'gemini-3.8-flash',
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        context: personalContext,
         config: {
           responseMimeType: 'application/json'
         }
@@ -1653,7 +1652,7 @@ Forneça exatamente 3 etapas progressivas e 3 missões iniciais práticas.`;
         if (parsed.missions && Array.isArray(parsed.missions)) generatedMissions = parsed.missions;
       }
     } catch (e) {
-      console.warn('AI plan generation error, using curated plan:', e);
+      return res.status(502).json({ error: e?.message || 'Não foi possível gerar o plano.' });
     }
   }
 
