@@ -5,6 +5,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { LoginPage } from './pages/auth/LoginPage';
 import { RegisterPage } from './pages/auth/RegisterPage';
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
+import { ResetPasswordPage } from './pages/auth/ResetPasswordPage';
 import { OnboardingPage } from './pages/onboarding/OnboardingPage';
 import { AppShell } from './components/layout/AppShell';
 import { DashboardPage } from './pages/dashboard/DashboardPage';
@@ -85,6 +86,7 @@ export default function App() {
             }
           />
           <Route path="/recuperar-senha" element={<ForgotPasswordPage />} />
+          <Route path="/redefinir-senha" element={<ResetPasswordPage />} />
 
           {/* Onboarding Flow */}
           <Route
