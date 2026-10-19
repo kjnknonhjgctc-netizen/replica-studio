@@ -10,5 +10,8 @@ describe('Assistant action intent', () => {
   });
   it('respects a request not to save or create a plan', () => {
     expect(requestsSavedPlan('Quero entender um plano, sem criar tarefas')).toBe(false);
+    expect(requestsSavedPlan('Não quero criar tarefas, só entender como funciona')).toBe(false);
+    expect(requestsSavedPlan('Não crie um plano, só me explique')).toBe(false);
+    expect(requestsSavedPlan('Não precisa montar um cronograma agora')).toBe(false);
   });
 });
