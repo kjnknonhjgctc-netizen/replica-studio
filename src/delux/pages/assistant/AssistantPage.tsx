@@ -401,10 +401,11 @@ export const AssistantPage: React.FC = () => {
         conversation_id: currentConvId || '',
         user_id: '',
         role: 'assistant',
-        content: 'Desculpe, não consegui processar a resposta no momento. Por favor, tente novamente.',
+        content: err?.message || 'Não foi possível obter a resposta do assistente.',
         created_at: new Date().toISOString()
       };
-      setMessages(prev => [...prev, errorMsg]);
+      setMessages(prev => [...prev.filter(m => m.id !== optimisticUserMsg.id), errorMsg]);
+      setInputMessage(text);
     } finally {
       setLoading(false);
     }
