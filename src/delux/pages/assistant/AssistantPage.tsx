@@ -395,6 +395,9 @@ export const AssistantPage: React.FC = () => {
         res.userMessage,
         res.assistantMessage
       ]);
+      if (res.action?.type === 'navigate' && typeof res.action.path === 'string') {
+        window.setTimeout(() => navigate(res.action.path), 650);
+      }
     } catch (err: any) {
       const errorMsg: AssistantMessage = {
         id: `err_${Date.now()}`,
