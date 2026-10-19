@@ -2,8 +2,9 @@ export function requestsSavedPlan(message: string) {
   const text = message.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   if (/\b(?:nao|nunca)\s+(?:(?:quero|preciso|vou|precisa|deve|deveria|pode|poderia)\s+)?(?:crie|criar|cria|salve|salvar|salva|registre|registrar|registra|monte|montar|monta|gere|gerar|gera|faca|fazer|planeje|planejar|organize|organizar|execute|executar)\b/.test(text)) return false;
   if (/\bsem\s+(?:criar|salvar|registrar|montar|gerar|fazer|planejar|organizar)\b/.test(text)) return false;
-  return /\b(crie|cria|criar|monte|monta|montar|faca|faz|fazer|planeje|planeja|planejar|organize|organiza|organizar|estruture|estrutura|estruturar|gere|gera|gerar|prepare|prepara|preparar|quero|preciso)\b.{0,70}\b(plano|planejamento|cronograma|rotina|agenda|missoes?|tarefas)\b/.test(text)
-    || /\b(organize|organiza|organizar|planeje|planeja|planejar)\b.{0,30}\b(minha semana|meu dia)\b/.test(text);
+  return /\b(crie|cria|criar|monte|monta|montar|faca|faz|fazer|planeje|planeja|planejar|organize|organiza|organizar|estruture|estrutura|estruturar|gere|gera|gerar|prepare|prepara|preparar)\b.{0,70}\b(plano|planejamento|cronograma|rotina|agenda|missoes?|tarefas)\b/.test(text)
+    || /\b(?:quero|preciso)\s+(?:de\s+)?(?:um|uma|minha|minha|meu)\s+(?:plano|planejamento|cronograma|rotina|agenda|missoes?|tarefas)\b/.test(text)
+    || /\b(?:organize|organiza|organizar|planeje|planeja|planejar)\b.{0,30}\b(minha semana|meu dia)\b/.test(text);
 }
 
 /**
