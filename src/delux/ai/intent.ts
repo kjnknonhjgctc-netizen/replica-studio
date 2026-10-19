@@ -11,7 +11,7 @@ export function requestsSavedPlan(message: string) {
  */
 export function resolveNavigationIntent(message: string): { type: 'navigate'; path: string; label: string } | null {
   const text = message.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
-  const asksToNavigate = /\b(abre|abrir|mostra|mostrar|vai|ir|va|acessa|acessar|entrar|navega|navegar|leva|levar|volta|voltar|manda|quero ver|quero acessar|me leva|me manda)\b/.test(text);
+  const asksToNavigate = /\b(abre|abrir|mostra|mostrar|vai|ir|va|acessa|acessar|entrar|navega|navegar|leva|levar|volta|voltar|manda|muda|mudar|troca|trocar|coloca|colocar|quero ver|quero acessar|me leva|me manda|me coloca)\b/.test(text);
   if (!asksToNavigate) return null;
 
   if (/\b(assinatura|premium|mensalidade|pagamento|cobranca|plano pago|meu plano atual)\b/.test(text)) {
