@@ -507,14 +507,6 @@ export const AssistantPage: React.FC = () => {
 
   return (
     <div className="flex h-full w-full min-h-0 bg-[#FAFAFC] dark:bg-[#0B0E14] text-[#0F172A] dark:text-[#F1F5F9] overflow-hidden select-text relative transition-colors">
-      {/* Dynamic Ambient Apple Intelligence Aura in background */}
-      <div 
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] sm:w-[700px] h-[260px] sm:h-[350px] pointer-events-none opacity-40 dark:opacity-25 blur-3xl z-0"
-        style={{
-          background: 'radial-gradient(ellipse at 50% 0%, rgba(78, 86, 255, 0.22) 0%, rgba(37, 99, 235, 0.15) 45%, rgba(112, 51, 255, 0.08) 70%, transparent 100%)'
-        }}
-      />
-
       {/* Mobile Backdrop Overlay for History Drawer */}
       <AnimatePresence>
         {showHistory && (
@@ -674,9 +666,6 @@ export const AssistantPage: React.FC = () => {
                 <h1 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white tracking-tight truncate">
                   Assistente Delux
                 </h1>
-                <span className="hidden xs:inline-flex text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-gradient-to-r from-[#7033FF]/15 via-[#4E56FF]/15 to-[#2563EB]/15 text-[#4E56FF] dark:text-[#889BFF] border border-[#4E56FF]/30 shrink-0">
-                  Apple Motion IA
-                </span>
 
                 {loading && (
                   <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/50 text-[#2563EB] dark:text-[#60A5FA] border border-blue-200 dark:border-blue-800 animate-pulse hidden sm:inline-flex items-center gap-1 shrink-0">
@@ -685,14 +674,6 @@ export const AssistantPage: React.FC = () => {
                   </span>
                 )}
               </div>
-              <span className="hidden md:flex text-[11px] text-slate-500 dark:text-slate-400 font-medium items-center gap-1.5 mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
-                Conectado aos seus objetivos, rotina e hábitos
-              </span>
-              <span className="md:hidden text-[10px] text-[#10B981] font-semibold flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
-                Online
-              </span>
             </div>
           </div>
 
@@ -714,96 +695,44 @@ export const AssistantPage: React.FC = () => {
         {/* Scrollable Chat Area */}
         <div className="flex-1 min-h-0 overflow-y-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6 space-y-4">
           {messages.length === 0 ? (
-            /* ========================================================
-               EMPTY HERO WORKSTATION - RESPONSIVE APPLE MOTION VIEW
-               ======================================================== */
-            <div className="flex flex-col items-center justify-center max-w-4xl xl:max-w-5xl w-full mx-auto text-center py-2 sm:py-4">
-              {/* Central Character Avatar with Apple Motion Ambient Radiance */}
-              <div className="mb-3 sm:mb-4 relative">
-                <div className="sm:hidden">
-                  <AssistantOrb
-                    size="lg"
-                    isSpeaking={false}
-                    isGenerating={loading}
-                  />
-                </div>
-                <div className="hidden sm:block">
-                  <AssistantOrb
-                    size="xl"
-                    isSpeaking={false}
-                    isGenerating={loading}
-                  />
-                </div>
+            <div className="flex min-h-full flex-col items-center justify-center max-w-2xl w-full mx-auto text-center py-6 sm:py-10">
+              <div className="mb-4">
+                <AssistantOrb size="lg" isSpeaking={false} isGenerating={loading} />
               </div>
-
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-gradient-to-r from-[#7033FF]/10 via-[#4E56FF]/10 to-[#2563EB]/10 border border-[#4E56FF]/25 text-[#4E56FF] dark:text-[#889BFF] text-[10px] sm:text-[11px] font-bold mb-1.5 sm:mb-2 shadow-2xs">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Inteligência Cognitiva & Estratégica Delux</span>
-              </div>
-
-              <h2 className="text-lg sm:text-2xl font-extrabold text-slate-900 dark:text-white mb-1 tracking-tight">
-                Em que posso acelerar seu progresso hoje?
+              <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 dark:text-white mb-2">
+                Oi! Como posso te ajudar?
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-4 sm:mb-6 max-w-xl">
-                Seu consultor executivo pessoal: estruture objetivos, elimine distrações, construa hábitos e planeje semanas inteiras com clareza.
+              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-md mb-7">
+                Vamos transformar o que você tem em mente em um próximo passo simples.
               </p>
-
-              {/* Mode Selector Tabs (Horizontal Swipe on Mobile) */}
-              <div className="w-full flex items-center gap-1.5 sm:gap-2 overflow-x-auto p-1 sm:p-1.5 bg-white/90 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-xl sm:rounded-2xl shadow-2xs mb-4 sm:mb-6 no-scrollbar touch-pan-x">
-                {MODES.map(mode => {
-                  const Icon = mode.icon;
-                  const isSelected = selectedMode === mode.id;
-                  return (
-                    <button
-                      key={mode.id}
-                      onClick={() => setSelectedMode(mode.id)}
-                      className={`px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-lg sm:rounded-xl text-xs font-semibold flex items-center gap-1.5 sm:gap-2 transition-all cursor-pointer whitespace-nowrap shrink-0 active:scale-95 ${
-                        isSelected
-                          ? 'bg-gradient-to-r from-[#7033FF] via-[#4E56FF] to-[#2563EB] text-white shadow-xs'
-                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/60'
-                      }`}
-                    >
-                      <Icon className="w-3.5 h-3.5" />
-                      <span>{mode.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Prompt Grid for Selected Mode (1-col on mobile, 2-col on sm) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3.5 w-full text-left">
-                {PROMPT_CARDS_BY_MODE[selectedMode].map((card, idx) => (
-                  <motion.button
-                    key={idx}
-                    onClick={() => handleSendMessage(card.prompt)}
-                    whileHover={{ scale: 1.015, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ type: 'spring', stiffness: 420, damping: 26 }}
-                    className="group p-3.5 sm:p-4 bg-white dark:bg-[#111622] hover:bg-slate-50 dark:hover:bg-slate-800/70 border border-slate-200 dark:border-slate-800 hover:border-[#4E56FF]/40 dark:hover:border-[#4E56FF]/60 rounded-xl sm:rounded-2xl shadow-2xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between active:scale-[0.98]"
-                  >
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-gradient-to-br from-[#EEF2FF] to-[#F5F3FF] dark:from-slate-800 dark:to-slate-800 flex items-center justify-center border border-[#E0E7FF] dark:border-slate-700 shrink-0">
-                          {card.icon}
-                        </div>
-                        <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                          {card.tag}
-                        </span>
-                      </div>
-                      <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#2563EB] dark:group-hover:text-[#60A5FA] transition-colors mb-0.5 sm:mb-1">
-                        {card.title}
-                      </h3>
-                      <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 sm:line-clamp-none">
-                        {card.desc}
-                      </p>
-                    </div>
-
-                    <div className="flex items-center gap-1 text-[11px] font-semibold text-[#4E56FF] dark:text-[#889BFF] mt-2.5 pt-2 sm:mt-3 sm:pt-2.5 border-t border-slate-100 dark:border-slate-800 group-hover:gap-1.5 transition-all">
-                      <span>Executar consulta</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
-                    </div>
-                  </motion.button>
-                ))}
+              <div className="w-full max-w-lg flex flex-col gap-2 text-left">
+                <button
+                  type="button"
+                  onClick={() => handleSendMessage('Me ajude a definir os próximos passos do meu principal objetivo.')}
+                  className="group flex items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-[#111622] px-4 py-3 text-sm text-slate-700 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-white dark:hover:bg-slate-800 transition-colors"
+                >
+                  <Target className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-[#4E56FF]" />
+                  <span className="flex-1">Organizar meu objetivo</span>
+                  <ChevronRight className="w-4 h-4 shrink-0 text-slate-400" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSendMessage('Me ajude a escolher minhas prioridades de hoje.')}
+                  className="group flex items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-[#111622] px-4 py-3 text-sm text-slate-700 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-white dark:hover:bg-slate-800 transition-colors"
+                >
+                  <Zap className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-[#4E56FF]" />
+                  <span className="flex-1">Escolher minhas prioridades</span>
+                  <ChevronRight className="w-4 h-4 shrink-0 text-slate-400" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSendMessage('Me ajude a criar um hábito simples que eu consiga manter.')}
+                  className="group flex items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-[#111622] px-4 py-3 text-sm text-slate-700 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-white dark:hover:bg-slate-800 transition-colors"
+                >
+                  <Flame className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-[#4E56FF]" />
+                  <span className="flex-1">Criar um hábito possível</span>
+                  <ChevronRight className="w-4 h-4 shrink-0 text-slate-400" />
+                </button>
               </div>
             </div>
           ) : (
@@ -853,9 +782,6 @@ export const AssistantPage: React.FC = () => {
                       {!isUser && (
                         <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-slate-100 dark:border-slate-800 text-[11px]">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-[#7033FF]/10 to-[#2563EB]/10 text-[#4E56FF] dark:text-[#889BFF]">
-                              Delux AI
-                            </span>
                             <span className="text-[10px] text-slate-400 dark:text-slate-500">
                               {new Date(msg.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                             </span>
@@ -920,7 +846,7 @@ export const AssistantPage: React.FC = () => {
         {/* ========================================================
             FIXED CHAT COMPOSER AT BOTTOM - APPLE STUDIO AESTHETIC
            ======================================================== */}
-        <div className="p-2.5 sm:p-4 border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-[#0F141E]/95 backdrop-blur-xl shrink-0 z-30 shadow-[0_-4px_24px_rgba(0,0,0,0.04)] transition-colors">
+        <div className="p-2.5 sm:p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0F141E] shrink-0 z-30 transition-colors">
           <div className="w-full max-w-4xl xl:max-w-5xl mx-auto space-y-2">
             {/* Listening indicator banner */}
             {isListening && (
@@ -957,11 +883,7 @@ export const AssistantPage: React.FC = () => {
             {/* Quick Follow-up Chips when Conversation is Active */}
             {messages.length > 0 && !loading && (
               <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 no-scrollbar text-xs touch-pan-x">
-                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider shrink-0 flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-[#4E56FF]" />
-                  <span className="hidden xs:inline">Sugestões:</span>
-                </span>
-                {QUICK_FOLLOW_UPS.map((chip, idx) => (
+                {QUICK_FOLLOW_UPS.slice(0, 2).map((chip, idx) => (
                   <button
                     key={idx}
                     type="button"
@@ -980,7 +902,7 @@ export const AssistantPage: React.FC = () => {
                 e.preventDefault();
                 handleSendMessage();
               }}
-              className="relative flex items-end gap-1.5 sm:gap-2 p-1.5 sm:p-2 bg-white dark:bg-slate-800/90 border-2 border-slate-300 dark:border-slate-700 focus-within:border-[#4E56FF] dark:focus-within:border-[#4E56FF] focus-within:ring-2 focus-within:ring-[#4E56FF]/20 rounded-2xl shadow-sm transition-all"
+              className="relative flex items-end gap-1.5 sm:gap-2 p-1.5 sm:p-2 bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 focus-within:border-[#4E56FF] rounded-2xl transition-colors"
             >
               {/* Voice dictation microphone button */}
               {speechSupported && (
