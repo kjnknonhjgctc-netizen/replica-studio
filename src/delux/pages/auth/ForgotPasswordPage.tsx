@@ -62,6 +62,11 @@ export const ForgotPasswordPage: React.FC = () => {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div role="alert" className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-300 text-xs">
+                {error}
+              </div>
+            )}
             <FormField
               label="E-mail cadastrado"
               id="email"
