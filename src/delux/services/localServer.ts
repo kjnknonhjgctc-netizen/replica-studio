@@ -1450,12 +1450,24 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
       db.steps.push(...createdSteps);
 
       const existingMissionCount = db.missions.filter(m => m.goal_id === goal.id && m.user_id === user.id).length;
+      const dailyCapacity = Math.max(5, Number(userPrefs?.daily_available_minutes) || 30);
+      const plannedMinutesByDate: Record<string, number> = {};
       const createdMissions: Mission[] = (Array.isArray(plan.missions) ? plan.missions : []).slice(0, 14).map((m: any, idx: number) => {
         const stepIndex = Number.isInteger(Number(m.step_index)) ? Number(m.step_index) : 0;
         const step = createdSteps[stepIndex] || createdSteps[0];
-        const duration = Math.max(5, Math.min(180, Number(m.estimated_minutes) || (userPrefs?.daily_available_minutes || 30)));
+        const requestedDuration = Number(m.estimated_minutes) || dailyCapacity;
+        const duration = Math.max(5, Math.min(180, dailyCapacity, requestedDuration));
         const priority = ['low', 'medium', 'high'].includes(m.priority) ? m.priority : 'medium';
-        const time = /^([01]\d|2[0-3]):[0-5]\d$/.test(String(m.scheduled_time || '')) ? String(m.scheduled_time) : '09:00';
+        const time = /^([01]\\d|2[0-3]):[0-5]\\d$/.test(String(m.scheduled_time || '')) ? String(m.scheduled_time) : '09:00';
+        let dayOffset = Math.max(0, Math.min(34, Math.floor(Number(m.day_offset) || 0)));
+        let scheduledDate = nextAvailableDate(user.id, dayOffset);
+        let attempts = 0;
+        while ((plannedMinutesByDate[scheduledDate] || 0) + duration > dailyCapacity && attempts < 35) {
+          dayOffset += 1;
+          scheduledDate = nextAvailableDate(user.id, dayOffset);
+          attempts += 1;
+        }
+        plannedMinutesByDate[scheduledDate] = (plannedMinutesByDate[scheduledDate] || 0) + duration;
         return {
           id: 'mis_' + Date.now() + '_' + idx + '_' + Math.random().toString(36).slice(2, 5),
           goal_id: goal.id,
@@ -1464,7 +1476,7 @@ app.post('/api/assistant/chat', requireAuth, async (req: Request, res: Response)
           title: String(m.title || ('Tarefa ' + (idx + 1))).trim(),
           instructions: String(m.instructions || '').trim(),
           estimated_minutes: duration,
-          scheduled_date: nextAvailableDate(user.id, Math.max(0, Math.min(6, Math.floor(Number(m.day_offset) || 0)))),
+          scheduled_date: scheduledDate,
           scheduled_time: time,
           priority,
           status: 'pending',
