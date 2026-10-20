@@ -20,10 +20,10 @@ const DEFAULT_NOTIFICATION_PREFERENCES = {
 };
 
 function config() {
-  const url = import.meta.env.VITE_SUPABASE_URL?.trim().replace(/\/+$/, '');
+  const url = import.meta.env['VITE_SUPABASE_URL']?.trim().replace(/\/+$/, '');
   // The connected Supabase project provides a publishable key (sb_publishable_...);
   // VITE_SUPABASE_ANON_KEY is kept as a fallback for legacy JWT anon keys.
-  const key = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY)?.trim();
+  const key = (import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY'] || import.meta.env['VITE_SUPABASE_ANON_KEY'])?.trim();
   if (!url || !key) {
     throw new Error('Supabase ainda não está configurado neste ambiente. Defina VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY nas variáveis do Lovable.');
   }
