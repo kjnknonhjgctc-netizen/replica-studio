@@ -346,7 +346,7 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
   return { ...goal, diagnostic: payload.diagnostic, steps: createdSteps, missions: createdMissions };
 }
 
-function cleanObject(value: any, forbidden: string[] = ['id', 'user_id', 'created_at', 'updated_at']) {
+function cleanObject(value: any, forbidden: string[] = ['id', 'user_id', 'created_at', 'updated_at']): any {
   const result: Record<string, any> = {};
   for (const [key, item] of Object.entries(value || {})) {
     if (!forbidden.includes(key) && item !== undefined) result[key] = item;
