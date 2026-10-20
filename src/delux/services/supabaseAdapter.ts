@@ -21,9 +21,11 @@ const DEFAULT_NOTIFICATION_PREFERENCES = {
 
 function config() {
   const url = import.meta.env.VITE_SUPABASE_URL?.trim().replace(/\/+$/, '');
-  const key = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
+  // The connected Supabase project provides a publishable key (sb_publishable_...);
+  // VITE_SUPABASE_ANON_KEY is kept as a fallback for legacy JWT anon keys.
+  const key = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY)?.trim();
   if (!url || !key) {
-    throw new Error('Supabase ainda não está configurado neste ambiente. Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY nas variáveis do Lovable.');
+    throw new Error('Supabase ainda não está configurado neste ambiente. Defina VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY nas variáveis do Lovable.');
   }
   return { url, key };
 }
@@ -134,7 +136,8 @@ async function authFetch(path: string, init: RequestInit = {}, authRequired = tr
   headers.set('apikey', key);
   headers.set('Content-Type', 'application/json');
   if (session?.access_token) headers.set('Authorization', 'Bearer ' + session.access_token);
-  else if (!headers.has('Authorization')) headers.set('Authorization', 'Bearer ' + key);
+  // Without a session, the apikey header alone authenticates as the anon role.
+  // Never send the publishable key as a Bearer token: it is not a JWT and PostgREST rejects it.
   const response = await fetch(url + path, { ...init, headers });
   return parseResponse(response, 'Falha ao acessar o Supabase.');
 }
