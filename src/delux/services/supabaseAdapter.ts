@@ -8,7 +8,7 @@ type Session = {
   refresh_token: string;
   expires_at: number;
   user: SessionUser;
-  flowType?: string;
+  flowType?: string | undefined;
 };
 const SESSION_KEY = 'delux_supabase_session';
 const WEEKDAY_KEYS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
@@ -20,10 +20,12 @@ const DEFAULT_NOTIFICATION_PREFERENCES = {
 };
 
 function config() {
-  const url = import.meta.env.VITE_SUPABASE_URL?.trim().replace(/\/+$/, '');
-  const key = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
+  const url = import.meta.env['VITE_SUPABASE_URL']?.trim().replace(/\/+$/, '');
+  // The connected Supabase project provides a publishable key (sb_publishable_...);
+  // VITE_SUPABASE_ANON_KEY is kept as a fallback for legacy JWT anon keys.
+  const key = (import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY'] || import.meta.env['VITE_SUPABASE_ANON_KEY'])?.trim();
   if (!url || !key) {
-    throw new Error('Supabase ainda não está configurado neste ambiente. Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY nas variáveis do Lovable.');
+    throw new Error('Supabase ainda não está configurado neste ambiente. Defina VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY nas variáveis do Lovable.');
   }
   return { url, key };
 }
@@ -134,7 +136,8 @@ async function authFetch(path: string, init: RequestInit = {}, authRequired = tr
   headers.set('apikey', key);
   headers.set('Content-Type', 'application/json');
   if (session?.access_token) headers.set('Authorization', 'Bearer ' + session.access_token);
-  else if (!headers.has('Authorization')) headers.set('Authorization', 'Bearer ' + key);
+  // Without a session, the apikey header alone authenticates as the anon role.
+  // Never send the publishable key as a Bearer token: it is not a JWT and PostgREST rejects it.
   const response = await fetch(url + path, { ...init, headers });
   return parseResponse(response, 'Falha ao acessar o Supabase.');
 }
@@ -203,7 +206,7 @@ function nextAvailableDate(preferredDays: string[], startOffset = 0) {
   date.setHours(12, 0, 0, 0);
   let index = -1;
   for (let i = 0; i < 370; i++) {
-    if (allowed.includes(WEEKDAY_KEYS[date.getDay()])) {
+    if (allowed.includes(WEEKDAY_KEYS[date.getDay()] ?? '')) {
       index++;
       if (index === target) return localDateString(date);
     }
@@ -220,7 +223,7 @@ async function getCurrentUser() {
     const values = {
       id: session.user.id,
       email: session.user.email || '',
-      full_name: String(session.user.user_metadata?.full_name || ''),
+      full_name: String(session.user.user_metadata?.['full_name'] || ''),
     };
     const created = await upsertRows('profiles', values, 'id');
     profile = created[0] || values;
@@ -343,7 +346,7 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
   return { ...goal, diagnostic: payload.diagnostic, steps: createdSteps, missions: createdMissions };
 }
 
-function cleanObject(value: any, forbidden: string[] = ['id', 'user_id', 'created_at', 'updated_at']) {
+function cleanObject(value: any, forbidden: string[] = ['id', 'user_id', 'created_at', 'updated_at']): any {
   const result: Record<string, any> = {};
   for (const [key, item] of Object.entries(value || {})) {
     if (!forbidden.includes(key) && item !== undefined) result[key] = item;
@@ -621,9 +624,9 @@ export async function handleSupabaseRequest(method: string, endpoint: string, bo
       const date = url.searchParams.get('date');
       const status = url.searchParams.get('status');
       const goalId = url.searchParams.get('goal_id');
-      if (date) filters.scheduled_date = 'eq.' + date;
-      if (status) filters.status = 'eq.' + status;
-      if (goalId) filters.goal_id = 'eq.' + goalId;
+      if (date) filters['scheduled_date'] = 'eq.' + date;
+      if (status) filters['status'] = 'eq.' + status;
+      if (goalId) filters['goal_id'] = 'eq.' + goalId;
       return { missions: await selectRows('missions', filters, 'scheduled_date.asc,scheduled_time.asc,position.asc') };
     }
     if (method === 'POST' && !actionOrId) {
@@ -645,9 +648,9 @@ export async function handleSupabaseRequest(method: string, endpoint: string, bo
       const data = cleanObject(payload, ['id', 'user_id', 'goal_id', 'goal_step_id', 'created_at', 'updated_at']);
       if (data.status === 'completed' && oldRows[0].status !== 'completed') data.completed_at = new Date().toISOString();
       const updated = await updateRows('missions', { id: 'eq.' + actionOrId, user_id: 'eq.' + user.id }, data);
-      if (data.status === 'completed' && oldRows[0].status !== 'completed') {
+      if (data['status'] === 'completed' && oldRows[0].status !== 'completed') {
         await insertRows('activity_events', [{ user_id: user.id, goal_id: oldRows[0].goal_id, mission_id: oldRows[0].id, event_type: 'mission_completed', metadata: { title: updated[0].title } }]);
-      } else if (data.status === 'postponed' && oldRows[0].status !== 'postponed') {
+      } else if (data['status'] === 'postponed' && oldRows[0].status !== 'postponed') {
         await insertRows('activity_events', [{ user_id: user.id, goal_id: oldRows[0].goal_id, mission_id: oldRows[0].id, event_type: 'mission_postponed', metadata: { title: updated[0].title } }]);
       }
       return { mission: updated[0] };
