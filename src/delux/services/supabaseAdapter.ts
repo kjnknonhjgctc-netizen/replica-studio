@@ -648,9 +648,9 @@ export async function handleSupabaseRequest(method: string, endpoint: string, bo
       const data = cleanObject(payload, ['id', 'user_id', 'goal_id', 'goal_step_id', 'created_at', 'updated_at']);
       if (data.status === 'completed' && oldRows[0].status !== 'completed') data.completed_at = new Date().toISOString();
       const updated = await updateRows('missions', { id: 'eq.' + actionOrId, user_id: 'eq.' + user.id }, data);
-      if (data.status === 'completed' && oldRows[0].status !== 'completed') {
+      if (data['status'] === 'completed' && oldRows[0].status !== 'completed') {
         await insertRows('activity_events', [{ user_id: user.id, goal_id: oldRows[0].goal_id, mission_id: oldRows[0].id, event_type: 'mission_completed', metadata: { title: updated[0].title } }]);
-      } else if (data.status === 'postponed' && oldRows[0].status !== 'postponed') {
+      } else if (data['status'] === 'postponed' && oldRows[0].status !== 'postponed') {
         await insertRows('activity_events', [{ user_id: user.id, goal_id: oldRows[0].goal_id, mission_id: oldRows[0].id, event_type: 'mission_postponed', metadata: { title: updated[0].title } }]);
       }
       return { mission: updated[0] };
