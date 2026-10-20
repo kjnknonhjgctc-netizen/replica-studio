@@ -8,7 +8,7 @@ type Session = {
   refresh_token: string;
   expires_at: number;
   user: SessionUser;
-  flowType?: string;
+  flowType?: string | undefined;
 };
 const SESSION_KEY = 'delux_supabase_session';
 const WEEKDAY_KEYS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
@@ -206,7 +206,7 @@ function nextAvailableDate(preferredDays: string[], startOffset = 0) {
   date.setHours(12, 0, 0, 0);
   let index = -1;
   for (let i = 0; i < 370; i++) {
-    if (allowed.includes(WEEKDAY_KEYS[date.getDay()])) {
+    if (allowed.includes(WEEKDAY_KEYS[date.getDay()] ?? '')) {
       index++;
       if (index === target) return localDateString(date);
     }
@@ -223,7 +223,7 @@ async function getCurrentUser() {
     const values = {
       id: session.user.id,
       email: session.user.email || '',
-      full_name: String(session.user.user_metadata?.full_name || ''),
+      full_name: String(session.user.user_metadata?.['full_name'] || ''),
     };
     const created = await upsertRows('profiles', values, 'id');
     profile = created[0] || values;
@@ -624,9 +624,9 @@ export async function handleSupabaseRequest(method: string, endpoint: string, bo
       const date = url.searchParams.get('date');
       const status = url.searchParams.get('status');
       const goalId = url.searchParams.get('goal_id');
-      if (date) filters.scheduled_date = 'eq.' + date;
-      if (status) filters.status = 'eq.' + status;
-      if (goalId) filters.goal_id = 'eq.' + goalId;
+      if (date) filters['scheduled_date'] = 'eq.' + date;
+      if (status) filters['status'] = 'eq.' + status;
+      if (goalId) filters['goal_id'] = 'eq.' + goalId;
       return { missions: await selectRows('missions', filters, 'scheduled_date.asc,scheduled_time.asc,position.asc') };
     }
     if (method === 'POST' && !actionOrId) {
