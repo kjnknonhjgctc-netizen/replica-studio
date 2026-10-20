@@ -4,8 +4,8 @@ O app usa Supabase Auth para cadastro/login e recuperação de senha, e o banco 
 
 ## 1. Configuração do projeto
 
-1. Em Supabase → Project Settings → API, copie a Project URL e a chave pública anon/publishable.
-2. Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY nas variáveis de ambiente do Lovable e em qualquer ambiente de build/deploy. Esses valores ficam visíveis no navegador; use apenas a chave pública.
+1. Em Supabase → Project Settings → API, copie a Project URL e a chave pública publishable (sb_publishable_...).
+2. Configure VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY nas variáveis de ambiente do Lovable e em qualquer ambiente de build/deploy. Esses valores ficam visíveis no navegador; use apenas a chave pública. VITE_SUPABASE_ANON_KEY (chave anon JWT legada) também é aceita como alternativa.
 3. Nunca use service_role ou qualquer chave secreta com prefixo VITE_.
 4. Mantenha LOVABLE_API_KEY como segredo de servidor para as chamadas do assistente.
 
@@ -35,7 +35,7 @@ Os métodos e a tela de assinatura foram deliberadamente mantidos fora desta eta
 
 ## 5. Checklist antes de publicar
 
-- [ ] Configurar as duas variáveis VITE_SUPABASE_* no ambiente certo.
+- [ ] Configurar VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY no ambiente certo.
 - [ ] Aplicar a migration SQL no projeto Supabase.
 - [ ] Conferir as políticas RLS e as URLs permitidas do Auth.
 - [ ] Testar cadastro, login, renovação de sessão e recuperação de senha em domínio de teste.
