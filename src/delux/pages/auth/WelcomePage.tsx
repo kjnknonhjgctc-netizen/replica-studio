@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from '@/delux/router';
-import { Globe, Download, X, Share, CheckCircle2, Info, Smartphone } from 'lucide-react';
+import { Globe, Download, X, Share, CheckCircle2, Info } from 'lucide-react';
 import { DeluxLogo } from '../../components/common/DeluxLogo';
 import { ThemeToggle } from '../../components/common/ThemeToggle';
 import { detectPlatform, installState, isStandalone, type Platform } from '../../install/installPrompt';
@@ -14,7 +14,6 @@ export const WelcomePage: React.FC = () => {
   const [installed, setInstalled] = useState(false);
   const [sheet, setSheet] = useState<Sheet>(null);
   const [busy, setBusy] = useState(false);
-  const [shareFailed, setShareFailed] = useState(false);
 
   useEffect(() => {
     setPlatform(detectPlatform());
@@ -41,15 +40,6 @@ export const WelcomePage: React.FC = () => {
     if (outcome === 'accepted') setSheet('done');
     else if (outcome === 'unavailable') setSheet('unavailable');
     else setSheet(null);
-  };
-
-  const openIosShare = async () => {
-    setShareFailed(false);
-    try {
-      await navigator.share({ title: 'Delux', url: window.location.origin + '/app/inicio' });
-    } catch (e) {
-      if ((e as Error)?.name !== 'AbortError') setShareFailed(true);
-    }
   };
 
   return (
