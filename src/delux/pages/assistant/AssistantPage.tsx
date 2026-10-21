@@ -273,12 +273,13 @@ export const AssistantPage: React.FC = () => {
   const loadConversations = async () => {
     try {
       const res = await api.getConversations();
-      setConversations(res.conversations);
-      if (res.conversations.length > 0) {
-        const first = res.conversations[0];
+      const list = Array.isArray(res?.conversations) ? res.conversations.filter(Boolean) : [];
+      setConversations(list);
+      if (list.length > 0) {
+        const first = list[0];
         setCurrentConvId(first.id);
         const msgRes = await api.getMessages(first.id);
-        setMessages(msgRes.messages);
+        setMessages(Array.isArray(msgRes?.messages) ? msgRes.messages.filter(Boolean) : []);
       }
     } catch (err) {
       console.error(err);
@@ -294,7 +295,7 @@ export const AssistantPage: React.FC = () => {
     try {
       setCurrentConvId(convId);
       const msgRes = await api.getMessages(convId);
-      setMessages(msgRes.messages);
+      setMessages(Array.isArray(msgRes?.messages) ? msgRes.messages.filter(Boolean) : []);
     } catch (err) {
       console.error(err);
     }
@@ -386,15 +387,15 @@ export const AssistantPage: React.FC = () => {
 
     try {
       const res = await api.sendChatMessage(text.trim(), currentConvId || undefined);
-      if (!currentConvId) {
+      if (!currentConvId && res?.conversation) {
         setCurrentConvId(res.conversation.id);
         setConversations(prev => [res.conversation, ...prev]);
       }
       setMessages(prev => [
         ...prev.filter(m => m.id !== optimisticUserMsg.id),
-        res.userMessage,
-        res.assistantMessage
-      ]);
+        res?.userMessage,
+        res?.assistantMessage
+      ].filter(Boolean));
       if (res.action?.type === 'navigate' && typeof res.action.path === 'string') {
         window.setTimeout(() => navigate(res.action.path), 650);
       }
@@ -428,7 +429,7 @@ export const AssistantPage: React.FC = () => {
 
   // Formats assistant markdown-like text with cards and lists
   const renderFormattedAssistantContent = (content: string) => {
-    const lines = content.split('\n');
+    const lines = String(content ?? '').split('\n');
 
     return (
       <div className="space-y-2 text-xs sm:text-sm leading-relaxed text-slate-700 dark:text-slate-200 break-words">
