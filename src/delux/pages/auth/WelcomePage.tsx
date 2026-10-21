@@ -120,7 +120,7 @@ export const WelcomePage: React.FC = () => {
           aria-modal="true"
         >
           <div
-            className="w-full sm:max-w-sm bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl p-6 pb-8 shadow-2xl"
+            className="w-full sm:max-w-sm bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl p-6 pb-8 shadow-2xl max-h-[90dvh] overflow-y-auto"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-start justify-between mb-4">
@@ -155,43 +155,55 @@ export const WelcomePage: React.FC = () => {
               </>
             )}
 
-            {sheet === 'ios' && (
-              <>
-                <h2 className="text-lg font-bold text-[#17191D] dark:text-white">Delux no iPhone</h2>
-                <p className="mt-2 text-sm text-[#777D87] dark:text-slate-400">
-                  A Apple não permite que sites instalem apps automaticamente, e o Delux ainda não está na App Store. O caminho oficial do iPhone é adicionar o Delux à tela de início — ele abre em tela cheia, como um app.
-                </p>
-                <div className="mt-4 flex items-start gap-2 p-3 rounded-xl bg-[#356AE6]/8 text-xs text-[#17191D] dark:text-slate-200">
-                  <Smartphone className="w-4 h-4 text-[#356AE6] shrink-0 mt-0.5" />
-                  <span>{typeof navigator !== 'undefined' && 'share' in navigator ? <>Toque em <strong>Adicionar</strong> e escolha <strong>“Adicionar à Tela de Início”</strong> na janela do iPhone.</> : <>Abra o Delux no Safari para adicionar à tela de início.</>}</span>
-                </div>
-                {shareFailed && (
-                  <p className="mt-3 text-xs text-rose-600">Não foi possível abrir a janela de compartilhamento neste navegador. Abra o Delux no Safari para adicionar à tela de início.</p>
-                )}
-                <div className="mt-6 flex gap-2">
-                  <button onClick={goBrowser} className="flex-1 py-3 rounded-xl text-sm font-semibold border border-[#E4E7EC] dark:border-slate-700 text-[#17191D] dark:text-white cursor-pointer">Usar no navegador</button>
-                  {typeof navigator !== 'undefined' && 'share' in navigator && (
-                    <button onClick={openIosShare} className="flex-1 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#7033FF] to-[#356AE6] inline-flex items-center justify-center gap-1.5 cursor-pointer">
-                      <Share className="w-4 h-4" /> Adicionar
-                    </button>
-                  )}
-                </div>
-              </>
-            )}
-
-            {sheet === 'unavailable' && (
-              <>
-                <h2 className="text-lg font-bold text-[#17191D] dark:text-white">Instalação indisponível aqui</h2>
-                <p className="mt-2 text-sm text-[#777D87] dark:text-slate-400">
-                  Este navegador não ofereceu a instalação do Delux agora. Isso acontece em navegadores sem suporte (como alguns embutidos em redes sociais), na pré-visualização do editor, ou se o app já estiver instalado.
-                </p>
-                <div className="mt-4 flex items-start gap-2 p-3 rounded-xl bg-[#356AE6]/8 text-xs text-[#17191D] dark:text-slate-200">
-                  <Info className="w-4 h-4 text-[#356AE6] shrink-0 mt-0.5" />
-                  <span>No Android, abra o site publicado no Chrome para instalar com um toque.</span>
-                </div>
-                <button onClick={goBrowser} className="mt-6 w-full py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#7033FF] to-[#356AE6] cursor-pointer">Continuar no navegador</button>
-              </>
-            )}
+            {(sheet === 'ios' || sheet === 'unavailable') && (() => {
+              const steps =
+                platform === 'ios'
+                  ? [
+                      <>Abra este site no <strong>Safari</strong> (se estiver em outro navegador, copie o endereço e cole no Safari).</>,
+                      <>Toque em <strong>Compartilhar</strong> <Share className="inline w-3.5 h-3.5 -mt-0.5" /> na barra do Safari.</>,
+                      <>Role e escolha <strong>“Adicionar à Tela de Início”</strong>.</>,
+                      <>Toque em <strong>Adicionar</strong> para confirmar. O ícone do Delux aparecerá na tela de início.</>,
+                    ]
+                  : platform === 'android'
+                    ? [
+                        <>Abra este site no <strong>Chrome</strong>.</>,
+                        <>Toque no menu <strong>⋮</strong> no canto superior direito.</>,
+                        <>Escolha <strong>“Instalar app”</strong> ou <strong>“Adicionar à tela inicial”</strong>.</>,
+                        <>Confirme em <strong>Instalar</strong>. O Delux aparecerá entre seus apps.</>,
+                      ]
+                    : [
+                        <>Abra este site no <strong>Chrome</strong> ou <strong>Edge</strong>.</>,
+                        <>Clique no ícone de instalação na barra de endereço, ou no menu <strong>⋮</strong> → <strong>“Instalar Delux”</strong>.</>,
+                        <>Confirme em <strong>Instalar</strong>.</>,
+                      ];
+              const title = platform === 'ios' ? 'Instalar no iPhone' : platform === 'android' ? 'Instalar no Android' : 'Instalar no computador';
+              return (
+                <>
+                  <h2 className="text-lg font-bold text-[#17191D] dark:text-white">{title}</h2>
+                  <p className="mt-2 text-sm text-[#777D87] dark:text-slate-400">
+                    {platform === 'ios'
+                      ? 'O iPhone não permite instalação automática por sites. Siga estes passos:'
+                      : 'Seu navegador não ofereceu a instalação automática. Faça assim:'}
+                  </p>
+                  <ol className="mt-4 space-y-3">
+                    {steps.map((step, i) => (
+                      <li key={i} className="flex gap-3 text-sm text-[#17191D] dark:text-slate-200">
+                        <span className="w-6 h-6 rounded-full bg-[#356AE6] text-white text-xs font-bold flex items-center justify-center shrink-0">{i + 1}</span>
+                        <span className="pt-0.5">{step}</span>
+                      </li>
+                    ))}
+                  </ol>
+                  <div className="mt-4 flex items-start gap-2 p-3 rounded-xl bg-[#356AE6]/8 text-xs text-[#17191D] dark:text-slate-200">
+                    <Info className="w-4 h-4 text-[#356AE6] shrink-0 mt-0.5" />
+                    <span>O Delux é um app web instalável (PWA): ganha ícone próprio e abre em tela cheia. Não é baixado da App Store nem da Play Store.</span>
+                  </div>
+                  <div className="mt-6 flex gap-2">
+                    <button onClick={() => setSheet(null)} className="flex-1 py-3 rounded-xl text-sm font-semibold border border-[#E4E7EC] dark:border-slate-700 text-[#17191D] dark:text-white cursor-pointer">Entendi</button>
+                    <button onClick={goBrowser} className="flex-1 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#7033FF] to-[#356AE6] cursor-pointer">Continuar no navegador</button>
+                  </div>
+                </>
+              );
+            })()}
           </div>
         </div>
       )}
