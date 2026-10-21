@@ -429,7 +429,7 @@ export const AssistantPage: React.FC = () => {
 
   // Formats assistant markdown-like text with cards and lists
   const renderFormattedAssistantContent = (content: string) => {
-    const lines = content.split('\n');
+    const lines = String(content ?? '').split('\n');
 
     return (
       <div className="space-y-2 text-xs sm:text-sm leading-relaxed text-slate-700 dark:text-slate-200 break-words">
