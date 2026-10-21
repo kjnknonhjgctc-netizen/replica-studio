@@ -12,10 +12,10 @@ interface ThemeContextType {
 // Preserve identity during hot updates: mounted providers and consumers must
 // never hold different context objects while the preview updates.
 export const ThemeContext =
-  (import.meta.hot?.data['themeContext'] as React.Context<ThemeContextType | undefined> | undefined)
+  (import.meta.hot?.data?.['themeContext'] as React.Context<ThemeContextType | undefined> | undefined)
   ?? createContext<ThemeContextType | undefined>(undefined);
 
-if (import.meta.hot) {
+if (import.meta.hot?.data) {
   import.meta.hot.data['themeContext'] = ThemeContext;
 }
 
