@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate, useSearchParams } from '@/delux/router';
+import { Link, useNavigate, useSearchParams, useLocation } from '@/delux/router';
 import { useAuth } from '../../context/AuthContext';
 import { DeluxLogo } from '../../components/common/DeluxLogo';
 import { PrimaryButton } from '../../components/common/Buttons';
@@ -11,9 +11,10 @@ export const LoginPage: React.FC = () => {
   const { login, register } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const location = useLocation();
 
-  // Mode: 'register' (default for first interaction) or 'login'
-  const initialMode = searchParams.get('mode') === 'login' ? 'login' : 'register';
+  // Login links must open the login form; signup routes open registration.
+  const initialMode = searchParams.get('mode') === 'login' || location.pathname === '/login' ? 'login' : 'register';
   const [mode, setMode] = useState<'register' | 'login'>(initialMode);
 
   const [email, setEmail] = useState('');
