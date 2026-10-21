@@ -62,7 +62,7 @@
 }
 
 :root {
-  --delux-system-background: #0B0E14;
+  --delux-system-background: #F7F8FA;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
@@ -99,6 +99,7 @@
 }
 
 .dark {
+  --delux-system-background: #0B0E14;
   --background: oklch(0.129 0.042 264.695);
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
@@ -165,13 +166,13 @@
   }
 
   html:not(.dark), html:not(.dark) body {
-    background-color: #F7F8FA;
+    background-color: var(--delux-system-background);
     color: #17191D;
     color-scheme: light;
   }
 
   html.dark, html.dark body {
-    background-color: #0B0E14;
+    background-color: var(--delux-system-background);
     color: #F1F5F9;
     color-scheme: dark;
   }
@@ -184,14 +185,13 @@
 
   @media (display-mode: standalone) {
     /* Include the gesture inset in the document, not in individual page layouts.
-       Match the theme selectors' specificity so a light page cannot expose a
-       white document canvas underneath the installed app. */
+       Match the theme selectors' specificity so the document canvas follows
+       the selected theme underneath the installed app. */
     html, html:not(.dark), html.dark,
     html body, html:not(.dark) body, html.dark body, #root {
       min-height: 100%;
       min-height: 100dvh;
       background-color: var(--delux-system-background);
-      color-scheme: dark;
     }
 
     body {
