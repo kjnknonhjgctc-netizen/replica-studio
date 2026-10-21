@@ -114,15 +114,12 @@ export const LoginPage: React.FC = () => {
           </button>
         </div>
 
-        {/* No-confirmation badge */}
-        <div className="mb-5 flex items-center gap-2 p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-300 text-[11px] font-medium transition-colors">
-          <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-          <span>
-            {mode === 'register'
-              ? 'A conta pode pedir confirmação por e-mail, conforme as configurações do projeto.'
-              : 'Entre com seu e-mail e senha para continuar seu progresso.'}
-          </span>
-        </div>
+        {mode === 'login' && (
+          <div className="mb-5 flex items-center gap-2 p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-300 text-[11px] font-medium transition-colors">
+            <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <span>Entre com seu e-mail e senha para continuar seu progresso.</span>
+          </div>
+        )}
 
         {error && (
           <div className="mb-5 p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-300 text-xs rounded-xl font-medium">
