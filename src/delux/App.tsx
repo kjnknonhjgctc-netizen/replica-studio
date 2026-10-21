@@ -4,7 +4,6 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { LoginPage } from './pages/auth/LoginPage';
 import { RegisterPage } from './pages/auth/RegisterPage';
-import { WelcomePage } from './pages/auth/WelcomePage';
 import './install/installPrompt';
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/auth/ResetPasswordPage';
@@ -32,7 +31,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   }
 
   if (!user) {
-    return <Navigate to="/comecar" replace />;
+    return <Navigate to="/cadastro" replace />;
   }
 
   if (!user.onboarding_completed && location.pathname !== '/onboarding') {
@@ -79,14 +78,7 @@ export default function App() {
               </PublicRoute>
             }
           />
-          <Route
-            path="/comecar"
-            element={
-              <PublicRoute>
-                <WelcomePage />
-              </PublicRoute>
-            }
-          />
+          <Route path="/comecar" element={<Navigate to="/cadastro" replace />} />
           <Route
             path="/cadastro"
             element={
