@@ -30,23 +30,32 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (theme === 'dark') {
       root.classList.add('dark');
       root.setAttribute('data-theme', 'dark');
-      root.style.colorScheme = 'dark';
     } else {
       root.classList.remove('dark');
       root.setAttribute('data-theme', 'light');
-      root.style.colorScheme = 'light';
     }
-    // Match the phone's status/navigation bar color to the chosen theme
-    const color = theme === 'dark' ? '#0B0E14' : '#F7F8FA';
-    document.querySelectorAll('meta[name="theme-color"]').forEach(m => {
-      m.setAttribute('content', color);
-      m.removeAttribute('media');
-    });
+    // Installed Android chrome gets a consistent dark surface. The page's
+    // selected theme remains unchanged; the OS ultimately owns its gesture bar.
+    const standalone = window.matchMedia('(display-mode: standalone)');
+    const syncSystemAppearance = () => {
+      root.style.colorScheme = standalone.matches ? 'dark' : theme;
+      const installedColor = getComputedStyle(root).getPropertyValue('--delux-system-background').trim();
+      const color = standalone.matches || theme === 'dark'
+        ? installedColor
+        : '#F7F8FA';
+      document.querySelectorAll('meta[name="theme-color"]').forEach(m => {
+        m.setAttribute('content', color);
+        m.removeAttribute('media');
+      });
+    };
+    syncSystemAppearance();
+    standalone.addEventListener('change', syncSystemAppearance);
     try {
       localStorage.setItem('delux_theme', theme);
     } catch {
       // ignore
     }
+    return () => standalone.removeEventListener('change', syncSystemAppearance);
   }, [theme]);
 
   const toggleTheme = () => {
