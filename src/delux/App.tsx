@@ -83,7 +83,7 @@ export default function App() {
             path="/cadastro"
             element={
               <PublicRoute>
-                <RegisterPage />
+                <LoginPage />
               </PublicRoute>
             }
           />
