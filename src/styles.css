@@ -183,7 +183,7 @@
 
   /* Installed app (PWA): fill the full screen and respect notches / gesture bars */
   @media (display-mode: standalone) {
-    html, body, #root {
+    html, body, #root, .min-h-screen {
       min-height: 100dvh;
     }
     body {
