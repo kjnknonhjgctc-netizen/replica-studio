@@ -181,13 +181,29 @@
     overscroll-behavior-x: none;
   }
 
-  /* Installed app (PWA): fill the full screen and respect notches / gesture bars */
+  /* Keep the Android PWA system/navigation area visually aligned with Delux. */
+  html, body {
+    background-color: #0B0E14;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
   @media (display-mode: standalone) {
-    html, body, #root, .min-h-screen {
+    html, body, #root {
+      min-height: 100%;
       min-height: 100dvh;
+      background-color: #0B0E14;
     }
+
     body {
-      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      padding: 0;
+      overscroll-behavior-y: none;
+    }
+
+    #root {
+      overflow-x: clip;
     }
   }
 
