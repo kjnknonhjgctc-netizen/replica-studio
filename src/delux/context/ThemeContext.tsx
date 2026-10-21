@@ -36,6 +36,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       root.setAttribute('data-theme', 'light');
       root.style.colorScheme = 'light';
     }
+    // Match the phone's status/navigation bar color to the chosen theme
+    const color = theme === 'dark' ? '#0B0E14' : '#F7F8FA';
+    document.querySelectorAll('meta[name="theme-color"]').forEach(m => {
+      m.setAttribute('content', color);
+      m.removeAttribute('media');
+    });
     try {
       localStorage.setItem('delux_theme', theme);
     } catch {
