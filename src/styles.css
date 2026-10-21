@@ -181,13 +181,20 @@
     overscroll-behavior-x: none;
   }
 
-  /* Keep the Android PWA system/navigation area visually aligned with Delux. */
-  html, body {
+  /* Make browser-owned overscroll and system-adjacent surfaces use dark colors. */
+  html {
+    background: #0B0E14;
+    color-scheme: dark;
+  }
+
+  body, #root {
     background-color: #0B0E14;
   }
 
-  html.dark {
-    color-scheme: dark;
+  @media (display-mode: standalone) {
+    :root {
+      color-scheme: dark;
+    }
   }
 
   @media (display-mode: standalone) {
