@@ -44,7 +44,9 @@ export const installState = {
   isInstalled: () => installed,
   subscribe(fn: () => void) {
     listeners.add(fn);
-    return () => listeners.delete(fn);
+    return () => {
+      listeners.delete(fn);
+    };
   },
   async prompt(): Promise<'accepted' | 'dismissed' | 'unavailable'> {
     if (!deferred) return 'unavailable';
