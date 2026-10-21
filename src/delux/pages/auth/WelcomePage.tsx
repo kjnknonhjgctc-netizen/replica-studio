@@ -163,7 +163,7 @@ export const WelcomePage: React.FC = () => {
                 </p>
                 <div className="mt-4 flex items-start gap-2 p-3 rounded-xl bg-[#356AE6]/8 text-xs text-[#17191D] dark:text-slate-200">
                   <Smartphone className="w-4 h-4 text-[#356AE6] shrink-0 mt-0.5" />
-                  <span>Toque no botão abaixo e escolha <strong>“Adicionar à Tela de Início”</strong> na janela do iPhone.</span>
+                  <span>{typeof navigator !== 'undefined' && 'share' in navigator ? <>Toque em <strong>Adicionar</strong> e escolha <strong>“Adicionar à Tela de Início”</strong> na janela do iPhone.</> : <>Abra o Delux no Safari para adicionar à tela de início.</>}</span>
                 </div>
                 {shareFailed && (
                   <p className="mt-3 text-xs text-rose-600">Não foi possível abrir a janela de compartilhamento neste navegador. Abra o Delux no Safari para adicionar à tela de início.</p>
