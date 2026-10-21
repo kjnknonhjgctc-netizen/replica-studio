@@ -62,6 +62,7 @@
 }
 
 :root {
+  --delux-system-background: #0B0E14;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
@@ -181,31 +182,21 @@
     overscroll-behavior-x: none;
   }
 
-  /* Make browser-owned overscroll and system-adjacent surfaces use dark colors. */
-  html {
-    background: #0B0E14;
-    color-scheme: dark;
-  }
-
-  body, #root {
-    background-color: #0B0E14;
-  }
-
   @media (display-mode: standalone) {
-    :root {
-      color-scheme: dark;
-    }
-  }
-
-  @media (display-mode: standalone) {
-    html, body, #root {
+    /* Include the gesture inset in the document, not in individual page layouts.
+       Match the theme selectors' specificity so a light page cannot expose a
+       white document canvas underneath the installed app. */
+    html, html:not(.dark), html.dark,
+    html body, html:not(.dark) body, html.dark body, #root {
       min-height: 100%;
       min-height: 100dvh;
-      background-color: #0B0E14;
+      background-color: var(--delux-system-background);
+      color-scheme: dark;
     }
 
     body {
-      padding: 0;
+      box-sizing: border-box;
+      padding: 0 0 env(safe-area-inset-bottom, 0px);
       overscroll-behavior-y: none;
     }
 
