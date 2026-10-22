@@ -51,20 +51,20 @@ export const GoalsListPage: React.FC = () => {
       />
 
       {/* Filter and Search Bar */}
-      <div className="delux-section bg-card p-4 rounded-2xl border border-border  space-y-3 shadow-xs transition-colors">
+      <div className="bg-white dark:bg-[#111622] p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs transition-colors">
         <div className="relative">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground " />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
           <input
             type="text"
             placeholder="Buscar por título, categoria ou resultado..."
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            className="w-full h-10 pl-10 pr-3.5 bg-card  border border-border  focus:border-primary rounded-xl text-xs sm:text-sm text-foreground  placeholder:text-muted-foreground  focus:outline-none transition-colors"
+            className="w-full h-10 pl-10 pr-3.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:border-[#356AE6] rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none transition-colors"
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-border ">
-          <span className="text-[11px] font-semibold text-muted-foreground  mr-1">Status:</span>
+        <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-100 dark:border-slate-800">
+          <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mr-1">Status:</span>
           {(['all', 'active', 'paused', 'completed', 'archived'] as const).map(st => {
             const labels = {
               all: 'Todos',
@@ -80,8 +80,8 @@ export const GoalsListPage: React.FC = () => {
                 onClick={() => setStatusFilter(st)}
                 className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                   active
-                    ? 'bg-gradient-to-r from-primary via-primary to-primary text-primary-foreground shadow-sm shadow-primary/25'
-                    : 'bg-muted  text-muted-foreground  hover:bg-muted '
+                    ? 'bg-gradient-to-r from-[#7033FF] via-[#4E56FF] to-[#2563EB] text-white shadow-sm shadow-[#4E56FF]/25'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                 }`}
               >
                 {labels[st]}
