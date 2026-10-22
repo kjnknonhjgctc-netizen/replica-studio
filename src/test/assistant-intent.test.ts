@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { requestsSavedPlan, resolveNavigationIntent } from '../delux/ai/intent';
+import { requestsSavedPlan, resolveNavigationIntent, resolvePreferredDaysFromRequest } from '../delux/ai/intent';
 
 describe('Assistant action intent', () => {
   it('answers a question without creating goals or tasks', () => {
@@ -28,5 +28,23 @@ describe('Assistant action intent', () => {
     expect(requestsSavedPlan('Não quero criar tarefas, só entender como funciona')).toBe(false);
     expect(requestsSavedPlan('Não crie um plano, só me explique')).toBe(false);
     expect(requestsSavedPlan('Não precisa montar um cronograma agora')).toBe(false);
+  });
+});
+
+describe("weekday constraints in plan requests", () => {
+  it("expands a weekday range and honors explicit exclusions", () => {
+    expect(resolvePreferredDaysFromRequest("Quero estudar violão de segunda a quinta, não sexta")).toEqual(["seg", "ter", "qua", "qui"]);
+  });
+
+  it("uses only explicitly listed days when the request lists individual weekdays", () => {
+    expect(resolvePreferredDaysFromRequest("Monte um plano para segunda, quarta e sexta")).toEqual(["seg", "qua", "sex"]);
+  });
+
+  it("removes an excluded day from the user's existing preferences", () => {
+    expect(resolvePreferredDaysFromRequest("Quero estudar, sem sexta", ["seg", "ter", "qua", "qui", "sex"])).toEqual(["seg", "ter", "qua", "qui"]);
+  });
+
+  it("keeps existing preferences when no weekdays are mentioned", () => {
+    expect(resolvePreferredDaysFromRequest("Crie um plano de estudos", ["seg", "qua"])).toEqual(["seg", "qua"]);
   });
 });
