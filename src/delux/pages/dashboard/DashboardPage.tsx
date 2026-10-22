@@ -139,7 +139,7 @@ export const DashboardPage: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate('/app/assistente')}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-[#F6F8FF] dark:hover:bg-slate-700 border border-[#DCE4F8] dark:border-slate-700 text-xs font-semibold text-[#17191D] dark:text-white hover:text-[#2563EB] dark:hover:text-[#60A5FA] transition-all cursor-pointer shadow-xs"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-[#F0F8F1] dark:hover:bg-slate-700 border border-[#D5E9D9] dark:border-slate-700 text-xs font-semibold text-[#17191D] dark:text-white hover:text-[#25865A] dark:hover:text-[#65B982] transition-all cursor-pointer shadow-xs"
           >
             <AssistantOrb size="xs" />
             <span>Consultar IA</span>
@@ -168,11 +168,11 @@ export const DashboardPage: React.FC = () => {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: 'spring', stiffness: 350, damping: 28 }}
-          className="relative overflow-hidden bg-gradient-to-br from-[#FFFFFF] via-[#FAF9FF] to-[#EFF4FF] dark:from-[#111622] dark:via-[#131A2B] dark:to-[#0F172A] border border-[#D9DDF8] dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-xs transition-colors"
+          className="relative overflow-hidden bg-gradient-to-br from-[#FFFFFF] via-[#FAF9FF] to-[#EFF4FF] dark:from-[#111622] dark:via-[#131A2B] dark:to-[#0F172A] border border-[#D5E9D9] dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-xs transition-colors"
         >
           <div className="flex items-center justify-between gap-3 mb-4">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gradient-to-r from-[#7033FF]/12 via-[#4E56FF]/12 to-[#2563EB]/12 dark:from-[#7033FF]/20 dark:to-[#2563EB]/20 text-[#4E56FF] dark:text-[#9A84FF] border border-[#4E56FF]/20 dark:border-[#4E56FF]/40 text-xs font-bold tracking-tight">
-              <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[#7033FF] to-[#2563EB] animate-pulse" />
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gradient-to-r from-[#25865A]/12 via-[#25865A]/12 to-[#25865A]/12 dark:from-[#25865A]/20 dark:to-[#25865A]/20 text-[#25865A] dark:text-[#8ECFA8] border border-[#25865A]/20 dark:border-[#25865A]/40 text-xs font-bold tracking-tight">
+              <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[#25865A] to-[#25865A] animate-pulse" />
               Seu próximo passo
             </span>
             {activeGoal && (
@@ -239,7 +239,7 @@ export const DashboardPage: React.FC = () => {
         <div className="bg-white dark:bg-[#111622] border border-[#E8EAF0] dark:border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xs transition-colors">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#7033FF]/10 to-[#356AE6]/10 dark:from-[#7033FF]/20 dark:to-[#356AE6]/20 flex items-center justify-center text-[#356AE6] dark:text-[#60A5FA]">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#25865A]/10 to-[#356AE6]/10 dark:from-[#25865A]/20 dark:to-[#356AE6]/20 flex items-center justify-center text-[#356AE6] dark:text-[#65B982]">
                 <Route className="w-4 h-4" />
               </div>
               <div>
@@ -256,7 +256,7 @@ export const DashboardPage: React.FC = () => {
 
             <button
               onClick={() => navigate(`/app/objetivos/${activeGoal.id}`)}
-              className="text-xs font-semibold text-[#356AE6] dark:text-[#60A5FA] hover:underline flex items-center gap-1 self-start sm:self-auto cursor-pointer"
+              className="text-xs font-semibold text-[#356AE6] dark:text-[#65B982] hover:underline flex items-center gap-1 self-start sm:self-auto cursor-pointer"
             >
               <span>Abrir Mapa Completo</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -274,7 +274,7 @@ export const DashboardPage: React.FC = () => {
                     onClick={() => navigate(`/app/objetivos/${activeGoal.id}`)}
                     className={`p-3 rounded-2xl border text-xs cursor-pointer transition-all ${
                       isCurrent
-                        ? 'border-[#356AE6] dark:border-[#4E56FF] bg-blue-50/40 dark:bg-blue-950/20 shadow-2xs'
+                        ? 'border-[#356AE6] dark:border-[#25865A] bg-blue-50/40 dark:bg-blue-950/20 shadow-2xs'
                         : isCompleted
                         ? 'border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/20 dark:bg-emerald-950/10'
                         : 'border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40 opacity-70'
@@ -315,7 +315,7 @@ export const DashboardPage: React.FC = () => {
           action={
             <button
               onClick={() => navigate('/app/planejamento')}
-              className="text-xs font-semibold text-[#356AE6] dark:text-[#60A5FA] hover:underline flex items-center gap-1 cursor-pointer"
+              className="text-xs font-semibold text-[#356AE6] dark:text-[#65B982] hover:underline flex items-center gap-1 cursor-pointer"
             >
               <span>Ver semana</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -385,7 +385,7 @@ export const DashboardPage: React.FC = () => {
 
           {/* Card 2: Metas Ativas */}
           <div className="bg-white dark:bg-[#111622] p-4 sm:p-5 rounded-2xl border border-[#E8EAF0] dark:border-slate-800 flex items-center gap-4 shadow-xs transition-colors">
-            <div className="w-12 h-12 rounded-2xl bg-[#EAF0FF] dark:bg-blue-950/40 text-[#356AE6] dark:text-[#60A5FA] flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-[#E2F3E8] dark:bg-blue-950/40 text-[#356AE6] dark:text-[#65B982] flex items-center justify-center shrink-0">
               <Target className="w-6 h-6" />
             </div>
             <div>
@@ -433,7 +433,7 @@ export const DashboardPage: React.FC = () => {
             className="p-4 bg-white dark:bg-[#111622] hover:bg-[#F9FAFC] dark:hover:bg-slate-800/60 border border-[#E8EAF0] dark:border-slate-800 rounded-2xl text-left cursor-pointer shadow-xs flex items-center justify-between group transition-colors"
           >
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-[#EAF0FF] dark:bg-blue-950/40 text-[#356AE6] dark:text-[#60A5FA]">
+              <div className="p-2.5 rounded-xl bg-[#E2F3E8] dark:bg-blue-950/40 text-[#356AE6] dark:text-[#65B982]">
                 <Plus className="w-4 h-4 stroke-[2.5]" />
               </div>
               <div>
@@ -441,7 +441,7 @@ export const DashboardPage: React.FC = () => {
                 <p className="text-[11px] text-[#777D87] dark:text-slate-400">Diagnosticar nova meta</p>
               </div>
             </div>
-            <ArrowRight className="w-4 h-4 text-[#CFD4DC] dark:text-slate-600 group-hover:text-[#356AE6] dark:group-hover:text-[#60A5FA] group-hover:translate-x-0.5 transition-all" />
+            <ArrowRight className="w-4 h-4 text-[#CFD4DC] dark:text-slate-600 group-hover:text-[#356AE6] dark:group-hover:text-[#65B982] group-hover:translate-x-0.5 transition-all" />
           </motion.button>
 
           <motion.button
@@ -460,7 +460,7 @@ export const DashboardPage: React.FC = () => {
                 <p className="text-[11px] text-[#777D87] dark:text-slate-400">Organizar semana</p>
               </div>
             </div>
-            <ArrowRight className="w-4 h-4 text-[#CFD4DC] dark:text-slate-600 group-hover:text-[#356AE6] dark:group-hover:text-[#60A5FA] group-hover:translate-x-0.5 transition-all" />
+            <ArrowRight className="w-4 h-4 text-[#CFD4DC] dark:text-slate-600 group-hover:text-[#356AE6] dark:group-hover:text-[#65B982] group-hover:translate-x-0.5 transition-all" />
           </motion.button>
 
           <motion.button
@@ -479,7 +479,7 @@ export const DashboardPage: React.FC = () => {
                 <p className="text-[11px] text-[#777D87] dark:text-slate-400">Refinar plano com IA</p>
               </div>
             </div>
-            <ArrowRight className="w-4 h-4 text-[#CFD4DC] dark:text-slate-600 group-hover:text-[#356AE6] dark:group-hover:text-[#60A5FA] group-hover:translate-x-0.5 transition-all" />
+            <ArrowRight className="w-4 h-4 text-[#CFD4DC] dark:text-slate-600 group-hover:text-[#356AE6] dark:group-hover:text-[#65B982] group-hover:translate-x-0.5 transition-all" />
           </motion.button>
         </div>
       </div>
