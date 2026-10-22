@@ -53,12 +53,12 @@ export const SubscriptionPage: React.FC = () => {
   }
 
   const statusLabels: Record<string, { label: string; class: string }> = {
-    active: { label: 'Assinatura Ativa', class: 'bg-emerald-50 dark:bg-emerald-950/40 text-[#248A62] dark:text-emerald-400 border-emerald-200 dark:border-emerald-800' },
-    trial: { label: 'Período de Testes (7 dias)', class: 'bg-[#EAF0FF] dark:bg-blue-950/40 text-[#356AE6] dark:text-[#60A5FA] border-[#D9E3FC] dark:border-blue-900/50' },
-    canceled: { label: 'Cancelamento Agendado', class: 'bg-amber-50 dark:bg-amber-950/40 text-[#D99024] dark:text-amber-400 border-amber-200 dark:border-amber-900/50' },
-    none: { label: 'Plano Gratuito', class: 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700' },
-    past_due: { label: 'Pagamento Pendente', class: 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900/50' },
-    expired: { label: 'Expirada', class: 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900/50' }
+    active: { label: 'Assinatura Ativa', class: 'bg-success-subtle  text-success  border-success-border ' },
+    trial: { label: 'Período de Testes (7 dias)', class: 'bg-accent  text-primary  border-border ' },
+    canceled: { label: 'Cancelamento Agendado', class: 'bg-warning-subtle  text-warning  border-warning-border ' },
+    none: { label: 'Plano Gratuito', class: 'bg-muted  text-muted-foreground  border-border ' },
+    past_due: { label: 'Pagamento Pendente', class: 'bg-destructive-subtle  text-destructive  border-destructive-border ' },
+    expired: { label: 'Expirada', class: 'bg-destructive-subtle  text-destructive  border-destructive-border ' }
   };
 
   const currentBadge = statusLabels[subscription?.status || 'none'] || statusLabels.active;
@@ -81,24 +81,24 @@ export const SubscriptionPage: React.FC = () => {
       />
 
       {notice && (
-        <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-300 text-xs rounded-2xl flex items-center gap-2 transition-colors">
-          <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+        <div className="p-3.5 bg-success-subtle  border border-success-border  text-success  text-xs rounded-2xl flex items-center gap-2 transition-colors">
+          <Check className="w-4 h-4 text-success " />
           <span>{notice}</span>
         </div>
       )}
 
       {/* Hero Pricing Card */}
-      <div className="bg-white dark:bg-[#111622] border border-[#D9DDF8] dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xs text-center relative overflow-hidden transition-colors">
+      <div className="bg-card  border border-border  rounded-3xl p-6 sm:p-8 shadow-xs text-center relative overflow-hidden transition-colors">
         <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border mb-4 ${currentBadge.class}`}>
-          <Crown className="w-3.5 h-3.5 text-[#4E56FF] dark:text-[#60A5FA]" />
+          <Crown className="w-3.5 h-3.5 text-primary " />
           <span>{currentBadge.label}</span>
         </div>
 
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-[#17191D] dark:text-white tracking-tight">
-          R$ 29,90 <span className="text-sm sm:text-base font-normal text-[#777D87] dark:text-slate-400">/ mês</span>
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground  tracking-normal">
+          R$ 29,90 <span className="text-sm sm:text-base font-normal text-muted-foreground ">/ mês</span>
         </h2>
 
-        <p className="text-xs sm:text-sm text-[#777D87] dark:text-slate-400 mt-2 max-w-sm mx-auto leading-relaxed">
+        <p className="text-xs sm:text-sm text-muted-foreground  mt-2 max-w-sm mx-auto leading-relaxed">
           Sem taxas ocultas, sem fidelidade. Cancele ou pause quando desejar com um clique.
         </p>
 
@@ -124,27 +124,27 @@ export const SubscriptionPage: React.FC = () => {
           )}
         </div>
 
-        <p className="text-[11px] text-[#777D87] dark:text-slate-400 mt-3 flex items-center justify-center gap-1.5">
-          <ShieldCheck className="w-3.5 h-3.5 text-[#248A62] dark:text-emerald-400" />
+        <p className="text-[11px] text-muted-foreground  mt-3 flex items-center justify-center gap-1.5">
+          <ShieldCheck className="w-3.5 h-3.5 text-success " />
           <span>Segurança garantida • Cobrança transparente</span>
         </p>
       </div>
 
       {/* Feature Breakdown */}
-      <div className="bg-white dark:bg-[#111622] p-6 sm:p-7 rounded-3xl border border-[#E8EAF0] dark:border-slate-800 shadow-xs transition-colors">
-        <h3 className="text-base font-bold text-[#17191D] dark:text-white mb-4">
+      <div className="bg-card  p-6 sm:p-7 rounded-3xl border border-border  shadow-xs transition-colors">
+        <h3 className="text-base font-bold text-foreground  mb-4">
           Tudo o que está incluído no seu plano
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {features.map((feat, idx) => (
-            <div key={idx} className="flex items-start gap-3 p-3 bg-[#F9FAFC] dark:bg-slate-900/60 rounded-2xl border border-[#ECEFF5] dark:border-slate-800/80 transition-colors">
-              <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-[#7033FF]/15 to-[#2563EB]/15 text-[#4E56FF] dark:text-[#60A5FA] flex items-center justify-center shrink-0 mt-0.5">
+            <div key={idx} className="flex items-start gap-3 p-3 bg-muted  rounded-2xl border border-border  transition-colors">
+              <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-primary/15 to-primary/15 text-primary  flex items-center justify-center shrink-0 mt-0.5">
                 <Check className="w-3 h-3 stroke-[3]" />
               </div>
               <div>
-                <p className="text-xs font-bold text-[#17191D] dark:text-white">{feat.title}</p>
-                <p className="text-[11px] text-[#777D87] dark:text-slate-400 mt-0.5 leading-snug">{feat.desc}</p>
+                <p className="text-xs font-bold text-foreground ">{feat.title}</p>
+                <p className="text-[11px] text-muted-foreground  mt-0.5 leading-snug">{feat.desc}</p>
               </div>
             </div>
           ))}
@@ -152,8 +152,8 @@ export const SubscriptionPage: React.FC = () => {
       </div>
 
       {/* Billing Integration Architecture Notice */}
-      <div className="p-4 bg-[#F2F4F8] dark:bg-slate-900/40 rounded-2xl border border-[#E8EAF0] dark:border-slate-800 text-xs text-[#777D87] dark:text-slate-400 leading-relaxed transition-colors">
-        <p className="font-semibold text-[#17191D] dark:text-slate-200 mb-1">
+      <div className="p-4 bg-muted  rounded-2xl border border-border  text-xs text-muted-foreground  leading-relaxed transition-colors">
+        <p className="font-semibold text-foreground  mb-1">
           Transparência & Arquitetura de Pagamentos
         </p>
         O Delux possui integração nativa preparada para webhooks de servidores seguros. Em ambiente de homologação ou desenvolvimento, o status de assinatura pode ser alternado de maneira segura para testes de fluxo sem efetuar cobranças em cartões reais.

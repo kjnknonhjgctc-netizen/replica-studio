@@ -88,8 +88,8 @@ export const PlannerPage: React.FC = () => {
 
   if (!plannerData) {
     return (
-      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111622] p-6 text-center">
-        <p role="alert" className="text-sm text-slate-600 dark:text-slate-300 mb-4">
+      <div className="rounded-2xl border border-border  bg-card  p-6 text-center">
+        <p role="alert" className="text-sm text-muted-foreground  mb-4">
           {loadError || 'O planejamento não está disponível no momento.'}
         </p>
         <SecondaryButton size="sm" onClick={fetchPlanner}>
@@ -111,7 +111,7 @@ export const PlannerPage: React.FC = () => {
           <SecondaryButton
             size="sm"
             onClick={() => setShowRebalanceModal(true)}
-            icon={<Sparkles className="w-3.5 h-3.5 text-[#356AE6]" />}
+            icon={<Sparkles className="w-3.5 h-3.5 text-primary" />}
           >
             Redistribuir Pendências
           </SecondaryButton>
@@ -119,7 +119,7 @@ export const PlannerPage: React.FC = () => {
       />
 
       {toastMessage && (
-        <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-300 text-xs rounded-2xl flex items-center justify-between">
+        <div className="p-3.5 bg-success-subtle  border border-success-border  text-success  text-xs rounded-2xl flex items-center justify-between">
           <span>{toastMessage}</span>
           <button onClick={() => setToastMessage(null)} className="font-bold underline text-xs cursor-pointer">
             OK
@@ -128,7 +128,7 @@ export const PlannerPage: React.FC = () => {
       )}
 
       {/* 7-Day Quick Strip Bar */}
-      <div className="bg-white dark:bg-[#111622] p-3 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs transition-colors">
+      <div className="bg-card  p-3 rounded-2xl border border-border  shadow-xs transition-colors">
         <div className="flex items-center justify-between gap-1 overflow-x-auto pb-1 scrollbar-none">
           {days.map((day: any, idx: number) => {
             const isSelected = selectedDayIdx === idx;
@@ -138,11 +138,11 @@ export const PlannerPage: React.FC = () => {
                 onClick={() => setSelectedDayIdx(idx)}
                 className={`flex-1 min-w-[50px] py-2 px-1 rounded-xl flex flex-col items-center transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-gradient-to-r from-[#25865A] via-[#25865A] to-[#25865A] text-white shadow-sm shadow-[#25865A]/25'
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-gradient-to-r from-primary via-primary to-primary text-primary-foreground shadow-sm shadow-primary/25'
+                    : 'text-muted-foreground  hover:bg-muted  hover:text-foreground '
                 }`}
               >
-                <span className="text-[10px] font-semibold tracking-wider uppercase opacity-80">
+                <span className="text-[10px] font-semibold tracking-normal uppercase opacity-80">
                   {day.dayName}
                 </span>
                 <span className="text-sm font-bold mt-0.5">{day.dayNumber}</span>
@@ -150,11 +150,11 @@ export const PlannerPage: React.FC = () => {
                   <span
                     className={`w-1.5 h-1.5 rounded-full ${
                       day.hasConflict
-                        ? 'bg-amber-400'
+                        ? 'bg-warning'
                         : day.missions.length > 0
                         ? isSelected
-                          ? 'bg-white'
-                          : 'bg-[#356AE6] dark:bg-[#65B982]'
+                          ? 'bg-card'
+                          : 'bg-primary '
                         : 'bg-transparent'
                     }`}
                   />
@@ -166,19 +166,19 @@ export const PlannerPage: React.FC = () => {
       </div>
 
       {/* Daily Capacity and Conflict Alert */}
-      <div className="bg-white dark:bg-[#111622] p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs transition-colors">
+      <div className="bg-card  p-5 rounded-3xl border border-border  shadow-xs transition-colors">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">
+            <h3 className="text-base font-bold text-foreground ">
               {currentSelectedDay.isToday ? 'Hoje' : currentSelectedDay.dayName} —{' '}
               {new Date(currentSelectedDay.date + 'T12:00:00').toLocaleDateString('pt-BR', {
                 day: 'numeric',
                 month: 'long'
               })}
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs text-muted-foreground  mt-0.5">
               Carga total estimada:{' '}
-              <span className="font-semibold text-slate-900 dark:text-white">
+              <span className="font-semibold text-foreground ">
                 {currentSelectedDay.totalMinutes} minutos
               </span>{' '}
               (sua meta diária: {currentSelectedDay.availableMinutes} min)
@@ -189,8 +189,8 @@ export const PlannerPage: React.FC = () => {
             <span
               className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
                 currentSelectedDay.hasConflict
-                  ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50'
-                  : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50'
+                  ? 'bg-warning-subtle  text-warning  border border-warning-border '
+                  : 'bg-success-subtle  text-success  border border-success-border '
               }`}
             >
               {currentSelectedDay.hasConflict ? 'Carga Alta' : 'Equilibrado'}
@@ -199,8 +199,8 @@ export const PlannerPage: React.FC = () => {
         </div>
 
         {currentSelectedDay.hasConflict && (
-          <div className="p-3 bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 rounded-2xl text-xs text-amber-700 dark:text-amber-300 flex items-center gap-2.5 mb-4">
-            <AlertCircle className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400" />
+          <div className="p-3 bg-warning-subtle/90  border border-warning-border  rounded-2xl text-xs text-warning  flex items-center gap-2.5 mb-4">
+            <AlertCircle className="w-4 h-4 shrink-0 text-warning " />
             <p>
               As atividades deste dia superam seu tempo ideal. Considere mover uma das tarefas para o dia seguinte para evitar frustração.
             </p>
@@ -210,10 +210,10 @@ export const PlannerPage: React.FC = () => {
         {/* Missions for current day */}
         <div className="space-y-2.5">
           {currentSelectedDay.missions.length === 0 ? (
-            <div className="p-8 bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800 rounded-2xl text-center">
-              <CalendarDays className="w-8 h-8 text-slate-300 dark:text-slate-600 mx-auto mb-2" />
-              <p className="text-xs font-semibold text-slate-900 dark:text-white">Nenhuma missão agendada para este dia</p>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+            <div className="p-8 bg-card  border border-border/60  rounded-2xl text-center">
+              <CalendarDays className="w-8 h-8 text-muted-foreground  mx-auto mb-2" />
+              <p className="text-xs font-semibold text-foreground ">Nenhuma missão agendada para este dia</p>
+              <p className="text-[11px] text-muted-foreground  mt-0.5">
                 Aproveite o tempo de descanso ou adiante passos dos seus objetivos ativos.
               </p>
             </div>
@@ -235,7 +235,7 @@ export const PlannerPage: React.FC = () => {
                         handleMoveMissionDate(m, 1);
                       }}
                       title="Mover para amanhã"
-                      className="px-2 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-semibold text-slate-600 dark:text-slate-300 hover:text-[#356AE6] dark:hover:text-[#65B982] rounded-lg shadow-xs flex items-center gap-1 cursor-pointer"
+                      className="px-2 py-1 bg-card  border border-border  text-[10px] font-semibold text-muted-foreground  hover:text-primary  rounded-lg shadow-xs flex items-center gap-1 cursor-pointer"
                     >
                       <span>Amanhã</span>
                       <MoveRight className="w-3 h-3" />

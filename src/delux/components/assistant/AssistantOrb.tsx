@@ -64,7 +64,7 @@ export const AssistantOrb: React.FC<AssistantOrbProps> = ({
           </g>
         </motion.g>
       </svg>
-      {(size === 'lg' || size === 'xl') && <span className={`absolute -bottom-0.5 -right-0.5 z-30 h-3.5 w-3.5 rounded-full border-2 border-white shadow-sm ${isGenerating ? 'bg-blue-500' : 'bg-emerald-500'}`}/>}
+      {(size === 'lg' || size === 'xl') && <span className={`absolute -bottom-0.5 -right-0.5 z-30 h-3.5 w-3.5 rounded-full border-2 border-card shadow-sm ${isGenerating ? 'bg-primary' : 'bg-success'}`}/>}
     </motion.div>
   );
 };

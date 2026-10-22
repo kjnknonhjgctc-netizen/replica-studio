@@ -35,26 +35,26 @@ export const ForgotPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA] dark:bg-[#0B0E14] flex flex-col justify-center items-center px-4 py-12 transition-colors">
-      <div className="w-full max-w-md bg-white dark:bg-[#111622] border border-[#E8EAF0] dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm transition-colors">
+    <div className="min-h-screen bg-background  flex flex-col justify-center items-center px-4 py-12 transition-colors">
+      <div className="w-full max-w-md bg-card  border border-border  rounded-3xl p-6 sm:p-8 shadow-sm transition-colors">
         <div className="flex flex-col items-center text-center mb-8">
           <DeluxLogo size="lg" className="mb-4" />
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#17191D] dark:text-white">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-normal text-foreground ">
             Recuperação de Acesso
           </h1>
-          <p className="text-xs sm:text-sm text-[#777D87] dark:text-slate-400 mt-1 max-w-xs">
+          <p className="text-xs sm:text-sm text-muted-foreground  mt-1 max-w-xs">
             Informe seu e-mail e enviaremos um link seguro para criar uma nova senha.
           </p>
         </div>
 
         {submitted ? (
-          <div className="text-center p-6 bg-[#F7F9FD] dark:bg-slate-900/60 border border-[#D9E3FC] dark:border-slate-800 rounded-2xl">
-            <CheckCircle2 className="w-10 h-10 text-[#356AE6] dark:text-[#60A5FA] mx-auto mb-3" />
-            <p className="text-sm font-semibold text-[#17191D] dark:text-white mb-1">Status da recuperação</p>
-            <p className="text-xs text-[#777D87] dark:text-slate-400 leading-relaxed mb-6">{message}</p>
+          <div className="text-center p-6 bg-accent  border border-border  rounded-2xl">
+            <CheckCircle2 className="w-10 h-10 text-primary  mx-auto mb-3" />
+            <p className="text-sm font-semibold text-foreground  mb-1">Status da recuperação</p>
+            <p className="text-xs text-muted-foreground  leading-relaxed mb-6">{message}</p>
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 text-xs font-semibold text-[#356AE6] dark:text-[#60A5FA] hover:underline"
+              className="inline-flex items-center gap-2 text-xs font-semibold text-primary  hover:underline"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               Voltar para o login
@@ -63,7 +63,7 @@ export const ForgotPasswordPage: React.FC = () => {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div role="alert" className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-300 text-xs">
+              <div role="alert" className="p-3 rounded-xl bg-destructive-subtle  border border-destructive-border  text-destructive  text-xs">
                 {error}
               </div>
             )}
@@ -88,7 +88,7 @@ export const ForgotPasswordPage: React.FC = () => {
             <div className="text-center mt-4">
               <Link
                 to="/login"
-                className="inline-flex items-center gap-1.5 text-xs text-[#777D87] dark:text-slate-400 hover:text-[#17191D] dark:hover:text-white transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground  hover:text-foreground  transition-colors"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 Retornar ao login

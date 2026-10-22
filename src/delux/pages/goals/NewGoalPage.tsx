@@ -158,14 +158,14 @@ export const NewGoalPage: React.FC = () => {
       />
 
       {/* Wizard Progress Stepper */}
-      <div className="flex items-center justify-between gap-1 overflow-x-auto pb-2 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex items-center justify-between gap-1 overflow-x-auto pb-2 border-b border-border ">
         {stepIndicators.map((s, idx) => (
           <div
             key={s.key}
             className={`flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap py-1 px-2.5 rounded-lg transition-all ${
               step === s.key
-                ? 'text-[#4E56FF] dark:text-[#889BFF] bg-gradient-to-r from-[#7033FF]/12 to-[#2563EB]/12 border border-[#4E56FF]/30 font-bold'
-                : 'text-slate-500 dark:text-slate-400'
+                ? 'text-primary  bg-gradient-to-r from-primary/12 to-primary/12 border border-primary/30 font-bold'
+                : 'text-muted-foreground '
             }`}
           >
             <span>{s.label}</span>
@@ -174,20 +174,20 @@ export const NewGoalPage: React.FC = () => {
       </div>
 
       {/* Step Container Card */}
-      <div className="bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xs transition-colors">
+      <div className="bg-card  border border-border  rounded-3xl p-6 sm:p-8 shadow-xs transition-colors">
         {/* ETAPA A: DEFINIR O OBJETIVO */}
         {step === 'A' && (
           <div className="space-y-5">
             <div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white">Etapa A: Definir o Objetivo</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              <h2 className="text-xl font-bold text-foreground ">Etapa A: Definir o Objetivo</h2>
+              <p className="text-xs text-muted-foreground  mt-1">
                 Dê um título direto para a jornada que você deseja iniciar.
               </p>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-200 block mb-1">
+                <label className="text-xs font-semibold text-foreground  block mb-1">
                   Título do objetivo *
                 </label>
                 <input
@@ -195,12 +195,12 @@ export const NewGoalPage: React.FC = () => {
                   placeholder="Ex: Conversação Fluente em Inglês"
                   value={title}
                   onChange={e => setTitle(e.target.value)}
-                  className="w-full h-11 px-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-[#356AE6] rounded-xl text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none transition-colors"
+                  className="w-full h-11 px-3.5 bg-card  border border-border  focus:border-primary rounded-xl text-sm text-foreground  placeholder:text-muted-foreground  focus:outline-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-200 block mb-1">
+                <label className="text-xs font-semibold text-foreground  block mb-1">
                   Categoria
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -213,8 +213,8 @@ export const NewGoalPage: React.FC = () => {
                         onClick={() => setCategory(catKey)}
                         className={`flex items-center gap-2 p-2.5 rounded-xl border text-left text-xs font-medium transition-all cursor-pointer ${
                           isSelected
-                            ? 'border-[#356AE6] bg-blue-50 dark:bg-blue-950/40 text-[#2563EB] dark:text-[#60A5FA] font-semibold'
-                            : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600 bg-white dark:bg-slate-800'
+                            ? 'border-primary bg-accent  text-primary  font-semibold'
+                            : 'border-border  text-muted-foreground  hover:border-border  bg-card '
                         }`}
                       >
                         {categoryIcons[catKey]}
@@ -226,7 +226,7 @@ export const NewGoalPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-200 block mb-1">
+                <label className="text-xs font-semibold text-foreground  block mb-1">
                   Breve descrição contextual (opcional)
                 </label>
                 <textarea
@@ -234,12 +234,12 @@ export const NewGoalPage: React.FC = () => {
                   placeholder="Ex: Desenvolver habilidade para interagir em reuniões e viagens internacionais com naturalidade."
                   value={description}
                   onChange={e => setDescription(e.target.value)}
-                  className="w-full p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-[#356AE6] rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none resize-none transition-colors"
+                  className="w-full p-3 bg-card  border border-border  focus:border-primary rounded-xl text-xs sm:text-sm text-foreground  placeholder:text-muted-foreground  focus:outline-none resize-none transition-colors"
                 />
               </div>
             </div>
 
-            <div className="flex justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex justify-end pt-4 border-t border-border ">
               <PrimaryButton
                 size="md"
                 disabled={!title.trim()}
@@ -256,15 +256,15 @@ export const NewGoalPage: React.FC = () => {
         {step === 'B' && (
           <div className="space-y-5">
             <div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white">Etapa B: Resultado Desejado</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              <h2 className="text-xl font-bold text-foreground ">Etapa B: Resultado Desejado</h2>
+              <p className="text-xs text-muted-foreground  mt-1">
                 Como você vai medir se atingiu o sucesso? Metas claras facilitam missões diárias.
               </p>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-200 block mb-1">
+                <label className="text-xs font-semibold text-foreground  block mb-1">
                   Resultado tangível almejado
                 </label>
                 <textarea
@@ -272,24 +272,24 @@ export const NewGoalPage: React.FC = () => {
                   placeholder="Ex: Conduzir uma reunião de 30 minutos em inglês com clientes sem usar tradutor ou hesitar."
                   value={desiredOutcome}
                   onChange={e => setDesiredOutcome(e.target.value)}
-                  className="w-full p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-[#356AE6] rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none resize-none transition-colors"
+                  className="w-full p-3 bg-card  border border-border  focus:border-primary rounded-xl text-xs sm:text-sm text-foreground  placeholder:text-muted-foreground  focus:outline-none resize-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-200 block mb-1">
+                <label className="text-xs font-semibold text-foreground  block mb-1">
                   Prazo estimado (opcional)
                 </label>
                 <input
                   type="date"
                   value={targetDate}
                   onChange={e => setTargetDate(e.target.value)}
-                  className="w-full h-11 px-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-[#356AE6] rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none transition-colors"
+                  className="w-full h-11 px-3.5 bg-card  border border-border  focus:border-primary rounded-xl text-xs sm:text-sm text-foreground  focus:outline-none transition-colors"
                 />
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-4 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex justify-between items-center pt-4 border-t border-border ">
               <SecondaryButton size="sm" onClick={() => setStep('A')}>
                 Voltar
               </SecondaryButton>
@@ -304,15 +304,15 @@ export const NewGoalPage: React.FC = () => {
         {step === 'C' && (
           <div className="space-y-5">
             <div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white">Etapa C: Contexto Atual</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              <h2 className="text-xl font-bold text-foreground ">Etapa C: Contexto Atual</h2>
+              <p className="text-xs text-muted-foreground  mt-1">
                 Entender seu ponto de partida evita planos excessivamente teóricos ou difíceis.
               </p>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-200 block mb-1">
+                <label className="text-xs font-semibold text-foreground  block mb-1">
                   Qual é o seu nível atual nessa área?
                 </label>
                 <textarea
@@ -320,12 +320,12 @@ export const NewGoalPage: React.FC = () => {
                   placeholder="Ex: Leio textos razoavelmente bem, mas quase nunca tive oportunidade de falar com nativos."
                   value={currentState}
                   onChange={e => setCurrentState(e.target.value)}
-                  className="w-full p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-[#356AE6] rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none resize-none transition-colors"
+                  className="w-full p-3 bg-card  border border-border  focus:border-primary rounded-xl text-xs sm:text-sm text-foreground  placeholder:text-muted-foreground  focus:outline-none resize-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-200 block mb-1">
+                <label className="text-xs font-semibold text-foreground  block mb-1">
                   O que você já tentou antes para alcançar essa meta?
                 </label>
                 <textarea
@@ -333,12 +333,12 @@ export const NewGoalPage: React.FC = () => {
                   placeholder="Ex: Aplicativos de gamificação como Duolingo e livros de gramática por 2 meses, mas parei por falta de aplicação prática."
                   value={whatHasBeenTried}
                   onChange={e => setWhatHasBeenTried(e.target.value)}
-                  className="w-full p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-[#356AE6] rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none resize-none transition-colors"
+                  className="w-full p-3 bg-card  border border-border  focus:border-primary rounded-xl text-xs sm:text-sm text-foreground  placeholder:text-muted-foreground  focus:outline-none resize-none transition-colors"
                 />
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-4 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex justify-between items-center pt-4 border-t border-border ">
               <SecondaryButton size="sm" onClick={() => setStep('B')}>
                 Voltar
               </SecondaryButton>
@@ -353,15 +353,15 @@ export const NewGoalPage: React.FC = () => {
         {step === 'D' && (
           <div className="space-y-5">
             <div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white">Etapa D: Obstáculos e Recursos</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              <h2 className="text-xl font-bold text-foreground ">Etapa D: Obstáculos e Recursos</h2>
+              <p className="text-xs text-muted-foreground  mt-1">
                 Identificar os atritos com antecedência é o segredo para manter a disciplina.
               </p>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-200 block mb-1">
+                <label className="text-xs font-semibold text-foreground  block mb-1">
                   Quais obstáculos mais atrapalham sua consistência? (um por linha)
                 </label>
                 <textarea
@@ -369,12 +369,12 @@ export const NewGoalPage: React.FC = () => {
                   placeholder="Cansaço mental ao final do dia&#10;Falta de um método claro&#10;Insegurança com pronúncia"
                   value={obstaclesInput}
                   onChange={e => setObstaclesInput(e.target.value)}
-                  className="w-full p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-[#356AE6] rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none resize-none font-mono text-xs transition-colors"
+                  className="w-full p-3 bg-card  border border-border  focus:border-primary rounded-xl text-xs sm:text-sm text-foreground  placeholder:text-muted-foreground  focus:outline-none resize-none font-mono text-xs transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-200 block mb-1">
+                <label className="text-xs font-semibold text-foreground  block mb-1">
                   Quais recursos você já tem disponíveis?
                 </label>
                 <input
@@ -382,12 +382,12 @@ export const NewGoalPage: React.FC = () => {
                   placeholder="Ex: Fone com cancelamento de ruído, 45 min livres pela manhã"
                   value={resourcesInput}
                   onChange={e => setResourcesInput(e.target.value)}
-                  className="w-full h-11 px-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-[#356AE6] rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none transition-colors"
+                  className="w-full h-11 px-3.5 bg-card  border border-border  focus:border-primary rounded-xl text-xs sm:text-sm text-foreground  placeholder:text-muted-foreground  focus:outline-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-200 block mb-1">
+                <label className="text-xs font-semibold text-foreground  block mb-1">
                   Restrições importantes de horário ou energia
                 </label>
                 <input
@@ -395,12 +395,12 @@ export const NewGoalPage: React.FC = () => {
                   placeholder="Ex: Finais de semana dedicados à família"
                   value={constraints}
                   onChange={e => setConstraints(e.target.value)}
-                  className="w-full h-11 px-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-[#356AE6] rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none transition-colors"
+                  className="w-full h-11 px-3.5 bg-card  border border-border  focus:border-primary rounded-xl text-xs sm:text-sm text-foreground  placeholder:text-muted-foreground  focus:outline-none transition-colors"
                 />
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-4 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex justify-between items-center pt-4 border-t border-border ">
               <SecondaryButton size="sm" onClick={() => setStep('C')}>
                 Voltar
               </SecondaryButton>
@@ -415,8 +415,8 @@ export const NewGoalPage: React.FC = () => {
         {step === 'E' && (
           <div className="space-y-5">
             <div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white">Etapa E: Disponibilidade e Prioridade</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              <h2 className="text-xl font-bold text-foreground ">Etapa E: Disponibilidade e Prioridade</h2>
+              <p className="text-xs text-muted-foreground  mt-1">
                 Ajuste o ritmo do plano para encaixar perfeitamente na sua rotina real.
               </p>
             </div>
@@ -424,10 +424,10 @@ export const NewGoalPage: React.FC = () => {
             <div className="space-y-5">
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-200">
+                  <label className="text-xs font-semibold text-foreground ">
                     Tempo diário dedicado a este objetivo:
                   </label>
-                  <span className="text-sm font-bold text-[#356AE6] dark:text-[#60A5FA]">{dailyMinutes} min</span>
+                  <span className="text-sm font-bold text-primary ">{dailyMinutes} min</span>
                 </div>
                 <input
                   type="range"
@@ -436,12 +436,12 @@ export const NewGoalPage: React.FC = () => {
                   step="5"
                   value={dailyMinutes}
                   onChange={e => setDailyMinutes(parseInt(e.target.value, 10))}
-                  className="w-full accent-[#356AE6]"
+                  className="w-full accent-primary"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-200 block mb-2">
+                <label className="text-xs font-semibold text-foreground  block mb-2">
                   Nível de Prioridade
                 </label>
                 <div className="grid grid-cols-3 gap-2">
@@ -456,8 +456,8 @@ export const NewGoalPage: React.FC = () => {
                       onClick={() => setPriority(p.id as any)}
                       className={`h-10 text-xs font-semibold rounded-xl border transition-all cursor-pointer ${
                         priority === p.id
-                          ? 'border-[#356AE6] bg-blue-50 dark:bg-blue-950/40 text-[#2563EB] dark:text-[#60A5FA]'
-                          : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600 bg-white dark:bg-slate-800'
+                          ? 'border-primary bg-accent  text-primary '
+                          : 'border-border  text-muted-foreground  hover:border-border  bg-card '
                       }`}
                     >
                       {p.label}
@@ -467,7 +467,7 @@ export const NewGoalPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-4 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex justify-between items-center pt-4 border-t border-border ">
               <SecondaryButton size="sm" onClick={() => setStep('D')}>
                 Voltar
               </SecondaryButton>
@@ -475,7 +475,7 @@ export const NewGoalPage: React.FC = () => {
                 size="md"
                 loading={generatingAI}
                 onClick={handleRunAIDiagnostic}
-                icon={<Sparkles className="w-4 h-4 text-white" />}
+                icon={<Sparkles className="w-4 h-4 text-primary-foreground" />}
               >
                 Gerar Diagnóstico & Plano
               </PrimaryButton>
@@ -488,31 +488,31 @@ export const NewGoalPage: React.FC = () => {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white">Etapa F: Plano de Ação Estruturado</h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                <h2 className="text-xl font-bold text-foreground ">Etapa F: Plano de Ação Estruturado</h2>
+                <p className="text-xs text-muted-foreground  mt-1">
                   Revise as etapas e primeiras missões sugeridas. Você poderá ajustá-las a qualquer momento.
                 </p>
               </div>
-              <span className="text-xs px-2.5 py-1 bg-blue-50 dark:bg-blue-950/40 text-[#2563EB] dark:text-[#60A5FA] font-bold rounded-full">
+              <span className="text-xs px-2.5 py-1 bg-accent  text-primary  font-bold rounded-full">
                 Diagnóstico Concluído
               </span>
             </div>
 
             {/* Stages / Steps */}
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2.5">
+              <span className="text-xs font-bold uppercase tracking-normal text-muted-foreground  block mb-2.5">
                 Etapas do Plano
               </span>
               <div className="space-y-2.5">
                 {steps.map((st, idx) => (
-                  <div key={idx} className="p-3.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 rounded-2xl text-left">
+                  <div key={idx} className="p-3.5 bg-card  border border-border  rounded-2xl text-left">
                     <div className="flex items-start justify-between gap-2">
-                      <span className="text-xs font-bold text-slate-900 dark:text-white">{st.title}</span>
-                      <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">Ordem {idx + 1}</span>
+                      <span className="text-xs font-bold text-foreground ">{st.title}</span>
+                      <span className="text-[10px] text-muted-foreground  font-semibold">Ordem {idx + 1}</span>
                     </div>
-                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">{st.description}</p>
+                    <p className="text-xs text-muted-foreground  mt-1">{st.description}</p>
                     {st.success_criteria && (
-                      <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium mt-1">
+                      <p className="text-[11px] text-success  font-medium mt-1">
                         Critério: {st.success_criteria}
                       </p>
                     )}
@@ -523,17 +523,17 @@ export const NewGoalPage: React.FC = () => {
 
             {/* Initial Missions */}
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2.5">
+              <span className="text-xs font-bold uppercase tracking-normal text-muted-foreground  block mb-2.5">
                 Primeiras Missões Práticas
               </span>
               <div className="space-y-2">
                 {missions.map((m, idx) => (
-                  <div key={idx} className="p-3 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-xl flex items-center justify-between">
+                  <div key={idx} className="p-3 bg-card  border border-border  rounded-xl flex items-center justify-between">
                     <div>
-                      <p className="text-xs font-bold text-slate-900 dark:text-white">{m.title}</p>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400">{m.instructions}</p>
+                      <p className="text-xs font-bold text-foreground ">{m.title}</p>
+                      <p className="text-[11px] text-muted-foreground ">{m.instructions}</p>
                     </div>
-                    <span className="text-xs font-semibold text-[#356AE6] dark:text-[#60A5FA] shrink-0 ml-3">
+                    <span className="text-xs font-semibold text-primary  shrink-0 ml-3">
                       {m.estimated_minutes} min
                     </span>
                   </div>
@@ -541,7 +541,7 @@ export const NewGoalPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-4 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex justify-between items-center pt-4 border-t border-border ">
               <SecondaryButton size="sm" onClick={() => setStep('E')}>
                 Voltar
               </SecondaryButton>
