@@ -75,7 +75,7 @@ function canonicalDay(value: string) {
  */
 export function resolvePreferredDaysFromRequest(message: string, preferredDays: string[] = ['seg', 'ter', 'qua', 'qui', 'sex']): string[] {
   const text = normalizeDayText(message);
-  const range = new RegExp('(?:de\\\\s+)?' + dayPattern() + '\\\\s+(?:a|ate|para)\\\\s+' + dayPattern()).exec(text);
+  const range = new RegExp('(?:de\\s+)?' + dayPattern() + '\\s+(?:a|ate|para)\\s+' + dayPattern()).exec(text);
   let days: string[];
 
   if (range) {
@@ -91,7 +91,7 @@ export function resolvePreferredDaysFromRequest(message: string, preferredDays: 
       }
     }
   } else {
-    const mentions = [...text.matchAll(new RegExp('\\\\b' + dayPattern() + '\\\\b', 'g'))];
+    const mentions = [...text.matchAll(new RegExp('\\b' + dayPattern() + '\\b', 'g'))];
     const excluded = new Set<string>();
     const positive: string[] = [];
     for (const match of mentions) {
@@ -105,7 +105,7 @@ export function resolvePreferredDaysFromRequest(message: string, preferredDays: 
   }
 
   const excluded = new Set<string>();
-  for (const match of text.matchAll(new RegExp('(?:nao|sem|exceto|menos|evitar|excluir|fora de|nao incluir|nao quero|nao posso)\\\\s+(?:(?:a|o|os|as)\\\\s+)?' + dayPattern(), 'g'))) {
+  for (const match of text.matchAll(new RegExp('(?:nao|sem|exceto|menos|evitar|excluir|fora de|nao incluir|nao quero|nao posso)\\s+(?:(?:a|o|os|as)\\s+)?' + dayPattern(), 'g'))) {
     const day = canonicalDay(match[1]);
     if (day) excluded.add(day);
   }
