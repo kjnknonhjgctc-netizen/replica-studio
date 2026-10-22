@@ -12,7 +12,6 @@ type Session = {
   flowType?: string | undefined;
 };
 const SESSION_KEY = 'delux_supabase_session';
-const WEEKDAY_KEYS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
 const DEFAULT_NOTIFICATION_PREFERENCES = {
   missions_reminders: true,
   weekly_digest: true,
@@ -430,7 +429,7 @@ async function sendChatMessage(message: string, conversationId?: string) {
       const prompt = 'Transforme o pedido abaixo em um plano REALISTA para salvar no Delux.\nPedido: "' + text + '"\n' +
         'Tempo diário: ' + (preferences.daily_available_minutes || 30) + ' minutos.\n' +
         'Horário preferido: ' + (preferences.preferred_time || 'flexible') + '.\n' +
-        'Dias disponíveis: ' + (preferences.preferred_days || ['seg', 'ter', 'qua', 'qui', 'sex']).join(', ') + '.\n' +
+        'Dias disponíveis: ' + resolvePreferredDaysFromRequest(text, preferences.preferred_days || ['seg', 'ter', 'qua', 'qui', 'sex']).join(', ') + '.\n' +
         'Metas existentes: ' + relevantGoals.map((g: any) => g.title).join('; ') + '.\n' +
         'day_offset é o índice de dias DISPONÍVEIS, não dias corridos. Responda somente JSON: ' +
         '{"goal_title":"...","goal_description":"...","category":"health|learning|career|finance|organization|personal_dev|other","desired_outcome":"...","current_state":"...","steps":[{"title":"...","description":"...","success_criteria":"..."}],"missions":[{"title":"...","instructions":"...","estimated_minutes":25,"priority":"high|medium|low","day_offset":0,"scheduled_time":"09:00","step_index":0}]}. Inclua 3 etapas e 5 a 7 missões.';
@@ -446,7 +445,7 @@ async function sendChatMessage(message: string, conversationId?: string) {
         diagnostic: { current_situation: plan.current_state || '', obstacles: [], available_resources: [], constraints: '' },
         steps: plan.steps,
         missions: plan.missions,
-      }, user.id, preferences.preferred_days || ['seg', 'ter', 'qua', 'qui', 'sex']);
+      }, user.id, resolvePreferredDaysFromRequest(text, preferences.preferred_days || ['seg', 'ter', 'qua', 'qui', 'sex']));
       const daySummary = goal.missions.map((m: any) => m.scheduled_date + ' ' + (m.scheduled_time || '') + ' — ' + m.title + ' (' + m.estimated_minutes + ' min)').join('\n');
       assistantContent = 'Plano salvo no Delux! Criei o objetivo **"' + goal.title + '"**, ' + goal.steps.length + ' etapas e ' + goal.missions.length + ' tarefas no Planejamento.\n\n' + daySummary;
     } else {
