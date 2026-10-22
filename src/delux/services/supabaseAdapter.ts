@@ -315,7 +315,7 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
     const hasOffset = m.day_offset !== undefined && m.day_offset !== null && m.day_offset !== '';
     let offset = hasOffset && Number.isFinite(Number(m.day_offset)) ? Math.max(0, Math.floor(Number(m.day_offset))) : i;
     const requestedDate = String(m.scheduled_date || '');
-    const parsedRequestedDate = /^\\d{4}-\\d{2}-\\d{2}$/.test(requestedDate) ? new Date(requestedDate + 'T12:00:00') : null;
+    const parsedRequestedDate = /^\d{4}-\d{2}-\d{2}$/.test(requestedDate) ? new Date(requestedDate + 'T12:00:00') : null;
     const validRequestedDate = parsedRequestedDate && Number.isFinite(parsedRequestedDate.getTime()) && formatLocalDate(parsedRequestedDate) === requestedDate;
     let date = validRequestedDate ? requestedDate : nextAvailableDate(allowedDays, offset);
     if (!isPreferredDate(date, allowedDays)) {
