@@ -60,7 +60,7 @@ export function getNextPreferredDate(
 }
 
 export function isPreferredDate(dateOnly: string, preferredDays: string[]): boolean {
-  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(dateOnly)) return false;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateOnly)) return false;
   const date = new Date(dateOnly + 'T12:00:00');
   if (!Number.isFinite(date.getTime()) || formatLocalDate(date) !== dateOnly) return false;
   const allowed = new Set(preferredDays.filter((day) => WEEKDAY_KEYS.includes(day as typeof WEEKDAY_KEYS[number])));
