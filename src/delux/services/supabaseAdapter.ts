@@ -1,6 +1,7 @@
 import { generateAi } from '../ai.functions';
 import { buildAssistantContext, recentConversation } from '../ai/context';
-import { requestsSavedPlan, resolveNavigationIntent } from '../ai/intent';
+import { requestsSavedPlan, resolveNavigationIntent, resolvePreferredDaysFromRequest } from '../ai/intent';
+import { addDaysToDateOnly, formatLocalDate, getNextPreferredDate, isPreferredDate } from '../utils/date';
 
 type SessionUser = { id: string; email?: string; user_metadata?: Record<string, unknown> };
 type Session = {
@@ -196,23 +197,11 @@ function uid() {
 }
 
 function localDateString(date: Date) {
-  return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+  return formatLocalDate(date);
 }
 
-function nextAvailableDate(preferredDays: string[], startOffset = 0) {
-  const allowed = preferredDays.length ? preferredDays : ['seg', 'ter', 'qua', 'qui', 'sex'];
-  const target = Math.max(0, Math.min(370, Math.floor(Number(startOffset) || 0)));
-  const date = new Date();
-  date.setHours(12, 0, 0, 0);
-  let index = -1;
-  for (let i = 0; i < 370; i++) {
-    if (allowed.includes(WEEKDAY_KEYS[date.getDay()] ?? '')) {
-      index++;
-      if (index === target) return localDateString(date);
-    }
-    date.setDate(date.getDate() + 1);
-  }
-  return localDateString(date);
+function nextAvailableDate(preferredDays: string[], startOffset = 0, startDate = new Date()) {
+  return getNextPreferredDate(preferredDays, startOffset, startDate);
 }
 
 async function getCurrentUser() {
@@ -308,7 +297,15 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
     : [];
   const activePrefs = await getPreferencesFor(userId);
   const capacity = Math.max(5, Number(activePrefs.daily_available_minutes) || 30);
+  const allowedDays = preferredDays.length ? preferredDays : ['seg', 'ter', 'qua', 'qui', 'sex'];
   const planned: Record<string, number> = {};
+  // Count existing unfinished work so a newly generated plan does not overload the user's calendar.
+  const existingMissions = await selectRows('missions', {}, 'scheduled_date.asc,scheduled_time.asc');
+  existingMissions.forEach((mission: any) => {
+    if (mission.scheduled_date && ['pending', 'in_progress', 'postponed'].includes(mission.status)) {
+      planned[mission.scheduled_date] = (planned[mission.scheduled_date] || 0) + (Number(mission.estimated_minutes) || 0);
+    }
+  });
   const requestedMissions = Array.isArray(payload.missions) ? payload.missions : [];
   const createdMissions = [];
   for (let i = 0; i < requestedMissions.length; i++) {
@@ -316,13 +313,23 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
     const stepIndex = Number.isInteger(Number(m.step_index)) ? Number(m.step_index) : 0;
     const step = createdSteps[stepIndex] || createdSteps[0];
     const minutes = Math.max(5, Math.min(180, capacity, Number(m.estimated_minutes) || capacity));
-    let offset = Math.max(0, Number(m.day_offset) || i);
-    let date = m.scheduled_date || nextAvailableDate(preferredDays, offset);
+    const hasOffset = m.day_offset !== undefined && m.day_offset !== null && m.day_offset !== '';
+    let offset = hasOffset && Number.isFinite(Number(m.day_offset)) ? Math.max(0, Math.floor(Number(m.day_offset))) : i;
+    const requestedDate = String(m.scheduled_date || '');
+    const parsedRequestedDate = /^\\d{4}-\\d{2}-\\d{2}$/.test(requestedDate) ? new Date(requestedDate + 'T12:00:00') : null;
+    const validRequestedDate = parsedRequestedDate && Number.isFinite(parsedRequestedDate.getTime()) && formatLocalDate(parsedRequestedDate) === requestedDate;
+    let date = validRequestedDate ? requestedDate : nextAvailableDate(allowedDays, offset);
+    if (!isPreferredDate(date, allowedDays)) {
+      date = nextAvailableDate(allowedDays, 0, validRequestedDate ? parsedRequestedDate! : new Date());
+    }
     let tries = 0;
-    while (!m.scheduled_date && (planned[date] || 0) + minutes > capacity && tries < 35) {
-      offset++;
-      date = nextAvailableDate(preferredDays, offset);
+    while ((planned[date] || 0) + minutes > capacity && tries < 370) {
+      const nextCalendarDate = addDaysToDateOnly(date, 1, new Date(date + 'T12:00:00'));
+      date = nextAvailableDate(allowedDays, 0, new Date(nextCalendarDate + 'T12:00:00'));
       tries++;
+    }
+    if ((planned[date] || 0) + minutes > capacity) {
+      throw new Error('Não foi possível encaixar todas as tarefas na sua disponibilidade. Aumente o tempo diário ou libere dias no perfil.');
     }
     planned[date] = (planned[date] || 0) + minutes;
     const inserted = await insertRows('missions', [{
@@ -338,7 +345,8 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
       status: 'pending',
       position: i + 1,
     }]);
-    if (inserted[0]) createdMissions.push(inserted[0]);
+    if (!inserted[0]) throw new Error('O Supabase não confirmou a criação de uma tarefa do plano.');
+    createdMissions.push(inserted[0]);
   }
   await insertRows('activity_events', [{
     user_id: userId, goal_id: goal.id, event_type: 'goal_created', metadata: { title: goal.title },
