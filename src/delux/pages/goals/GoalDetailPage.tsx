@@ -236,7 +236,7 @@ export const GoalDetailPage: React.FC = () => {
             onClick={() => setActiveTab(tab.key as any)}
             className={`px-3.5 py-2 text-xs font-semibold rounded-xl transition-all whitespace-nowrap cursor-pointer ${
               activeTab === tab.key
-                ? 'bg-gradient-to-r from-[#7033FF] via-[#4E56FF] to-[#2563EB] text-white shadow-sm shadow-[#4E56FF]/25'
+                ? 'bg-gradient-to-r from-[#25865A] via-[#25865A] to-[#25865A] text-white shadow-sm shadow-[#25865A]/25'
                 : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
@@ -250,7 +250,7 @@ export const GoalDetailPage: React.FC = () => {
         <div className="space-y-6">
           {/* Mission & Roadmap Hero HUD */}
           <div className="bg-gradient-to-br from-[#1E293B] via-[#0F172A] to-[#020617] text-white p-5 sm:p-7 rounded-3xl border border-slate-800 shadow-lg relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-[#7033FF]/20 via-[#356AE6]/20 to-transparent rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-[#25865A]/20 via-[#356AE6]/20 to-transparent rounded-full blur-3xl pointer-events-none" />
             
             <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
               <div className="space-y-2">
@@ -269,7 +269,7 @@ export const GoalDetailPage: React.FC = () => {
               <div className="flex sm:flex-col items-center sm:items-end justify-between gap-2 shrink-0 bg-white/5 sm:bg-transparent p-3 sm:p-0 rounded-2xl border sm:border-0 border-white/10">
                 <div className="text-left sm:text-right">
                   <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Progresso do Mapa</span>
-                  <span className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#60A5FA] via-[#A78BFA] to-white">
+                  <span className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#65B982] via-[#A78BFA] to-white">
                     {Math.round(progressPercent)}%
                   </span>
                 </div>
@@ -305,7 +305,7 @@ export const GoalDetailPage: React.FC = () => {
           </div>
 
           {/* Interactive Roadmap Route Stations */}
-          <div className="relative pl-6 sm:pl-8 space-y-6 before:absolute before:left-3 sm:before:left-4 before:top-4 before:bottom-4 before:w-0.5 before:bg-gradient-to-b before:from-[#7033FF] before:via-[#356AE6] before:to-slate-300 dark:before:to-slate-800">
+          <div className="relative pl-6 sm:pl-8 space-y-6 before:absolute before:left-3 sm:before:left-4 before:top-4 before:bottom-4 before:w-0.5 before:bg-gradient-to-b before:from-[#25865A] before:via-[#356AE6] before:to-slate-300 dark:before:to-slate-800">
             {steps.length === 0 ? (
               <div className="bg-white dark:bg-[#111622] p-8 rounded-3xl border border-slate-200 dark:border-slate-800 text-center">
                 <Compass className="w-10 h-10 text-slate-400 mx-auto mb-3" />
@@ -332,7 +332,7 @@ export const GoalDetailPage: React.FC = () => {
                         isCompleted
                           ? 'bg-emerald-500 border-emerald-400 text-white shadow-md shadow-emerald-500/30'
                           : isCurrent
-                          ? 'bg-gradient-to-r from-[#7033FF] to-[#356AE6] border-white text-white shadow-lg shadow-[#356AE6]/40 ring-4 ring-[#356AE6]/20 animate-pulse'
+                          ? 'bg-gradient-to-r from-[#25865A] to-[#356AE6] border-white text-white shadow-lg shadow-[#356AE6]/40 ring-4 ring-[#356AE6]/20 animate-pulse'
                           : 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-400 hover:border-slate-400'
                       }`}
                     >
@@ -349,7 +349,7 @@ export const GoalDetailPage: React.FC = () => {
                     <div
                       className={`p-5 sm:p-6 rounded-3xl border transition-all ${
                         isCurrent
-                          ? 'border-[#356AE6] dark:border-[#4E56FF] bg-white dark:bg-[#111622] shadow-md ring-1 ring-[#356AE6]/20'
+                          ? 'border-[#356AE6] dark:border-[#25865A] bg-white dark:bg-[#111622] shadow-md ring-1 ring-[#356AE6]/20'
                           : isCompleted
                           ? 'border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/20 dark:bg-emerald-950/10'
                           : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111622] opacity-80'
@@ -362,7 +362,7 @@ export const GoalDetailPage: React.FC = () => {
                               Estação {idx + 1}
                             </span>
                             {isCurrent && (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950/60 text-[#2563EB] dark:text-[#60A5FA] border border-blue-200 dark:border-blue-800">
+                              <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950/60 text-[#25865A] dark:text-[#65B982] border border-blue-200 dark:border-blue-800">
                                 <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-ping" />
                                 Você está aqui • Foco Atual
                               </span>
@@ -496,7 +496,7 @@ export const GoalDetailPage: React.FC = () => {
           <div className="bg-white dark:bg-[#111622] p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs transition-colors">
             <div className="flex justify-between items-center mb-2">
               <span className="text-xs font-bold text-slate-900 dark:text-white">Progresso Operacional</span>
-              <span className="text-sm font-bold text-[#356AE6] dark:text-[#60A5FA]">{Math.round(progressPercent)}%</span>
+              <span className="text-sm font-bold text-[#356AE6] dark:text-[#65B982]">{Math.round(progressPercent)}%</span>
             </div>
             <ProgressBar progress={progressPercent} height="md" />
           </div>
@@ -608,7 +608,7 @@ export const GoalDetailPage: React.FC = () => {
                           <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
                             isCompleted
                               ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400'
-                              : 'bg-blue-100 dark:bg-blue-950/60 text-[#2563EB] dark:text-[#60A5FA]'
+                              : 'bg-blue-100 dark:bg-blue-950/60 text-[#25865A] dark:text-[#65B982]'
                           }`}>
                             {isCompleted ? 'Concluída' : 'Em Andamento'}
                           </span>
