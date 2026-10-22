@@ -273,8 +273,9 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
   const goal = createdRows[0];
   if (!goal) throw new Error('O Supabase não confirmou a criação do objetivo.');
 
-  if (payload.diagnostic) {
-    const d = payload.diagnostic;
+  try {
+    if (payload.diagnostic) {
+      const d = payload.diagnostic;
     await insertRows('goal_diagnostics', [{
       user_id: userId, goal_id: goal.id,
       current_situation: d.current_situation || payload.current_state || '',
@@ -350,7 +351,17 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
   await insertRows('activity_events', [{
     user_id: userId, goal_id: goal.id, event_type: 'goal_created', metadata: { title: goal.title },
   }]);
-  return { ...goal, diagnostic: payload.diagnostic, steps: createdSteps, missions: createdMissions };
+    return { ...goal, diagnostic: payload.diagnostic, steps: createdSteps, missions: createdMissions };
+  } catch (error) {
+    // Avoid leaving a half-created goal if any related insert fails.
+    await Promise.allSettled([
+      deleteRows('missions', { goal_id: 'eq.' + goal.id, user_id: 'eq.' + userId }),
+      deleteRows('goal_steps', { goal_id: 'eq.' + goal.id, user_id: 'eq.' + userId }),
+      deleteRows('goal_diagnostics', { goal_id: 'eq.' + goal.id, user_id: 'eq.' + userId }),
+      deleteRows('goals', { id: 'eq.' + goal.id, user_id: 'eq.' + userId }),
+    ]);
+    throw error;
+  }
 }
 
 function cleanObject(value: any, forbidden: string[] = ['id', 'user_id', 'created_at', 'updated_at']): any {
