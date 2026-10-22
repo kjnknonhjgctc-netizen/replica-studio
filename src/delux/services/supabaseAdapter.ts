@@ -1,6 +1,7 @@
 import { generateAi } from '../ai.functions';
 import { buildAssistantContext, recentConversation } from '../ai/context';
-import { requestsSavedPlan, resolveNavigationIntent } from '../ai/intent';
+import { requestsSavedPlan, resolveNavigationIntent, resolvePreferredDaysFromRequest } from '../ai/intent';
+import { addDaysToDateOnly, formatLocalDate, getNextPreferredDate, isPreferredDate } from '../utils/date';
 
 type SessionUser = { id: string; email?: string; user_metadata?: Record<string, unknown> };
 type Session = {
@@ -11,7 +12,6 @@ type Session = {
   flowType?: string | undefined;
 };
 const SESSION_KEY = 'delux_supabase_session';
-const WEEKDAY_KEYS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
 const DEFAULT_NOTIFICATION_PREFERENCES = {
   missions_reminders: true,
   weekly_digest: true,
@@ -196,23 +196,11 @@ function uid() {
 }
 
 function localDateString(date: Date) {
-  return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+  return formatLocalDate(date);
 }
 
-function nextAvailableDate(preferredDays: string[], startOffset = 0) {
-  const allowed = preferredDays.length ? preferredDays : ['seg', 'ter', 'qua', 'qui', 'sex'];
-  const target = Math.max(0, Math.min(370, Math.floor(Number(startOffset) || 0)));
-  const date = new Date();
-  date.setHours(12, 0, 0, 0);
-  let index = -1;
-  for (let i = 0; i < 370; i++) {
-    if (allowed.includes(WEEKDAY_KEYS[date.getDay()] ?? '')) {
-      index++;
-      if (index === target) return localDateString(date);
-    }
-    date.setDate(date.getDate() + 1);
-  }
-  return localDateString(date);
+function nextAvailableDate(preferredDays: string[], startOffset = 0, startDate = new Date()) {
+  return getNextPreferredDate(preferredDays, startOffset, startDate);
 }
 
 async function getCurrentUser() {
@@ -285,8 +273,9 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
   const goal = createdRows[0];
   if (!goal) throw new Error('O Supabase não confirmou a criação do objetivo.');
 
-  if (payload.diagnostic) {
-    const d = payload.diagnostic;
+  try {
+    if (payload.diagnostic) {
+      const d = payload.diagnostic;
     await insertRows('goal_diagnostics', [{
       user_id: userId, goal_id: goal.id,
       current_situation: d.current_situation || payload.current_state || '',
@@ -308,7 +297,15 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
     : [];
   const activePrefs = await getPreferencesFor(userId);
   const capacity = Math.max(5, Number(activePrefs.daily_available_minutes) || 30);
+  const allowedDays = preferredDays.length ? preferredDays : ['seg', 'ter', 'qua', 'qui', 'sex'];
   const planned: Record<string, number> = {};
+  // Count existing unfinished work so a newly generated plan does not overload the user's calendar.
+  const existingMissions = await selectRows('missions', {}, 'scheduled_date.asc,scheduled_time.asc');
+  existingMissions.forEach((mission: any) => {
+    if (mission.scheduled_date && ['pending', 'in_progress', 'postponed'].includes(mission.status)) {
+      planned[mission.scheduled_date] = (planned[mission.scheduled_date] || 0) + (Number(mission.estimated_minutes) || 0);
+    }
+  });
   const requestedMissions = Array.isArray(payload.missions) ? payload.missions : [];
   const createdMissions = [];
   for (let i = 0; i < requestedMissions.length; i++) {
@@ -316,13 +313,23 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
     const stepIndex = Number.isInteger(Number(m.step_index)) ? Number(m.step_index) : 0;
     const step = createdSteps[stepIndex] || createdSteps[0];
     const minutes = Math.max(5, Math.min(180, capacity, Number(m.estimated_minutes) || capacity));
-    let offset = Math.max(0, Number(m.day_offset) || i);
-    let date = m.scheduled_date || nextAvailableDate(preferredDays, offset);
+    const hasOffset = m.day_offset !== undefined && m.day_offset !== null && m.day_offset !== '';
+    let offset = hasOffset && Number.isFinite(Number(m.day_offset)) ? Math.max(0, Math.floor(Number(m.day_offset))) : i;
+    const requestedDate = String(m.scheduled_date || '');
+    const parsedRequestedDate = /^\d{4}-\d{2}-\d{2}$/.test(requestedDate) ? new Date(requestedDate + 'T12:00:00') : null;
+    const validRequestedDate = parsedRequestedDate && Number.isFinite(parsedRequestedDate.getTime()) && formatLocalDate(parsedRequestedDate) === requestedDate && requestedDate >= localDateString(new Date());
+    let date = validRequestedDate ? requestedDate : nextAvailableDate(allowedDays, offset);
+    if (!isPreferredDate(date, allowedDays)) {
+      date = nextAvailableDate(allowedDays, 0, validRequestedDate ? parsedRequestedDate! : new Date());
+    }
     let tries = 0;
-    while (!m.scheduled_date && (planned[date] || 0) + minutes > capacity && tries < 35) {
-      offset++;
-      date = nextAvailableDate(preferredDays, offset);
+    while ((planned[date] || 0) + minutes > capacity && tries < 370) {
+      const nextCalendarDate = addDaysToDateOnly(date, 1, new Date(date + 'T12:00:00'));
+      date = nextAvailableDate(allowedDays, 0, new Date(nextCalendarDate + 'T12:00:00'));
       tries++;
+    }
+    if ((planned[date] || 0) + minutes > capacity) {
+      throw new Error('Não foi possível encaixar todas as tarefas na sua disponibilidade. Aumente o tempo diário ou libere dias no perfil.');
     }
     planned[date] = (planned[date] || 0) + minutes;
     const inserted = await insertRows('missions', [{
@@ -338,12 +345,24 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
       status: 'pending',
       position: i + 1,
     }]);
-    if (inserted[0]) createdMissions.push(inserted[0]);
+    if (!inserted[0]) throw new Error('O Supabase não confirmou a criação de uma tarefa do plano.');
+    createdMissions.push(inserted[0]);
   }
   await insertRows('activity_events', [{
     user_id: userId, goal_id: goal.id, event_type: 'goal_created', metadata: { title: goal.title },
   }]);
-  return { ...goal, diagnostic: payload.diagnostic, steps: createdSteps, missions: createdMissions };
+    return { ...goal, diagnostic: payload.diagnostic, steps: createdSteps, missions: createdMissions };
+  } catch (error) {
+    // Avoid leaving a half-created goal if any related insert fails.
+    await Promise.allSettled([
+      deleteRows('missions', { goal_id: 'eq.' + goal.id, user_id: 'eq.' + userId }),
+      deleteRows('goal_steps', { goal_id: 'eq.' + goal.id, user_id: 'eq.' + userId }),
+      deleteRows('goal_diagnostics', { goal_id: 'eq.' + goal.id, user_id: 'eq.' + userId }),
+      deleteRows('activity_events', { goal_id: 'eq.' + goal.id, user_id: 'eq.' + userId }),
+      deleteRows('goals', { id: 'eq.' + goal.id, user_id: 'eq.' + userId }),
+    ]);
+    throw error;
+  }
 }
 
 function cleanObject(value: any, forbidden: string[] = ['id', 'user_id', 'created_at', 'updated_at']): any {
@@ -422,7 +441,7 @@ async function sendChatMessage(message: string, conversationId?: string) {
       const prompt = 'Transforme o pedido abaixo em um plano REALISTA para salvar no Delux.\nPedido: "' + text + '"\n' +
         'Tempo diário: ' + (preferences.daily_available_minutes || 30) + ' minutos.\n' +
         'Horário preferido: ' + (preferences.preferred_time || 'flexible') + '.\n' +
-        'Dias disponíveis: ' + (preferences.preferred_days || ['seg', 'ter', 'qua', 'qui', 'sex']).join(', ') + '.\n' +
+        'Dias disponíveis: ' + resolvePreferredDaysFromRequest(text, preferences.preferred_days || ['seg', 'ter', 'qua', 'qui', 'sex']).join(', ') + '.\n' +
         'Metas existentes: ' + relevantGoals.map((g: any) => g.title).join('; ') + '.\n' +
         'day_offset é o índice de dias DISPONÍVEIS, não dias corridos. Responda somente JSON: ' +
         '{"goal_title":"...","goal_description":"...","category":"health|learning|career|finance|organization|personal_dev|other","desired_outcome":"...","current_state":"...","steps":[{"title":"...","description":"...","success_criteria":"..."}],"missions":[{"title":"...","instructions":"...","estimated_minutes":25,"priority":"high|medium|low","day_offset":0,"scheduled_time":"09:00","step_index":0}]}. Inclua 3 etapas e 5 a 7 missões.';
@@ -438,7 +457,7 @@ async function sendChatMessage(message: string, conversationId?: string) {
         diagnostic: { current_situation: plan.current_state || '', obstacles: [], available_resources: [], constraints: '' },
         steps: plan.steps,
         missions: plan.missions,
-      }, user.id, preferences.preferred_days || ['seg', 'ter', 'qua', 'qui', 'sex']);
+      }, user.id, resolvePreferredDaysFromRequest(text, preferences.preferred_days || ['seg', 'ter', 'qua', 'qui', 'sex']));
       const daySummary = goal.missions.map((m: any) => m.scheduled_date + ' ' + (m.scheduled_time || '') + ' — ' + m.title + ' (' + m.estimated_minutes + ' min)').join('\n');
       assistantContent = 'Plano salvo no Delux! Criei o objetivo **"' + goal.title + '"**, ' + goal.steps.length + ' etapas e ' + goal.missions.length + ' tarefas no Planejamento.\n\n' + daySummary;
     } else {
@@ -681,6 +700,7 @@ export async function handleSupabaseRequest(method: string, endpoint: string, bo
       const days = [];
       for (let i = 0; i < 7; i++) {
         const day = new Date();
+        day.setHours(12, 0, 0, 0);
         day.setDate(day.getDate() + i);
         const date = localDateString(day);
         const dayMissions = missions.filter((m: any) => m.scheduled_date === date);
@@ -690,7 +710,7 @@ export async function handleSupabaseRequest(method: string, endpoint: string, bo
           date, dayName: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][day.getDay()],
           dayNumber: day.getDate(), isToday: i === 0, missions: dayMissions,
           totalMinutes, completedMinutes, availableMinutes: preferences.daily_available_minutes,
-          hasConflict: totalMinutes > preferences.daily_available_minutes * 1.5,
+          hasConflict: totalMinutes > (Number(preferences.daily_available_minutes) || 30),
         });
       }
       return { days, goals, preferences };

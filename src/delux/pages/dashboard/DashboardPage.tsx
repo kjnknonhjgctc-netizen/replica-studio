@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { playSuccessSound, playButtonSound } from '../../services/sound';
+import { formatLocalDate } from '../../utils/date';
 
 export const DashboardPage: React.FC = () => {
   const { user } = useAuth();
@@ -38,7 +39,7 @@ export const DashboardPage: React.FC = () => {
   const [activityMetrics, setActivityMetrics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = formatLocalDate(new Date());
 
   const fetchData = async () => {
     try {
