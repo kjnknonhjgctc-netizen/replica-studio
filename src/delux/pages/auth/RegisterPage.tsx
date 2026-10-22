@@ -42,25 +42,25 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA] dark:bg-[#0B0E14] text-[#17191D] dark:text-[#F1F5F9] flex flex-col justify-center items-center px-4 py-8 sm:py-12 relative transition-colors">
+    <div className="min-h-screen bg-background  text-foreground  flex flex-col justify-center items-center px-4 py-8 sm:py-12 relative transition-colors">
       {/* Top Corner Theme Toggle */}
       <div className="absolute top-4 right-4">
         <ThemeToggle variant="icon" size="sm" />
       </div>
 
-      <div className="w-full max-w-md bg-white dark:bg-[#111622] border border-[#E8EAF0] dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xs transition-colors">
+      <div className="delux-auth-form w-full max-w-md bg-card  border border-border  rounded-3xl p-6 sm:p-8 shadow-xs transition-colors">
         <div className="flex flex-col items-center text-center mb-6">
-          <DeluxLogo size="lg" className="mb-4" />
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#17191D] dark:text-white">
+          <DeluxLogo size="xl" className="mb-6" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-normal text-foreground ">
             Comece no Delux
           </h1>
-          <p className="text-xs sm:text-sm text-[#777D87] dark:text-slate-400 mt-1 max-w-xs">
+          <p className="text-xs sm:text-sm text-muted-foreground  mt-1 max-w-xs">
             Crie sua conta para salvar seus dados com segurança.
           </p>
         </div>
 
         {error && (
-          <div className="mb-5 p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-300 text-xs rounded-xl font-medium">
+          <div className="mb-5 p-3.5 bg-destructive-subtle  border border-destructive-border  text-destructive  text-xs rounded-xl font-medium">
             {error}
           </div>
         )}
@@ -99,9 +99,9 @@ export const RegisterPage: React.FC = () => {
           </div>
         </form>
 
-        <div className="mt-6 text-center text-xs text-[#777D87] dark:text-slate-400">
+        <div className="mt-6 text-center text-xs text-muted-foreground ">
           Já possui uma conta?{' '}
-          <Link to="/login?mode=login" className="font-semibold text-[#356AE6] dark:text-[#60A5FA] hover:underline">
+          <Link to="/login?mode=login" className="font-semibold text-primary  hover:underline">
             Fazer login
           </Link>
         </div>

@@ -20,9 +20,9 @@ export const PrimaryButton: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const sizeClasses = {
-    sm: 'h-9 px-3.5 text-xs rounded-2xl font-medium',
-    md: 'h-11 px-5 text-sm rounded-2xl font-medium',
-    lg: 'h-12 px-6 text-base rounded-2xl font-semibold'
+    sm: 'min-h-10 px-4 py-2 text-xs rounded-xl',
+    md: 'min-h-12 px-5 py-2.5 text-sm rounded-2xl',
+    lg: 'min-h-14 px-6 py-3 text-base rounded-2xl'
   }[size];
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -39,15 +39,15 @@ export const PrimaryButton: React.FC<ButtonProps> = ({
       transition={{ type: 'spring', stiffness: 420, damping: 26 }}
       disabled={disabled || loading}
       onClick={handleClick}
-      className={`relative inline-flex items-center justify-center gap-2 text-white bg-gradient-to-r from-[#25865A] via-[#25865A] to-[#25865A] hover:from-[#1D7049] hover:via-[#1D7049] hover:to-[#1D7049] cursor-pointer shadow-md shadow-[#25865A]/25 hover:shadow-lg hover:shadow-[#25865A]/35 active:shadow-sm disabled:opacity-50 disabled:pointer-events-none overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/20 before:to-transparent before:opacity-75 before:pointer-events-none ${sizeClasses} ${className}`}
+      className={`delux-primary-button relative inline-flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:pointer-events-none transition-colors ${sizeClasses} ${className}`}
       {...(props as any)}
     >
       {loading ? (
-        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+        <span className="w-4 h-4 border-2 border-card/30 border-t-card rounded-full animate-spin" />
       ) : (
         icon
       )}
-      <span>{children}</span>
+      <span className="min-w-0 text-center leading-snug">{children}</span>
     </motion.button>
   );
 };
@@ -63,9 +63,9 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const sizeClasses = {
-    sm: 'h-9 px-3.5 text-xs rounded-2xl font-medium',
-    md: 'h-11 px-5 text-sm rounded-2xl font-medium',
-    lg: 'h-12 px-6 text-base rounded-2xl font-semibold'
+    sm: 'min-h-10 px-4 py-2 text-xs rounded-xl',
+    md: 'min-h-12 px-5 py-2.5 text-sm rounded-2xl',
+    lg: 'min-h-14 px-6 py-3 text-base rounded-2xl'
   }[size];
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -82,15 +82,15 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
       transition={{ type: 'spring', stiffness: 450, damping: 28 }}
       disabled={disabled || loading}
       onClick={handleClick}
-      className={`relative inline-flex items-center justify-center gap-2 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800/90 hover:bg-slate-50 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:text-[#25865A] dark:hover:text-[#65B982] cursor-pointer disabled:opacity-50 disabled:pointer-events-none shadow-xs transition-colors ${sizeClasses} ${className}`}
+      className={`delux-secondary-button relative inline-flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:pointer-events-none transition-colors ${sizeClasses} ${className}`}
       {...(props as any)}
     >
       {loading ? (
-        <span className="w-4 h-4 border-2 border-slate-400 border-t-slate-700 dark:border-t-white rounded-full animate-spin" />
+        <span className="w-4 h-4 border-2 border-border border-t-border  rounded-full animate-spin" />
       ) : (
         icon
       )}
-      <span>{children}</span>
+      <span className="min-w-0 text-center leading-snug">{children}</span>
     </motion.button>
   );
 };
@@ -118,9 +118,9 @@ export const IconButton: React.FC<IconButtonProps> = ({
   }[size];
 
   const variantClasses = {
-    surface: 'bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 shadow-2xs',
-    ghost: 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white',
-    primary: 'bg-gradient-to-r from-[#25865A] via-[#25865A] to-[#25865A] hover:from-[#1D7049] hover:to-[#1D7049] text-white shadow-md shadow-[#25865A]/25'
+    surface: 'bg-card  hover:bg-card  border border-border  text-foreground  shadow-2xs',
+    ghost: 'hover:bg-muted  text-muted-foreground  hover:text-foreground ',
+    primary: 'bg-gradient-to-r from-primary via-primary to-primary hover:from-primary hover:to-primary text-primary-foreground shadow-md shadow-primary/25'
   }[variant];
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {

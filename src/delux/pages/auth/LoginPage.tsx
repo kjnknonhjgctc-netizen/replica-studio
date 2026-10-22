@@ -63,20 +63,20 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA] dark:bg-[#0B0E14] text-[#17191D] dark:text-[#F1F5F9] flex flex-col justify-center items-center px-4 py-8 sm:py-12 relative transition-colors">
+    <div className="min-h-screen bg-background  text-foreground  flex flex-col justify-center items-center px-4 py-8 sm:py-12 relative transition-colors">
       {/* Top Corner Theme Toggle */}
       <div className="absolute top-4 right-4">
         <ThemeToggle variant="icon" size="sm" />
       </div>
 
-      <div className="w-full max-w-md bg-white dark:bg-[#111622] border border-[#E8EAF0] dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xs transition-colors">
+      <div className="delux-auth-form w-full max-w-md bg-card  border border-border  rounded-3xl p-6 sm:p-8 shadow-xs transition-colors">
         {/* Header / Logo */}
         <div className="flex flex-col items-center text-center mb-6">
-          <DeluxLogo size="lg" className="mb-4" />
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#17191D] dark:text-white">
+          <DeluxLogo size="xl" className="mb-6" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-normal text-foreground ">
             {mode === 'register' ? 'Comece no Delux' : 'Acesse sua conta'}
           </h1>
-          <p className="text-xs sm:text-sm text-[#777D87] dark:text-slate-400 mt-1 max-w-xs">
+          <p className="text-xs sm:text-sm text-muted-foreground  mt-1 max-w-xs">
             {mode === 'register'
               ? 'Crie sua conta para salvar seus dados com segurança.'
               : 'Digite seu e-mail e senha para continuar seu progresso.'}
@@ -84,7 +84,7 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {/* Tab switch */}
-        <div className="flex p-1 bg-[#F2F4F8] dark:bg-slate-800 rounded-2xl mb-6">
+        <div className="flex p-1 bg-muted  rounded-2xl mb-6">
           <button
             type="button"
             onClick={() => {
@@ -93,8 +93,8 @@ export const LoginPage: React.FC = () => {
             }}
             className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
               mode === 'register'
-                ? 'bg-white dark:bg-slate-700 text-[#17191D] dark:text-white shadow-xs'
-                : 'text-[#777D87] dark:text-slate-400 hover:text-[#17191D] dark:hover:text-white'
+                ? 'bg-card  text-foreground  shadow-xs'
+                : 'text-muted-foreground  hover:text-foreground '
             }`}
           >
             Criar Conta
@@ -107,8 +107,8 @@ export const LoginPage: React.FC = () => {
             }}
             className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
               mode === 'login'
-                ? 'bg-white dark:bg-slate-700 text-[#17191D] dark:text-white shadow-xs'
-                : 'text-[#777D87] dark:text-slate-400 hover:text-[#17191D] dark:hover:text-white'
+                ? 'bg-card  text-foreground  shadow-xs'
+                : 'text-muted-foreground  hover:text-foreground '
             }`}
           >
             Já tenho conta
@@ -116,14 +116,14 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {mode === 'login' && (
-          <div className="mb-5 flex items-center gap-2 p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-300 text-[11px] font-medium transition-colors">
-            <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+          <div className="mb-5 flex items-center gap-2 p-2.5 rounded-xl bg-success-subtle  border border-success-border  text-success  text-[11px] font-medium transition-colors">
+            <ShieldCheck className="w-4 h-4 text-success  shrink-0" />
             <span>Entre com seu e-mail e senha para continuar seu progresso.</span>
           </div>
         )}
 
         {error && (
-          <div className="mb-5 p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-300 text-xs rounded-xl font-medium">
+          <div className="mb-5 p-3.5 bg-destructive-subtle  border border-destructive-border  text-destructive  text-xs rounded-xl font-medium">
             {error}
           </div>
         )}
@@ -162,14 +162,14 @@ export const LoginPage: React.FC = () => {
 
         {mode === 'login' && (
           <div className="mt-4 text-right">
-            <Link to="/recuperar-senha" className="text-xs font-semibold text-[#356AE6] dark:text-[#60A5FA] hover:underline">
+            <Link to="/recuperar-senha" className="text-xs font-semibold text-primary  hover:underline">
               Esqueci minha senha
             </Link>
           </div>
         )}
 
         {/* Toggle Mode Footer */}
-        <div className="mt-6 text-center text-xs text-[#777D87] dark:text-slate-400">
+        <div className="mt-6 text-center text-xs text-muted-foreground ">
           {mode === 'register' ? (
             <>
               Já possui uma conta salva?{' '}
@@ -179,7 +179,7 @@ export const LoginPage: React.FC = () => {
                   setMode('login');
                   setError(null);
                 }}
-                className="font-semibold text-[#356AE6] dark:text-[#60A5FA] hover:underline cursor-pointer"
+                className="font-semibold text-primary  hover:underline cursor-pointer"
               >
                 Entrar com e-mail e senha
               </button>
@@ -193,7 +193,7 @@ export const LoginPage: React.FC = () => {
                   setMode('register');
                   setError(null);
                 }}
-                className="font-semibold text-[#356AE6] dark:text-[#60A5FA] hover:underline cursor-pointer"
+                className="font-semibold text-primary  hover:underline cursor-pointer"
               >
                 Criar conta rápida
               </button>

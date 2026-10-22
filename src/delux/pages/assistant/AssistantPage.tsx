@@ -57,28 +57,28 @@ const PROMPT_CARDS_BY_MODE: Record<AssistantMode, PromptCard[]> = {
       title: 'Estruturar meu grande objetivo',
       desc: 'Quebre sua meta principal em marcos mensuráveis de 30, 60 e 90 dias.',
       prompt: 'Ajude-me a estruturar meu objetivo principal em metas semanais com etapas práticas e marcos claros.',
-      icon: <Target className="w-4 h-4 text-[#25865A]" />,
+      icon: <Target className="w-4 h-4 text-primary" />,
       tag: 'Estratégia'
     },
     {
       title: 'Reorganizar meu cronograma semanal',
       desc: 'Encontre o equilíbrio entre trabalho profundo, descanso e hábitos diários.',
       prompt: 'Preciso reorganizar meu cronograma desta semana para conciliar hábitos e metas sem me sobrecarregar.',
-      icon: <Calendar className="w-4 h-4 text-[#25865A]" />,
+      icon: <Calendar className="w-4 h-4 text-primary" />,
       tag: 'Planejamento'
     },
     {
       title: 'Definir métricas de progresso',
       desc: 'Como saber com precisão se estou avançando na direção certa a cada semana.',
       prompt: 'Quais são os melhores indicadores e métricas semanais para acompanhar o progresso dos meus objetivos?',
-      icon: <Sparkles className="w-4 h-4 text-[#25865A]" />,
+      icon: <Sparkles className="w-4 h-4 text-primary" />,
       tag: 'Métricas'
     },
     {
       title: 'Eliminar gargalos e distrações',
       desc: 'Mapeie o que mais consome sua energia e estabeleça barreiras inteligentes.',
       prompt: 'Como identificar e eliminar os 2 maiores gargalos que estão atrasando o avanço dos meus projetos?',
-      icon: <Flame className="w-4 h-4 text-[#E65100]" />,
+      icon: <Flame className="w-4 h-4 text-warning" />,
       tag: 'Otimização'
     }
   ],
@@ -87,28 +87,28 @@ const PROMPT_CARDS_BY_MODE: Record<AssistantMode, PromptCard[]> = {
       title: 'O que devo priorizar hoje?',
       desc: 'Identifique tarefas de alto impacto para focar seu tempo com máxima eficiência.',
       prompt: 'Com base no meu dia, quais são as 3 principais prioridades que devo focar hoje para avançar de verdade?',
-      icon: <Zap className="w-4 h-4 text-[#25865A]" />,
+      icon: <Zap className="w-4 h-4 text-primary" />,
       tag: 'Foco Imediato'
     },
     {
       title: 'Bloco de 25 minutos de alta intensidade',
       desc: 'Defina exatamente o que fazer no próximo bloco Pomodoro sem dispersão.',
       prompt: 'Vou começar um bloco de foco de 25 minutos agora. Como devo estruturar esse tempo para terminar uma tarefa?',
-      icon: <Target className="w-4 h-4 text-[#25865A]" />,
+      icon: <Target className="w-4 h-4 text-primary" />,
       tag: 'Execução'
     },
     {
       title: 'Vencer a procrastinação inicial',
       desc: 'Técnica dos 5 minutos para romper a inércia e entrar no estado de fluxo.',
       prompt: 'Estou adiando uma tarefa importante agora. Me dê uma estratégia prática de 2 minutos para começar sem hesitar.',
-      icon: <Flame className="w-4 h-4 text-[#E65100]" />,
+      icon: <Flame className="w-4 h-4 text-warning" />,
       tag: 'Anti-Inércia'
     },
     {
       title: 'Checklist de encerramento do dia',
       desc: 'Feche o expediente com a sensação de dever cumprido e o dia seguinte planejado.',
       prompt: 'Gere um checklist rápido de 4 etapas para encerrar meu dia produtivo e deixar o próximo organizado.',
-      icon: <CheckCircle2 className="w-4 h-4 text-[#10B981]" />,
+      icon: <CheckCircle2 className="w-4 h-4 text-success" />,
       tag: 'Rotina'
     }
   ],
@@ -117,28 +117,28 @@ const PROMPT_CARDS_BY_MODE: Record<AssistantMode, PromptCard[]> = {
       title: 'Como manter a consistência diária?',
       desc: 'Estratégias científicas para não quebrar a cadeia de hábitos.',
       prompt: 'Estou com dificuldade de manter a consistência. Quais técnicas práticas posso aplicar hoje para não falhar?',
-      icon: <Flame className="w-4 h-4 text-[#E65100]" />,
+      icon: <Flame className="w-4 h-4 text-warning" />,
       tag: 'Disciplina'
     },
     {
       title: 'Reduzir o atrito de começar',
       desc: 'Torne o hábito tão pequeno e simples que seja impossível falhar.',
       prompt: 'Como posso aplicar a regra dos 2 minutos para facilitar a realização dos meus hábitos matinais?',
-      icon: <Zap className="w-4 h-4 text-[#25865A]" />,
+      icon: <Zap className="w-4 h-4 text-primary" />,
       tag: 'Micro-Hábitos'
     },
     {
       title: 'O que fazer quando eu falhar um dia?',
       desc: 'A regra de nunca falhar duas vezes consecutivas na prática.',
       prompt: 'Ontem não consegui cumprir minhas metas de hábitos. Como me recuperar hoje sem culpa e sem tentar compensar o dobro?',
-      icon: <RotateCcw className="w-4 h-4 text-[#25865A]" />,
+      icon: <RotateCcw className="w-4 h-4 text-primary" />,
       tag: 'Recuperação'
     },
     {
       title: 'Empilhar novos hábitos na rotina',
       desc: 'Conecte um novo hábito a um comportamento automático existente.',
       prompt: 'Me ensine a usar a técnica de empilhamento de hábitos (habit stacking) para criar uma rotina noturna consistente.',
-      icon: <ListOrdered className="w-4 h-4 text-[#25865A]" />,
+      icon: <ListOrdered className="w-4 h-4 text-primary" />,
       tag: 'Estruturação'
     }
   ],
@@ -147,28 +147,28 @@ const PROMPT_CARDS_BY_MODE: Record<AssistantMode, PromptCard[]> = {
       title: 'Mapear decisões difíceis',
       desc: 'Avalie prós, contras e impacto de segundo nível com neutralidade.',
       prompt: 'Preciso tomar uma decisão importante sobre meus projetos. Me guie com perguntas estratégicas para clarear minha mente.',
-      icon: <Compass className="w-4 h-4 text-[#25865A]" />,
+      icon: <Compass className="w-4 h-4 text-primary" />,
       tag: 'Decisão'
     },
     {
       title: 'Descarrego mental (Brain Dump)',
       desc: 'Transforme pensamentos dispersos em ações claras e organizadas.',
       prompt: 'Minha cabeça está cheia de pendências soltas. Como posso organizar esse turbilhão em uma lista executável?',
-      icon: <Sparkles className="w-4 h-4 text-[#25865A]" />,
+      icon: <Sparkles className="w-4 h-4 text-primary" />,
       tag: 'Organização'
     },
     {
       title: 'Regra de Pareto 80/20',
       desc: 'Identifique os 20% das suas ações que geram 80% do resultado real.',
       prompt: 'Como posso aplicar o Princípio de Pareto para cortar tarefas inúteis da minha rotina esta semana?',
-      icon: <Target className="w-4 h-4 text-[#25865A]" />,
+      icon: <Target className="w-4 h-4 text-primary" />,
       tag: 'Filtro'
     },
     {
       title: 'Diagnóstico de sobrecarga',
       desc: 'Entenda se o problema é excesso de compromissos ou falta de clareza.',
       prompt: 'Sinto que estou sempre ocupado mas não vejo o progresso. Como fazer um diagnóstico rápido do meu uso de tempo?',
-      icon: <Calendar className="w-4 h-4 text-[#E65100]" />,
+      icon: <Calendar className="w-4 h-4 text-warning" />,
       tag: 'Diagnóstico'
     }
   ]
@@ -432,7 +432,7 @@ export const AssistantPage: React.FC = () => {
     const lines = String(content ?? '').split('\n');
 
     return (
-      <div className="space-y-2 text-xs sm:text-sm leading-relaxed text-slate-700 dark:text-slate-200 break-words">
+      <div className="space-y-2 text-xs sm:text-sm leading-relaxed text-foreground  break-words">
         {lines.map((line, idx) => {
           const trimmed = line.trim();
           if (!trimmed) {
@@ -443,8 +443,8 @@ export const AssistantPage: React.FC = () => {
           if (trimmed.startsWith('### ') || trimmed.startsWith('## ') || trimmed.startsWith('# ')) {
             const headingText = trimmed.replace(/^#+\s*/, '');
             return (
-              <h4 key={idx} className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm pt-1 tracking-tight flex items-center gap-1.5 sm:gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#25865A] shrink-0" />
+              <h4 key={idx} className="font-bold text-foreground  text-xs sm:text-sm pt-1 tracking-normal flex items-center gap-1.5 sm:gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
                 <span className="break-words">{headingText}</span>
               </h4>
             );
@@ -457,7 +457,7 @@ export const AssistantPage: React.FC = () => {
             const itemText = numberedMatch[2];
             return (
               <div key={idx} className="flex items-start gap-2 sm:gap-2.5 my-1 pl-0.5 sm:pl-1">
-                <span className="shrink-0 w-5 h-5 rounded-md bg-gradient-to-r from-[#25865A]/15 to-[#25865A]/15 text-[#25865A] dark:text-[#8ECFA8] text-[11px] font-bold flex items-center justify-center mt-0.5 border border-[#25865A]/30">
+                <span className="shrink-0 w-5 h-5 rounded-md bg-gradient-to-r from-primary/15 to-primary/15 text-primary  text-[11px] font-bold flex items-center justify-center mt-0.5 border border-primary/30">
                   {num}
                 </span>
                 <span className="flex-1 break-words">
@@ -472,7 +472,7 @@ export const AssistantPage: React.FC = () => {
             const itemText = trimmed.replace(/^[-*]\s+/, '');
             return (
               <div key={idx} className="flex items-start gap-2 sm:gap-2.5 my-1 pl-0.5 sm:pl-1">
-                <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-[#25865A] dark:bg-[#65B982] mt-1.5 sm:mt-2" />
+                <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-primary  mt-1.5 sm:mt-2" />
                 <span className="flex-1 break-words">
                   {renderInlineFormatting(itemText)}
                 </span>
@@ -497,7 +497,7 @@ export const AssistantPage: React.FC = () => {
     return parts.map((part, i) => {
       if (part.startsWith('**') && part.endsWith('**')) {
         return (
-          <strong key={i} className="font-bold text-slate-900 dark:text-white">
+          <strong key={i} className="font-bold text-foreground ">
             {part.slice(2, -2)}
           </strong>
         );
@@ -507,7 +507,7 @@ export const AssistantPage: React.FC = () => {
   };
 
   return (
-    <div className="flex h-full w-full min-h-0 bg-[#FAFAFC] dark:bg-[#0B0E14] text-[#0F172A] dark:text-[#F1F5F9] overflow-hidden select-text relative transition-colors">
+    <div className="flex h-full w-full min-h-0 bg-background  text-foreground  overflow-hidden select-text relative transition-colors">
       {/* Mobile Backdrop Overlay for History Drawer */}
       <AnimatePresence>
         {showHistory && (
@@ -517,7 +517,7 @@ export const AssistantPage: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={() => setShowHistory(false)}
-            className="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 md:hidden"
+            className="fixed inset-0 bg-overlay/40 backdrop-blur-xs z-40 md:hidden"
           />
         )}
       </AnimatePresence>
@@ -530,17 +530,17 @@ export const AssistantPage: React.FC = () => {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '-100%', opacity: 0 }}
             transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-            className="fixed md:static inset-y-0 left-0 z-50 md:z-20 w-[84vw] max-w-[320px] md:w-[280px] lg:w-[300px] h-full border-r border-[#E2E8F0] dark:border-slate-800 bg-white dark:bg-[#0F141E] flex flex-col shrink-0 overflow-hidden shadow-2xl md:shadow-none transition-colors"
+            className="fixed md:static inset-y-0 left-0 z-50 md:z-20 w-[84vw] max-w-[320px] md:w-[280px] lg:w-[300px] h-full border-r border-border  bg-card  flex flex-col shrink-0 overflow-hidden shadow-2xl md:shadow-none transition-colors"
           >
             {/* History Header */}
-            <div className="p-3.5 sm:p-4 border-b border-[#F1F5F9] dark:border-slate-800 flex items-center justify-between bg-white dark:bg-[#0F141E] shrink-0">
+            <div className="p-3.5 sm:p-4 border-b border-muted  flex items-center justify-between bg-card  shrink-0">
               <div className="flex items-center gap-2">
-                <History className="w-4 h-4 text-[#25865A]" />
-                <span className="text-xs font-bold text-[#0F172A] dark:text-white tracking-tight">Histórico de Sessões</span>
+                <History className="w-4 h-4 text-primary" />
+                <span className="text-xs font-bold text-foreground  tracking-normal">Histórico de Sessões</span>
               </div>
               <button
                 onClick={() => setShowHistory(false)}
-                className="p-1.5 text-[#64748B] dark:text-slate-400 hover:text-[#0F172A] dark:hover:text-white hover:bg-[#F1F5F9] dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+                className="p-1.5 text-muted-foreground  hover:text-foreground  hover:bg-muted  rounded-lg transition-colors cursor-pointer"
                 title="Fechar histórico"
               >
                 <PanelLeftClose className="w-4 h-4" />
@@ -548,12 +548,12 @@ export const AssistantPage: React.FC = () => {
             </div>
 
             {/* New Conversation CTA */}
-            <div className="p-3 border-b border-[#F8FAFC] shrink-0">
+            <div className="p-3 border-b border-muted shrink-0">
               <motion.button
                 whileHover={{ scale: 1.015 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleNewConversation}
-                className="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-[#25865A] via-[#25865A] to-[#25865A] hover:from-[#1D7049] hover:to-[#1D7049] text-white text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-sm shadow-[#25865A]/25 cursor-pointer"
+                className="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-primary via-primary to-primary hover:from-primary hover:to-primary text-primary-foreground text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-sm shadow-primary/25 cursor-pointer"
               >
                 <Plus className="w-4 h-4 stroke-[2.5]" />
                 <span>Nova conversa</span>
@@ -561,13 +561,13 @@ export const AssistantPage: React.FC = () => {
 
               {/* History Search */}
               <div className="relative mt-2.5">
-                <Search className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Search className="w-3.5 h-3.5 text-muted-foreground  absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="Buscar conversas..."
                   value={historySearch}
                   onChange={e => setHistorySearch(e.target.value)}
-                  className="w-full h-8 pl-8 pr-3 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-[#25865A] rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none transition-all"
+                  className="w-full h-8 pl-8 pr-3 text-xs bg-card  border border-border  focus:border-primary rounded-lg text-foreground  placeholder:text-muted-foreground  focus:outline-none transition-all"
                 />
               </div>
             </div>
@@ -575,7 +575,7 @@ export const AssistantPage: React.FC = () => {
             {/* Conversation list */}
             <div className="flex-1 overflow-y-auto px-2 py-2 space-y-1">
               {filteredConversations.length === 0 ? (
-                <div className="p-6 text-center text-xs text-slate-400 dark:text-slate-500">
+                <div className="p-6 text-center text-xs text-muted-foreground ">
                   {historySearch ? 'Nenhuma conversa encontrada.' : 'Nenhuma conversa gravada ainda.'}
                 </div>
               ) : (
@@ -587,14 +587,14 @@ export const AssistantPage: React.FC = () => {
                       onClick={() => handleSelectConversation(c.id)}
                       className={`group relative w-full text-left p-2.5 rounded-xl text-xs transition-all flex items-start gap-2.5 cursor-pointer ${
                         isActive
-                          ? 'bg-blue-50 dark:bg-blue-950/40 border border-[#C7D2FE] dark:border-blue-800/60 text-[#1E1B4B] dark:text-blue-200 font-semibold'
-                          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                          ? 'bg-accent  border border-border  text-primary  font-semibold'
+                          : 'text-muted-foreground  hover:bg-muted  hover:text-foreground '
                       }`}
                     >
-                      <MessageSquare className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${isActive ? 'text-[#25865A]' : 'text-slate-400 dark:text-slate-500'}`} />
+                      <MessageSquare className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${isActive ? 'text-primary' : 'text-muted-foreground '}`} />
                       <div className="flex-1 truncate pr-6">
                         <span className="block truncate">{c.title || 'Conversa'}</span>
-                        <span className="text-[10px] text-slate-400 dark:text-slate-500 flex items-center gap-1 font-normal mt-0.5">
+                        <span className="text-[10px] text-muted-foreground  flex items-center gap-1 font-normal mt-0.5">
                           <Clock className="w-2.5 h-2.5" />
                           {new Date(c.updated_at || c.created_at).toLocaleDateString('pt-BR')}
                         </span>
@@ -603,7 +603,7 @@ export const AssistantPage: React.FC = () => {
                       {/* Delete conversation button */}
                       <button
                         onClick={(e) => handleDeleteConversation(c.id, e)}
-                        className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded transition-all absolute right-2 top-2.5 cursor-pointer"
+                        className="opacity-0 group-hover:opacity-100 p-1 text-muted-foreground hover:text-destructive hover:bg-destructive-subtle  rounded transition-all absolute right-2 top-2.5 cursor-pointer"
                         title="Excluir conversa"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -620,16 +620,16 @@ export const AssistantPage: React.FC = () => {
       {/* Main Chat Workstation - Occupies All Available Space */}
       <div className="flex-1 min-h-0 flex flex-col h-full min-w-0 bg-transparent overflow-hidden relative z-10">
         {/* Top Header Bar with Glassmorphic Apple Touch */}
-        <header className="h-14 sm:h-16 border-b border-slate-200 dark:border-slate-800 px-2.5 sm:px-6 lg:px-8 flex items-center justify-between shrink-0 bg-white/95 dark:bg-[#0F141E]/95 backdrop-blur-xl z-20 transition-colors">
+        <header className="h-14 sm:h-16 border-b border-border  px-2.5 sm:px-6 lg:px-8 flex items-center justify-between shrink-0 bg-card/95  backdrop-blur-xl z-20 transition-colors">
           <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
             {/* Back Button to Início */}
             <button
               onClick={() => navigate('/app/inicio')}
               aria-label="Voltar para a página inicial"
               title="Voltar para o Início"
-              className="p-2 sm:px-2.5 sm:py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-700 transition-all cursor-pointer flex items-center gap-1 text-xs font-semibold shadow-2xs shrink-0 active:scale-95"
+              className="p-2 sm:px-2.5 sm:py-2 rounded-xl border border-border  bg-card  text-muted-foreground  hover:text-foreground  hover:bg-card  transition-all cursor-pointer flex items-center gap-1 text-xs font-semibold shadow-2xs shrink-0 active:scale-95"
             >
-              <ArrowLeft className="w-4 h-4 text-[#25865A]" />
+              <ArrowLeft className="w-4 h-4 text-primary" />
               <span className="hidden sm:inline">Início</span>
             </button>
 
@@ -640,8 +640,8 @@ export const AssistantPage: React.FC = () => {
               title={showHistory ? 'Ocultar histórico' : 'Ver histórico'}
               className={`p-2 sm:px-2.5 sm:py-2 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 text-xs font-semibold shrink-0 active:scale-95 ${
                 showHistory
-                  ? 'bg-blue-50 dark:bg-blue-950/40 border-[#C7D2FE] dark:border-blue-800/60 text-[#25865A] dark:text-[#8ECFA8]'
-                  : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-700 shadow-2xs'
+                  ? 'bg-accent  border-border  text-primary '
+                  : 'bg-card  border-border  text-muted-foreground  hover:text-foreground  hover:bg-card  shadow-2xs'
               }`}
             >
               {showHistory ? (
@@ -664,13 +664,13 @@ export const AssistantPage: React.FC = () => {
 
             <div className="min-w-0 truncate">
               <div className="flex items-center gap-1.5 sm:gap-2">
-                <h1 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white tracking-tight truncate">
+                <h1 className="text-xs sm:text-sm font-bold text-foreground  tracking-normal truncate">
                   Assistente Delux
                 </h1>
 
                 {loading && (
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/50 text-[#25865A] dark:text-[#65B982] border border-blue-200 dark:border-blue-800 animate-pulse hidden sm:inline-flex items-center gap-1 shrink-0">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#25865A] animate-ping" />
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-accent  text-primary  border border-primary  animate-pulse hidden sm:inline-flex items-center gap-1 shrink-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-ping" />
                     Processando...
                   </span>
                 )}
@@ -684,7 +684,7 @@ export const AssistantPage: React.FC = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
               onClick={handleNewConversation}
-              className="p-2 sm:px-3.5 sm:py-1.5 text-xs font-semibold text-[#25865A] dark:text-[#8ECFA8] hover:bg-[#EEF2FF] dark:hover:bg-slate-800 border border-[#C7D2FE] dark:border-slate-700 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95 bg-white dark:bg-slate-800"
+              className="p-2 sm:px-3.5 sm:py-1.5 text-xs font-semibold text-primary  hover:bg-accent  border border-border  rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95 bg-card "
               title="Nova conversa"
             >
               <Plus className="w-4 h-4 sm:w-3.5 sm:h-3.5 stroke-[2.5]" />
@@ -700,39 +700,39 @@ export const AssistantPage: React.FC = () => {
               <div className="mb-4">
                 <AssistantOrb size="lg" isSpeaking={false} isGenerating={loading} />
               </div>
-              <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 dark:text-white mb-2">
+              <h2 className="text-xl sm:text-2xl font-semibold tracking-normal text-foreground  mb-2">
                 Oi! Como posso te ajudar?
               </h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-md mb-7">
+              <p className="text-sm text-muted-foreground  leading-relaxed max-w-md mb-7">
                 Vamos transformar o que você tem em mente em um próximo passo simples.
               </p>
               <div className="w-full max-w-lg flex flex-col gap-2 text-left">
                 <button
                   type="button"
                   onClick={() => handleSendMessage('Me ajude a definir os próximos passos do meu principal objetivo.')}
-                  className="group flex items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-[#111622] px-4 py-3 text-sm text-slate-700 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-white dark:hover:bg-slate-800 transition-colors"
+                  className="group flex items-center gap-3 rounded-xl border border-border  bg-card/80  px-4 py-3 text-sm text-foreground  hover:border-border  hover:bg-card  transition-colors"
                 >
-                  <Target className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-[#25865A]" />
+                  <Target className="w-4 h-4 shrink-0 text-muted-foreground group-hover:text-primary" />
                   <span className="flex-1">Organizar meu objetivo</span>
-                  <ChevronRight className="w-4 h-4 shrink-0 text-slate-400" />
+                  <ChevronRight className="w-4 h-4 shrink-0 text-muted-foreground" />
                 </button>
                 <button
                   type="button"
                   onClick={() => handleSendMessage('Me ajude a escolher minhas prioridades de hoje.')}
-                  className="group flex items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-[#111622] px-4 py-3 text-sm text-slate-700 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-white dark:hover:bg-slate-800 transition-colors"
+                  className="group flex items-center gap-3 rounded-xl border border-border  bg-card/80  px-4 py-3 text-sm text-foreground  hover:border-border  hover:bg-card  transition-colors"
                 >
-                  <Zap className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-[#25865A]" />
+                  <Zap className="w-4 h-4 shrink-0 text-muted-foreground group-hover:text-primary" />
                   <span className="flex-1">Escolher minhas prioridades</span>
-                  <ChevronRight className="w-4 h-4 shrink-0 text-slate-400" />
+                  <ChevronRight className="w-4 h-4 shrink-0 text-muted-foreground" />
                 </button>
                 <button
                   type="button"
                   onClick={() => handleSendMessage('Me ajude a criar um hábito simples que eu consiga manter.')}
-                  className="group flex items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-[#111622] px-4 py-3 text-sm text-slate-700 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-white dark:hover:bg-slate-800 transition-colors"
+                  className="group flex items-center gap-3 rounded-xl border border-border  bg-card/80  px-4 py-3 text-sm text-foreground  hover:border-border  hover:bg-card  transition-colors"
                 >
-                  <Flame className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-[#25865A]" />
+                  <Flame className="w-4 h-4 shrink-0 text-muted-foreground group-hover:text-primary" />
                   <span className="flex-1">Criar um hábito possível</span>
-                  <ChevronRight className="w-4 h-4 shrink-0 text-slate-400" />
+                  <ChevronRight className="w-4 h-4 shrink-0 text-muted-foreground" />
                 </button>
               </div>
             </div>
@@ -768,8 +768,8 @@ export const AssistantPage: React.FC = () => {
                     <div
                       className={`relative group max-w-[88%] sm:max-w-[82%] rounded-2xl ${
                         isUser
-                          ? 'px-4 py-3 sm:px-5 sm:py-3.5 bg-gradient-to-r from-[#25865A] via-[#25865A] to-[#25865A] text-white shadow-md shadow-[#25865A]/20 rounded-tr-xs text-xs sm:text-sm whitespace-pre-wrap leading-relaxed break-words'
-                          : 'p-3.5 sm:p-5 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 shadow-2xs rounded-tl-xs break-words'
+                          ? 'px-4 py-3 sm:px-5 sm:py-3.5 bg-gradient-to-r from-primary via-primary to-primary text-primary-foreground shadow-md shadow-primary/20 rounded-tr-xs text-xs sm:text-sm whitespace-pre-wrap leading-relaxed break-words'
+                          : 'p-3.5 sm:p-5 bg-card  border border-border  shadow-2xs rounded-tl-xs break-words'
                       }`}
                     >
                       {/* Message Content */}
@@ -781,9 +781,9 @@ export const AssistantPage: React.FC = () => {
 
                       {/* Interactive Actions Strip on Assistant Messages */}
                       {!isUser && (
-                        <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-slate-100 dark:border-slate-800 text-[11px]">
+                        <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-border  text-[11px]">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-[10px] text-slate-400 dark:text-slate-500">
+                            <span className="text-[10px] text-muted-foreground ">
                               {new Date(msg.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                             </span>
                           </div>
@@ -792,13 +792,13 @@ export const AssistantPage: React.FC = () => {
                             {/* Copy button */}
                             <button
                               onClick={() => handleCopyMessage(msg.id, msg.content)}
-                              className="px-2 py-1 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1 cursor-pointer active:scale-95"
+                              className="px-2 py-1 text-xs text-muted-foreground  hover:text-foreground  hover:bg-muted  rounded-lg transition-colors flex items-center gap-1 cursor-pointer active:scale-95"
                               title="Copiar mensagem"
                             >
                               {isCopied ? (
                                 <>
-                                  <Check className="w-3.5 h-3.5 text-emerald-600" />
-                                  <span className="text-emerald-600 font-semibold text-[11px]">Copiado!</span>
+                                  <Check className="w-3.5 h-3.5 text-success" />
+                                  <span className="text-success font-semibold text-[11px]">Copiado!</span>
                                 </>
                               ) : (
                                 <>
@@ -827,14 +827,14 @@ export const AssistantPage: React.FC = () => {
                       isGenerating={true}
                     />
                   </div>
-                  <div className="px-4 py-3 sm:px-5 sm:py-3.5 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-2xl rounded-tl-xs flex items-center gap-2.5 sm:gap-3 shadow-2xs max-w-[90%]">
-                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                  <div className="px-4 py-3 sm:px-5 sm:py-3.5 bg-card  border border-border  rounded-2xl rounded-tl-xs flex items-center gap-2.5 sm:gap-3 shadow-2xs max-w-[90%]">
+                    <span className="text-xs text-muted-foreground  font-medium">
                       Delux está formulando sua orientação executiva...
                     </span>
                     <div className="flex items-center gap-1 shrink-0">
-                      <span className="w-1.5 h-1.5 bg-[#25865A] rounded-full animate-bounce [animation-delay:0s]" />
-                      <span className="w-1.5 h-1.5 bg-[#25865A] rounded-full animate-bounce [animation-delay:0.15s]" />
-                      <span className="w-1.5 h-1.5 bg-[#25865A] rounded-full animate-bounce [animation-delay:0.3s]" />
+                      <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:0s]" />
+                      <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:0.15s]" />
+                      <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:0.3s]" />
                     </div>
                   </div>
                 </div>
@@ -847,7 +847,7 @@ export const AssistantPage: React.FC = () => {
         {/* ========================================================
             FIXED CHAT COMPOSER AT BOTTOM - APPLE STUDIO AESTHETIC
            ======================================================== */}
-        <div className="p-2.5 sm:p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0F141E] shrink-0 z-30 transition-colors">
+        <div className="p-2.5 sm:p-4 border-t border-border  bg-card  shrink-0 z-30 transition-colors">
           <div className="w-full max-w-4xl xl:max-w-5xl mx-auto space-y-2">
             {/* Listening indicator banner */}
             {isListening && (
@@ -855,16 +855,16 @@ export const AssistantPage: React.FC = () => {
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 5 }}
-                className="flex items-center justify-between px-3 py-1.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 rounded-xl text-xs text-rose-700 dark:text-rose-300 animate-pulse"
+                className="flex items-center justify-between px-3 py-1.5 bg-destructive-subtle  border border-destructive-border  rounded-xl text-xs text-destructive  animate-pulse"
               >
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-rose-600 animate-ping shrink-0" />
+                  <span className="w-2 h-2 rounded-full bg-destructive animate-ping shrink-0" />
                   <span className="font-semibold text-[11px] sm:text-xs">Ouvindo sua voz... Fale agora</span>
                 </div>
                 <button
                   type="button"
                   onClick={handleToggleListening}
-                  className="text-[11px] font-bold text-rose-800 dark:text-rose-300 hover:underline cursor-pointer px-1 py-0.5"
+                  className="text-[11px] font-bold text-destructive  hover:underline cursor-pointer px-1 py-0.5"
                 >
                   Concluir
                 </button>
@@ -873,9 +873,9 @@ export const AssistantPage: React.FC = () => {
 
             {/* Speech error banner */}
             {speechError && (
-              <div className="px-3 py-1.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 rounded-xl text-xs text-amber-800 dark:text-amber-300 flex items-center justify-between">
+              <div className="px-3 py-1.5 bg-warning-subtle  border border-warning-border  rounded-xl text-xs text-warning  flex items-center justify-between">
                 <span>{speechError}</span>
-                <button onClick={() => setSpeechError(null)} className="text-amber-900 dark:text-amber-200 font-bold ml-2 cursor-pointer">
+                <button onClick={() => setSpeechError(null)} className="text-warning  font-bold ml-2 cursor-pointer">
                   <X className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -889,7 +889,7 @@ export const AssistantPage: React.FC = () => {
                     key={idx}
                     type="button"
                     onClick={() => handleSendMessage(chip)}
-                    className="shrink-0 px-2.5 py-1 sm:px-3 sm:py-1 rounded-full bg-white dark:bg-slate-800 hover:bg-[#EEF2FF] dark:hover:bg-slate-700 hover:text-[#25865A] dark:hover:text-[#8ECFA8] border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-[11px] sm:text-xs font-medium transition-colors cursor-pointer shadow-2xs active:scale-95"
+                    className="shrink-0 px-2.5 py-1 sm:px-3 sm:py-1 rounded-full bg-card  hover:bg-accent  hover:text-primary  border border-border  text-muted-foreground  text-[11px] sm:text-xs font-medium transition-colors cursor-pointer shadow-2xs active:scale-95"
                   >
                     {chip}
                   </button>
@@ -903,7 +903,7 @@ export const AssistantPage: React.FC = () => {
                 e.preventDefault();
                 handleSendMessage();
               }}
-              className="relative flex items-end gap-1.5 sm:gap-2 p-1.5 sm:p-2 bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 focus-within:border-[#25865A] rounded-2xl transition-colors"
+              className="relative flex items-end gap-1.5 sm:gap-2 p-1.5 sm:p-2 bg-card  border border-border  focus-within:border-primary rounded-2xl transition-colors"
             >
               {/* Voice dictation microphone button */}
               {speechSupported && (
@@ -912,13 +912,13 @@ export const AssistantPage: React.FC = () => {
                   onClick={handleToggleListening}
                   className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl transition-all cursor-pointer flex items-center justify-center shrink-0 mb-0.5 active:scale-95 ${
                     isListening
-                      ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-600 ring-2 ring-rose-300 animate-pulse'
-                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700'
+                      ? 'bg-destructive-subtle  text-destructive ring-2 ring-destructive animate-pulse'
+                      : 'text-muted-foreground  hover:text-foreground  hover:bg-muted '
                   }`}
                   title={isListening ? 'Parar gravação de voz' : 'Falar com o assistente (Ditado)'}
                 >
                   {isListening ? (
-                    <MicOff className="w-4 h-4 text-rose-600" />
+                    <MicOff className="w-4 h-4 text-destructive" />
                   ) : (
                     <Mic className="w-4 h-4" />
                   )}
@@ -942,7 +942,7 @@ export const AssistantPage: React.FC = () => {
                 autoCorrect="on"
                 spellCheck={true}
                 enterKeyHint="send"
-                className="w-full py-2 px-1.5 sm:px-2 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 bg-transparent resize-none focus:outline-none max-h-28 leading-relaxed self-center"
+                className="w-full py-2 px-1.5 sm:px-2 text-xs sm:text-sm text-foreground  placeholder:text-muted-foreground  bg-transparent resize-none focus:outline-none max-h-28 leading-relaxed self-center"
               />
 
               {/* Send Button with gradient purple to blue */}
@@ -953,15 +953,15 @@ export const AssistantPage: React.FC = () => {
                 transition={{ type: 'spring', stiffness: 450, damping: 25 }}
                 disabled={!inputMessage.trim() || loading}
                 aria-label="Enviar mensagem"
-                className="h-9 sm:h-10 px-3 sm:px-4 rounded-xl bg-gradient-to-r from-[#25865A] via-[#25865A] to-[#25865A] hover:from-[#1D7049] hover:to-[#1D7049] text-white flex items-center justify-center gap-1.5 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0 shadow-md shadow-[#25865A]/25 font-semibold text-xs mb-0.5 active:scale-95"
+                className="h-9 sm:h-10 px-3 sm:px-4 rounded-xl bg-gradient-to-r from-primary via-primary to-primary hover:from-primary hover:to-primary text-primary-foreground flex items-center justify-center gap-1.5 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0 shadow-md shadow-primary/25 font-semibold text-xs mb-0.5 active:scale-95"
               >
                 <span className="hidden sm:inline">Enviar</span>
                 <Send className="w-3.5 h-3.5 stroke-[2.4]" />
               </motion.button>
             </form>
 
-            <div className="hidden sm:flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500 px-1">
-              <span>Pressione <kbd className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-mono text-[10px] text-slate-600 dark:text-slate-300 font-semibold">Enter ↵</kbd> para enviar • <kbd className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-mono text-[10px] text-slate-600 dark:text-slate-300 font-semibold">Shift+Enter</kbd> quebra linha</span>
+            <div className="hidden sm:flex items-center justify-between text-[11px] text-muted-foreground  px-1">
+              <span>Pressione <kbd className="px-1.5 py-0.5 rounded bg-muted  border border-border  font-mono text-[10px] text-muted-foreground  font-semibold">Enter ↵</kbd> para enviar • <kbd className="px-1.5 py-0.5 rounded bg-muted  border border-border  font-mono text-[10px] text-muted-foreground  font-semibold">Shift+Enter</kbd> quebra linha</span>
               <span className="font-medium">Assistente Executivo Delux</span>
             </div>
           </div>
