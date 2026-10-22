@@ -40,7 +40,7 @@ export const DesktopSidebar: React.FC = () => {
           <DeluxLogo size="md" />
         </NavLink>
         <div className="flex items-center gap-1.5">
-          <span className="text-[10px] font-extrabold tracking-wider uppercase px-2 py-0.5 rounded-full bg-gradient-to-r from-[#7033FF]/15 via-[#4E56FF]/15 to-[#2563EB]/15 text-[#4E56FF] dark:text-[#889BFF] border border-[#4E56FF]/25">
+          <span className="text-[10px] font-extrabold tracking-wider uppercase px-2 py-0.5 rounded-full bg-gradient-to-r from-[#25865A]/15 via-[#25865A]/15 to-[#25865A]/15 text-[#25865A] dark:text-[#8ECFA8] border border-[#25865A]/25">
             PRO
           </span>
           <ThemeToggle variant="icon" size="sm" />
@@ -54,7 +54,7 @@ export const DesktopSidebar: React.FC = () => {
           whileHover={{ scale: 1.015 }}
           whileTap={{ scale: 0.97 }}
           transition={{ type: 'spring', stiffness: 450, damping: 28 }}
-          className="w-full h-11 px-4 bg-gradient-to-r from-[#7033FF] via-[#4E56FF] to-[#2563EB] hover:from-[#6228F0] hover:via-[#424BF0] hover:to-[#1D54D8] text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-[#4E56FF]/25 hover:shadow-lg hover:shadow-[#4E56FF]/35"
+          className="w-full h-11 px-4 bg-gradient-to-r from-[#25865A] via-[#25865A] to-[#25865A] hover:from-[#1D7049] hover:via-[#1D7049] hover:to-[#1D7049] text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-[#25865A]/25 hover:shadow-lg hover:shadow-[#25865A]/35"
         >
           <Plus className="w-4 h-4 stroke-[2.5]" />
           <span>Novo Objetivo</span>
@@ -76,13 +76,13 @@ export const DesktopSidebar: React.FC = () => {
                 if (isAssistant) {
                   return `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm transition-all duration-150 ${
                     isActive
-                      ? 'bg-gradient-to-r from-[#7033FF]/15 via-[#4E56FF]/15 to-[#2563EB]/15 dark:from-[#7033FF]/25 dark:to-[#2563EB]/25 border border-[#4E56FF]/30 text-[#4E56FF] dark:text-[#9A84FF] font-bold shadow-xs'
-                      : 'text-[#475569] dark:text-slate-300 hover:bg-[#F3F5FA] dark:hover:bg-slate-800/60 hover:text-[#17191D] dark:hover:text-white font-medium'
+                      ? 'bg-gradient-to-r from-[#25865A]/15 via-[#25865A]/15 to-[#25865A]/15 dark:from-[#25865A]/25 dark:to-[#25865A]/25 border border-[#25865A]/30 text-[#25865A] dark:text-[#8ECFA8] font-bold shadow-xs'
+                      : 'text-[#475569] dark:text-slate-300 hover:bg-[#F0F8F1] dark:hover:bg-slate-800/60 hover:text-[#17191D] dark:hover:text-white font-medium'
                   }`;
                 }
                 return `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
                   isActive
-                    ? 'bg-[#EAF0FF] dark:bg-[#1E293B] text-[#356AE6] dark:text-[#60A5FA] font-semibold'
+                    ? 'bg-[#E2F3E8] dark:bg-[#1E293B] text-[#356AE6] dark:text-[#65B982] font-semibold'
                     : 'text-[#5A606C] dark:text-slate-400 hover:bg-[#F7F8FA] dark:hover:bg-slate-800/60 hover:text-[#17191D] dark:hover:text-white'
                 }`;
               }}
@@ -99,7 +99,7 @@ export const DesktopSidebar: React.FC = () => {
                 <span
                   className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
                     isAssistant
-                      ? 'bg-gradient-to-r from-[#7033FF] to-[#2563EB] text-white shadow-xs'
+                      ? 'bg-gradient-to-r from-[#25865A] to-[#25865A] text-white shadow-xs'
                       : 'bg-[#356AE6] text-white'
                   }`}
                 >
