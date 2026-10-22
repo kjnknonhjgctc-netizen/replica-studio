@@ -62,7 +62,7 @@
 }
 
 :root {
-  --delux-system-background: #F7F8FA;
+  --delux-system-background: #FAF8F0;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
@@ -99,7 +99,7 @@
 }
 
 .dark {
-  --delux-system-background: #0B0E14;
+  --delux-system-background: #17251D;
   --background: oklch(0.129 0.042 264.695);
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
@@ -261,3 +261,51 @@
   display: none !important;
 }
 
+
+
+/* Delux visual refresh: warm, distinctive, friendly — styling only. */
+:root {
+  --background: oklch(0.985 0.012 95);
+  --foreground: oklch(0.24 0.035 155);
+  --card: oklch(0.998 0.006 95);
+  --card-foreground: oklch(0.24 0.035 155);
+  --popover: oklch(0.998 0.006 95);
+  --popover-foreground: oklch(0.24 0.035 155);
+  --primary: oklch(0.52 0.12 155);
+  --primary-foreground: oklch(0.99 0.01 95);
+  --secondary: oklch(0.94 0.035 145);
+  --secondary-foreground: oklch(0.30 0.06 155);
+  --muted: oklch(0.955 0.018 95);
+  --muted-foreground: oklch(0.50 0.025 155);
+  --accent: oklch(0.93 0.045 145);
+  --accent-foreground: oklch(0.30 0.06 155);
+  --border: oklch(0.90 0.025 95);
+  --input: oklch(0.90 0.025 95);
+  --ring: oklch(0.62 0.12 155);
+}
+.dark {
+  --background: oklch(0.20 0.025 155);
+  --foreground: oklch(0.96 0.015 95);
+  --card: oklch(0.235 0.025 155);
+  --card-foreground: oklch(0.96 0.015 95);
+  --popover: oklch(0.235 0.025 155);
+  --popover-foreground: oklch(0.96 0.015 95);
+  --primary: oklch(0.72 0.12 150);
+  --primary-foreground: oklch(0.20 0.025 155);
+  --secondary: oklch(0.29 0.035 155);
+  --secondary-foreground: oklch(0.95 0.015 95);
+  --muted: oklch(0.28 0.025 155);
+  --muted-foreground: oklch(0.72 0.025 155);
+  --accent: oklch(0.31 0.045 150);
+  --accent-foreground: oklch(0.95 0.015 95);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.68 0.12 150);
+}
+
+@layer base {
+  body { background-color: var(--delux-system-background); }
+  button, input, textarea, select { font-family: inherit; }
+  button { -webkit-tap-highlight-color: transparent; }
+  ::selection { background: #B9E5C8; color: #173B28; }
+}
