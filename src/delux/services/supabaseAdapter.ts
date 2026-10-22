@@ -317,7 +317,7 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
     let offset = hasOffset && Number.isFinite(Number(m.day_offset)) ? Math.max(0, Math.floor(Number(m.day_offset))) : i;
     const requestedDate = String(m.scheduled_date || '');
     const parsedRequestedDate = /^\d{4}-\d{2}-\d{2}$/.test(requestedDate) ? new Date(requestedDate + 'T12:00:00') : null;
-    const validRequestedDate = parsedRequestedDate && Number.isFinite(parsedRequestedDate.getTime()) && formatLocalDate(parsedRequestedDate) === requestedDate;
+    const validRequestedDate = parsedRequestedDate && Number.isFinite(parsedRequestedDate.getTime()) && formatLocalDate(parsedRequestedDate) === requestedDate && requestedDate >= localDateString(new Date());
     let date = validRequestedDate ? requestedDate : nextAvailableDate(allowedDays, offset);
     if (!isPreferredDate(date, allowedDays)) {
       date = nextAvailableDate(allowedDays, 0, validRequestedDate ? parsedRequestedDate! : new Date());
@@ -358,6 +358,7 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
       deleteRows('missions', { goal_id: 'eq.' + goal.id, user_id: 'eq.' + userId }),
       deleteRows('goal_steps', { goal_id: 'eq.' + goal.id, user_id: 'eq.' + userId }),
       deleteRows('goal_diagnostics', { goal_id: 'eq.' + goal.id, user_id: 'eq.' + userId }),
+      deleteRows('activity_events', { goal_id: 'eq.' + goal.id, user_id: 'eq.' + userId }),
       deleteRows('goals', { id: 'eq.' + goal.id, user_id: 'eq.' + userId }),
     ]);
     throw error;
