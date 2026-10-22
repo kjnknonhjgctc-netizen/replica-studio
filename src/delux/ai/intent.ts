@@ -41,3 +41,75 @@ export function resolveNavigationIntent(message: string): { type: 'navigate'; pa
   }
   return null;
 }
+
+
+const WEEKDAY_ALIASES: Record<string, string[]> = {
+  dom: ['domingo', 'dom'],
+  seg: ['segunda-feira', 'segunda', 'seg'],
+  ter: ['terca-feira', 'terca', 'ter'],
+  qua: ['quarta-feira', 'quarta', 'qua'],
+  qui: ['quinta-feira', 'quinta', 'qui'],
+  sex: ['sexta-feira', 'sexta', 'sex'],
+  sab: ['sabado', 'sab'],
+};
+
+const WEEKDAY_ORDER = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
+
+function normalizeDayText(value: string) {
+  return value.normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase();
+}
+
+function dayPattern() {
+  return '(domingo|dom|segunda-feira|segunda|seg|terca-feira|terca|ter|quarta-feira|quarta|qua|quinta-feira|quinta|qui|sexta-feira|sexta|sex|sabado|sab)';
+}
+
+function canonicalDay(value: string) {
+  const normalized = normalizeDayText(value);
+  return WEEKDAY_ORDER.find((key) => WEEKDAY_ALIASES[key].includes(normalized)) || null;
+}
+
+/**
+ * Resolve explicit weekday constraints from a plan request.
+ * Ranges such as "segunda a quinta" override the default preference list;
+ * explicit exclusions such as "não sexta" are then removed.
+ */
+export function resolvePreferredDaysFromRequest(message: string, preferredDays: string[] = ['seg', 'ter', 'qua', 'qui', 'sex']): string[] {
+  const text = normalizeDayText(message);
+  const range = new RegExp('(?:de\\\\s+)?' + dayPattern() + '\\\\s+(?:a|ate|para)\\\\s+' + dayPattern()).exec(text);
+  let days: string[];
+
+  if (range) {
+    const start = canonicalDay(range[1]);
+    const end = canonicalDay(range[2]);
+    const startIndex = WEEKDAY_ORDER.indexOf(start || '');
+    const endIndex = WEEKDAY_ORDER.indexOf(end || '');
+    days = [];
+    if (startIndex >= 0 && endIndex >= 0) {
+      for (let i = startIndex, count = 0; count < WEEKDAY_ORDER.length; count++, i = (i + 1) % WEEKDAY_ORDER.length) {
+        days.push(WEEKDAY_ORDER[i]);
+        if (i === endIndex) break;
+      }
+    }
+  } else {
+    const mentions = [...text.matchAll(new RegExp('\\\\b' + dayPattern() + '\\\\b', 'g'))];
+    const excluded = new Set<string>();
+    const positive: string[] = [];
+    for (const match of mentions) {
+      const day = canonicalDay(match[1]);
+      if (!day) continue;
+      const prefix = text.slice(Math.max(0, (match.index || 0) - 32), match.index || 0);
+      if (/(?:nao|sem|exceto|menos|evitar|excluir|fora de|nao incluir|nao quero|nao posso)\\\\s+(?:(?:a|o|os|as)\\\\s+)?$/.test(prefix)) excluded.add(day);
+      else positive.push(day);
+    }
+    days = positive.length ? [...new Set(positive)] : [...preferredDays];
+  }
+
+  const excluded = new Set<string>();
+  for (const match of text.matchAll(new RegExp('(?:nao|sem|exceto|menos|evitar|excluir|fora de|nao incluir|nao quero|nao posso)\\\\s+(?:(?:a|o|os|as)\\\\s+)?' + dayPattern(), 'g'))) {
+    const day = canonicalDay(match[1]);
+    if (day) excluded.add(day);
+  }
+
+  const result = days.filter((day) => !excluded.has(day) && WEEKDAY_ORDER.includes(day));
+  return [...new Set(result)];
+}
