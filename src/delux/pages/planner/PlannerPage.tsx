@@ -138,7 +138,7 @@ export const PlannerPage: React.FC = () => {
                 onClick={() => setSelectedDayIdx(idx)}
                 className={`flex-1 min-w-[50px] py-2 px-1 rounded-xl flex flex-col items-center transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-gradient-to-r from-[#7033FF] via-[#4E56FF] to-[#2563EB] text-white shadow-sm shadow-[#4E56FF]/25'
+                    ? 'bg-gradient-to-r from-[#25865A] via-[#25865A] to-[#25865A] text-white shadow-sm shadow-[#25865A]/25'
                     : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
@@ -154,7 +154,7 @@ export const PlannerPage: React.FC = () => {
                         : day.missions.length > 0
                         ? isSelected
                           ? 'bg-white'
-                          : 'bg-[#356AE6] dark:bg-[#60A5FA]'
+                          : 'bg-[#356AE6] dark:bg-[#65B982]'
                         : 'bg-transparent'
                     }`}
                   />
@@ -235,7 +235,7 @@ export const PlannerPage: React.FC = () => {
                         handleMoveMissionDate(m, 1);
                       }}
                       title="Mover para amanhã"
-                      className="px-2 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-semibold text-slate-600 dark:text-slate-300 hover:text-[#356AE6] dark:hover:text-[#60A5FA] rounded-lg shadow-xs flex items-center gap-1 cursor-pointer"
+                      className="px-2 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-semibold text-slate-600 dark:text-slate-300 hover:text-[#356AE6] dark:hover:text-[#65B982] rounded-lg shadow-xs flex items-center gap-1 cursor-pointer"
                     >
                       <span>Amanhã</span>
                       <MoveRight className="w-3 h-3" />
