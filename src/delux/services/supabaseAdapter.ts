@@ -688,6 +688,7 @@ export async function handleSupabaseRequest(method: string, endpoint: string, bo
       const days = [];
       for (let i = 0; i < 7; i++) {
         const day = new Date();
+        day.setHours(12, 0, 0, 0);
         day.setDate(day.getDate() + i);
         const date = localDateString(day);
         const dayMissions = missions.filter((m: any) => m.scheduled_date === date);
@@ -697,7 +698,7 @@ export async function handleSupabaseRequest(method: string, endpoint: string, bo
           date, dayName: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][day.getDay()],
           dayNumber: day.getDate(), isToday: i === 0, missions: dayMissions,
           totalMinutes, completedMinutes, availableMinutes: preferences.daily_available_minutes,
-          hasConflict: totalMinutes > preferences.daily_available_minutes * 1.5,
+          hasConflict: totalMinutes > (Number(preferences.daily_available_minutes) || 30),
         });
       }
       return { days, goals, preferences };
