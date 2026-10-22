@@ -19,23 +19,23 @@ export const DeluxLogo: React.FC<DeluxLogoProps> = ({
   }[size];
 
   const textStyles = {
-    sm: 'text-base tracking-normal font-semibold',
-    md: 'text-xl tracking-normal font-bold',
-    lg: 'text-2xl tracking-normal font-bold',
-    xl: 'text-4xl tracking-normal font-extrabold'
+    sm: 'text-base tracking-tight font-semibold',
+    md: 'text-xl tracking-tight font-bold',
+    lg: 'text-2xl tracking-tight font-bold',
+    xl: 'text-4xl tracking-tight font-extrabold'
   }[size];
 
   return (
     <div className={`inline-flex items-center gap-2.5 select-none ${className}`}>
       {/* Precision Apple-like geometric badge */}
       <div
-        className={`${iconDimensions} rounded-xl bg-gradient-to-tr from-primary via-primary to-primary p-0.5 shadow-md shadow-primary/30 flex items-center justify-center relative overflow-hidden`}
+        className={`${iconDimensions} rounded-xl bg-gradient-to-tr from-[#7033FF] via-[#4E56FF] to-[#2563EB] p-0.5 shadow-md shadow-[#4E56FF]/30 flex items-center justify-center relative overflow-hidden`}
       >
         <svg
           viewBox="0 0 32 32"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-full p-1.5 text-primary-foreground"
+          className="w-full h-full p-1.5 text-white"
         >
           {/* Delux Chevron & Zenith Ascent Monogram */}
           <path
@@ -59,7 +59,7 @@ export const DeluxLogo: React.FC<DeluxLogoProps> = ({
 
       {showText && (
         <div className="flex flex-col leading-none">
-          <span className={`text-foreground  font-display ${textStyles} transition-colors`}>
+          <span className={`text-[#17191D] dark:text-white font-['Plus_Jakarta_Sans',sans-serif] ${textStyles} transition-colors`}>
             Delux
           </span>
         </div>

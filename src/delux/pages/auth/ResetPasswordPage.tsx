@@ -36,24 +36,24 @@ export const ResetPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background  flex flex-col justify-center items-center px-4 py-12 transition-colors">
-      <div className="delux-auth-form w-full max-w-md bg-card  border border-border  rounded-3xl p-6 sm:p-8 shadow-sm transition-colors">
+    <div className="min-h-screen bg-[#F7F8FA] dark:bg-[#0B0E14] flex flex-col justify-center items-center px-4 py-12 transition-colors">
+      <div className="w-full max-w-md bg-white dark:bg-[#111622] border border-[#E8EAF0] dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm transition-colors">
         <div className="flex flex-col items-center text-center mb-8">
-          <DeluxLogo size="xl" className="mb-6" />
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-normal text-foreground ">
+          <DeluxLogo size="lg" className="mb-4" />
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#17191D] dark:text-white">
             Criar nova senha
           </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground  mt-1 max-w-xs">
+          <p className="text-xs sm:text-sm text-[#777D87] dark:text-slate-400 mt-1 max-w-xs">
             Escolha uma senha com pelo menos 8 caracteres para proteger sua conta.
           </p>
         </div>
 
         {message ? (
-          <div className="text-center p-6 bg-accent  border border-border  rounded-2xl">
-            <CheckCircle2 className="w-10 h-10 text-primary  mx-auto mb-3" />
-            <p className="text-sm font-semibold text-foreground  mb-1">Senha atualizada</p>
-            <p className="text-xs text-muted-foreground  leading-relaxed mb-6">{message}</p>
-            <Link to="/login?mode=login" className="inline-flex items-center gap-2 text-xs font-semibold text-primary  hover:underline">
+          <div className="text-center p-6 bg-[#F7F9FD] dark:bg-slate-900/60 border border-[#D9E3FC] dark:border-slate-800 rounded-2xl">
+            <CheckCircle2 className="w-10 h-10 text-[#356AE6] dark:text-[#60A5FA] mx-auto mb-3" />
+            <p className="text-sm font-semibold text-[#17191D] dark:text-white mb-1">Senha atualizada</p>
+            <p className="text-xs text-[#777D87] dark:text-slate-400 leading-relaxed mb-6">{message}</p>
+            <Link to="/login?mode=login" className="inline-flex items-center gap-2 text-xs font-semibold text-[#356AE6] dark:text-[#60A5FA] hover:underline">
               <ArrowLeft className="w-3.5 h-3.5" />
               Voltar para o login
             </Link>
@@ -61,7 +61,7 @@ export const ResetPasswordPage: React.FC = () => {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div role="alert" className="p-3 rounded-xl bg-destructive-subtle  border border-destructive-border  text-destructive  text-xs">
+              <div role="alert" className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-300 text-xs">
                 {error}
               </div>
             )}

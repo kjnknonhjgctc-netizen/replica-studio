@@ -14,5 +14,3 @@
 - Assistant instructions and gateway calls stay server-only; bounded plain conversation turns and user-scoped goal context accompany each request. Why: the gateway is stateless and advice must reflect the user's constraints without exposing secrets.
 - Installed-app system surfaces use the theme-aware global system-background token and standalone CSS; ThemeContext synchronizes browser chrome with the selected theme. Why: match gesture-inset areas to page themes while leaving Android-owned navigation controls to the OS.
 - Keep the theme context and hook in themeState.ts, separate from the provider component, and preserve context identity through hot updates. Why: mounted preview consumers must not lose their provider during React Refresh.
-
-- Delux presentation uses semantic theme tokens in src/styles.css and existing shared controls; retain the internal routing and data logic during visual edits. Why: a consistent light/dark identity must not change user workflows.

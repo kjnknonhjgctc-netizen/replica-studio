@@ -10,7 +10,7 @@ interface ProgressBarProps {
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({
   progress,
-  color = 'var(--primary)',
+  color = '#356AE6',
   height = 'md',
   showLabel = false,
   className = ''
@@ -26,12 +26,12 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   return (
     <div className={`w-full ${className}`}>
       {showLabel && (
-        <div className="flex justify-between items-center text-xs text-muted-foreground  font-medium mb-1.5">
+        <div className="flex justify-between items-center text-xs text-[#777D87] dark:text-slate-400 font-medium mb-1.5">
           <span>Progresso</span>
-          <span className="text-foreground  font-semibold">{Math.round(clamped)}%</span>
+          <span className="text-[#17191D] dark:text-white font-semibold">{Math.round(clamped)}%</span>
         </div>
       )}
-      <div className={`w-full ${heightClass} bg-accent  rounded-full overflow-hidden transition-colors`}>
+      <div className={`w-full ${heightClass} bg-[#E8EAF0] dark:bg-slate-800 rounded-full overflow-hidden transition-colors`}>
         <div
           className="h-full rounded-full transition-all duration-500 ease-out"
           style={{ width: `${clamped}%`, backgroundColor: color }}
@@ -56,8 +56,8 @@ export const ProgressRing: React.FC<ProgressRingProps> = ({
   progress,
   size = 56,
   strokeWidth = 5,
-  color = 'var(--primary)',
-  trackColor = 'var(--border)',
+  color = '#356AE6',
+  trackColor = '#E8EAF0',
   showPercent = true,
   children,
   className = ''
@@ -91,7 +91,7 @@ export const ProgressRing: React.FC<ProgressRingProps> = ({
           className="transition-all duration-700 ease-out"
         />
       </svg>
-      <div className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-foreground ">
+      <div className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-[#17191D] dark:text-white">
         {children ? children : showPercent ? `${Math.round(clamped)}%` : null}
       </div>
     </div>
