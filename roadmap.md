@@ -7,3 +7,6 @@
 - [x] Padronizar cores, tipografia, botões, formulários e indicadores compartilhados.
 - [x] Aplicar o visual a todas as telas existentes e aprimorar navegação e espaços no celular.
 - [x] Verificar telas claras/escuras, navegação pública real, telas internas com dados simulados somente no navegador, 13 testes e compilação sem alterar funcionalidades.
+
+# Reversão do visual
+- [x] Restaurar as cores e a tipografia originais (padrão) em todas as telas, mantendo funcionalidades, dados e autenticação.
