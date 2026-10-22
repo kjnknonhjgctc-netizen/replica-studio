@@ -56,7 +56,7 @@ const WEEKDAY_ALIASES: Record<string, string[]> = {
 const WEEKDAY_ORDER = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
 
 function normalizeDayText(value: string) {
-  return value.normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase();
+  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 }
 
 function dayPattern() {
@@ -98,7 +98,7 @@ export function resolvePreferredDaysFromRequest(message: string, preferredDays: 
       const day = canonicalDay(match[1]);
       if (!day) continue;
       const prefix = text.slice(Math.max(0, (match.index || 0) - 32), match.index || 0);
-      if (/(?:nao|sem|exceto|menos|evitar|excluir|fora de|nao incluir|nao quero|nao posso)\\\\s+(?:(?:a|o|os|as)\\\\s+)?$/.test(prefix)) excluded.add(day);
+      if (/(?:nao|sem|exceto|menos|evitar|excluir|fora de|nao incluir|nao quero|nao posso)\s+(?:(?:a|o|os|as)\s+)?$/.test(prefix)) excluded.add(day);
       else positive.push(day);
     }
     days = positive.length ? [...new Set(positive)] : [...preferredDays];
