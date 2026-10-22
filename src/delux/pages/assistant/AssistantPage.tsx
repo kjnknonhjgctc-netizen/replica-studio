@@ -57,21 +57,21 @@ const PROMPT_CARDS_BY_MODE: Record<AssistantMode, PromptCard[]> = {
       title: 'Estruturar meu grande objetivo',
       desc: 'Quebre sua meta principal em marcos mensuráveis de 30, 60 e 90 dias.',
       prompt: 'Ajude-me a estruturar meu objetivo principal em metas semanais com etapas práticas e marcos claros.',
-      icon: <Target className="w-4 h-4 text-[#2563EB]" />,
+      icon: <Target className="w-4 h-4 text-[#25865A]" />,
       tag: 'Estratégia'
     },
     {
       title: 'Reorganizar meu cronograma semanal',
       desc: 'Encontre o equilíbrio entre trabalho profundo, descanso e hábitos diários.',
       prompt: 'Preciso reorganizar meu cronograma desta semana para conciliar hábitos e metas sem me sobrecarregar.',
-      icon: <Calendar className="w-4 h-4 text-[#4E56FF]" />,
+      icon: <Calendar className="w-4 h-4 text-[#25865A]" />,
       tag: 'Planejamento'
     },
     {
       title: 'Definir métricas de progresso',
       desc: 'Como saber com precisão se estou avançando na direção certa a cada semana.',
       prompt: 'Quais são os melhores indicadores e métricas semanais para acompanhar o progresso dos meus objetivos?',
-      icon: <Sparkles className="w-4 h-4 text-[#7033FF]" />,
+      icon: <Sparkles className="w-4 h-4 text-[#25865A]" />,
       tag: 'Métricas'
     },
     {
@@ -87,14 +87,14 @@ const PROMPT_CARDS_BY_MODE: Record<AssistantMode, PromptCard[]> = {
       title: 'O que devo priorizar hoje?',
       desc: 'Identifique tarefas de alto impacto para focar seu tempo com máxima eficiência.',
       prompt: 'Com base no meu dia, quais são as 3 principais prioridades que devo focar hoje para avançar de verdade?',
-      icon: <Zap className="w-4 h-4 text-[#7033FF]" />,
+      icon: <Zap className="w-4 h-4 text-[#25865A]" />,
       tag: 'Foco Imediato'
     },
     {
       title: 'Bloco de 25 minutos de alta intensidade',
       desc: 'Defina exatamente o que fazer no próximo bloco Pomodoro sem dispersão.',
       prompt: 'Vou começar um bloco de foco de 25 minutos agora. Como devo estruturar esse tempo para terminar uma tarefa?',
-      icon: <Target className="w-4 h-4 text-[#2563EB]" />,
+      icon: <Target className="w-4 h-4 text-[#25865A]" />,
       tag: 'Execução'
     },
     {
@@ -124,21 +124,21 @@ const PROMPT_CARDS_BY_MODE: Record<AssistantMode, PromptCard[]> = {
       title: 'Reduzir o atrito de começar',
       desc: 'Torne o hábito tão pequeno e simples que seja impossível falhar.',
       prompt: 'Como posso aplicar a regra dos 2 minutos para facilitar a realização dos meus hábitos matinais?',
-      icon: <Zap className="w-4 h-4 text-[#7033FF]" />,
+      icon: <Zap className="w-4 h-4 text-[#25865A]" />,
       tag: 'Micro-Hábitos'
     },
     {
       title: 'O que fazer quando eu falhar um dia?',
       desc: 'A regra de nunca falhar duas vezes consecutivas na prática.',
       prompt: 'Ontem não consegui cumprir minhas metas de hábitos. Como me recuperar hoje sem culpa e sem tentar compensar o dobro?',
-      icon: <RotateCcw className="w-4 h-4 text-[#2563EB]" />,
+      icon: <RotateCcw className="w-4 h-4 text-[#25865A]" />,
       tag: 'Recuperação'
     },
     {
       title: 'Empilhar novos hábitos na rotina',
       desc: 'Conecte um novo hábito a um comportamento automático existente.',
       prompt: 'Me ensine a usar a técnica de empilhamento de hábitos (habit stacking) para criar uma rotina noturna consistente.',
-      icon: <ListOrdered className="w-4 h-4 text-[#4E56FF]" />,
+      icon: <ListOrdered className="w-4 h-4 text-[#25865A]" />,
       tag: 'Estruturação'
     }
   ],
@@ -147,21 +147,21 @@ const PROMPT_CARDS_BY_MODE: Record<AssistantMode, PromptCard[]> = {
       title: 'Mapear decisões difíceis',
       desc: 'Avalie prós, contras e impacto de segundo nível com neutralidade.',
       prompt: 'Preciso tomar uma decisão importante sobre meus projetos. Me guie com perguntas estratégicas para clarear minha mente.',
-      icon: <Compass className="w-4 h-4 text-[#2563EB]" />,
+      icon: <Compass className="w-4 h-4 text-[#25865A]" />,
       tag: 'Decisão'
     },
     {
       title: 'Descarrego mental (Brain Dump)',
       desc: 'Transforme pensamentos dispersos em ações claras e organizadas.',
       prompt: 'Minha cabeça está cheia de pendências soltas. Como posso organizar esse turbilhão em uma lista executável?',
-      icon: <Sparkles className="w-4 h-4 text-[#7033FF]" />,
+      icon: <Sparkles className="w-4 h-4 text-[#25865A]" />,
       tag: 'Organização'
     },
     {
       title: 'Regra de Pareto 80/20',
       desc: 'Identifique os 20% das suas ações que geram 80% do resultado real.',
       prompt: 'Como posso aplicar o Princípio de Pareto para cortar tarefas inúteis da minha rotina esta semana?',
-      icon: <Target className="w-4 h-4 text-[#4E56FF]" />,
+      icon: <Target className="w-4 h-4 text-[#25865A]" />,
       tag: 'Filtro'
     },
     {
@@ -444,7 +444,7 @@ export const AssistantPage: React.FC = () => {
             const headingText = trimmed.replace(/^#+\s*/, '');
             return (
               <h4 key={idx} className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm pt-1 tracking-tight flex items-center gap-1.5 sm:gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#4E56FF] shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#25865A] shrink-0" />
                 <span className="break-words">{headingText}</span>
               </h4>
             );
@@ -457,7 +457,7 @@ export const AssistantPage: React.FC = () => {
             const itemText = numberedMatch[2];
             return (
               <div key={idx} className="flex items-start gap-2 sm:gap-2.5 my-1 pl-0.5 sm:pl-1">
-                <span className="shrink-0 w-5 h-5 rounded-md bg-gradient-to-r from-[#7033FF]/15 to-[#2563EB]/15 text-[#4E56FF] dark:text-[#889BFF] text-[11px] font-bold flex items-center justify-center mt-0.5 border border-[#4E56FF]/30">
+                <span className="shrink-0 w-5 h-5 rounded-md bg-gradient-to-r from-[#25865A]/15 to-[#25865A]/15 text-[#25865A] dark:text-[#8ECFA8] text-[11px] font-bold flex items-center justify-center mt-0.5 border border-[#25865A]/30">
                   {num}
                 </span>
                 <span className="flex-1 break-words">
@@ -472,7 +472,7 @@ export const AssistantPage: React.FC = () => {
             const itemText = trimmed.replace(/^[-*]\s+/, '');
             return (
               <div key={idx} className="flex items-start gap-2 sm:gap-2.5 my-1 pl-0.5 sm:pl-1">
-                <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-[#2563EB] dark:bg-[#60A5FA] mt-1.5 sm:mt-2" />
+                <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-[#25865A] dark:bg-[#65B982] mt-1.5 sm:mt-2" />
                 <span className="flex-1 break-words">
                   {renderInlineFormatting(itemText)}
                 </span>
@@ -535,7 +535,7 @@ export const AssistantPage: React.FC = () => {
             {/* History Header */}
             <div className="p-3.5 sm:p-4 border-b border-[#F1F5F9] dark:border-slate-800 flex items-center justify-between bg-white dark:bg-[#0F141E] shrink-0">
               <div className="flex items-center gap-2">
-                <History className="w-4 h-4 text-[#4E56FF]" />
+                <History className="w-4 h-4 text-[#25865A]" />
                 <span className="text-xs font-bold text-[#0F172A] dark:text-white tracking-tight">Histórico de Sessões</span>
               </div>
               <button
@@ -553,7 +553,7 @@ export const AssistantPage: React.FC = () => {
                 whileHover={{ scale: 1.015 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleNewConversation}
-                className="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-[#7033FF] via-[#4E56FF] to-[#2563EB] hover:from-[#6228F0] hover:to-[#1D54D8] text-white text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-sm shadow-[#4E56FF]/25 cursor-pointer"
+                className="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-[#25865A] via-[#25865A] to-[#25865A] hover:from-[#1D7049] hover:to-[#1D7049] text-white text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-sm shadow-[#25865A]/25 cursor-pointer"
               >
                 <Plus className="w-4 h-4 stroke-[2.5]" />
                 <span>Nova conversa</span>
@@ -567,7 +567,7 @@ export const AssistantPage: React.FC = () => {
                   placeholder="Buscar conversas..."
                   value={historySearch}
                   onChange={e => setHistorySearch(e.target.value)}
-                  className="w-full h-8 pl-8 pr-3 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-[#4E56FF] rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none transition-all"
+                  className="w-full h-8 pl-8 pr-3 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-[#25865A] rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none transition-all"
                 />
               </div>
             </div>
@@ -591,7 +591,7 @@ export const AssistantPage: React.FC = () => {
                           : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
-                      <MessageSquare className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${isActive ? 'text-[#4E56FF]' : 'text-slate-400 dark:text-slate-500'}`} />
+                      <MessageSquare className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${isActive ? 'text-[#25865A]' : 'text-slate-400 dark:text-slate-500'}`} />
                       <div className="flex-1 truncate pr-6">
                         <span className="block truncate">{c.title || 'Conversa'}</span>
                         <span className="text-[10px] text-slate-400 dark:text-slate-500 flex items-center gap-1 font-normal mt-0.5">
@@ -629,7 +629,7 @@ export const AssistantPage: React.FC = () => {
               title="Voltar para o Início"
               className="p-2 sm:px-2.5 sm:py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-700 transition-all cursor-pointer flex items-center gap-1 text-xs font-semibold shadow-2xs shrink-0 active:scale-95"
             >
-              <ArrowLeft className="w-4 h-4 text-[#4E56FF]" />
+              <ArrowLeft className="w-4 h-4 text-[#25865A]" />
               <span className="hidden sm:inline">Início</span>
             </button>
 
@@ -640,7 +640,7 @@ export const AssistantPage: React.FC = () => {
               title={showHistory ? 'Ocultar histórico' : 'Ver histórico'}
               className={`p-2 sm:px-2.5 sm:py-2 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 text-xs font-semibold shrink-0 active:scale-95 ${
                 showHistory
-                  ? 'bg-blue-50 dark:bg-blue-950/40 border-[#C7D2FE] dark:border-blue-800/60 text-[#4E56FF] dark:text-[#889BFF]'
+                  ? 'bg-blue-50 dark:bg-blue-950/40 border-[#C7D2FE] dark:border-blue-800/60 text-[#25865A] dark:text-[#8ECFA8]'
                   : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-700 shadow-2xs'
               }`}
             >
@@ -669,8 +669,8 @@ export const AssistantPage: React.FC = () => {
                 </h1>
 
                 {loading && (
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/50 text-[#2563EB] dark:text-[#60A5FA] border border-blue-200 dark:border-blue-800 animate-pulse hidden sm:inline-flex items-center gap-1 shrink-0">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-ping" />
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/50 text-[#25865A] dark:text-[#65B982] border border-blue-200 dark:border-blue-800 animate-pulse hidden sm:inline-flex items-center gap-1 shrink-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#25865A] animate-ping" />
                     Processando...
                   </span>
                 )}
@@ -684,7 +684,7 @@ export const AssistantPage: React.FC = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
               onClick={handleNewConversation}
-              className="p-2 sm:px-3.5 sm:py-1.5 text-xs font-semibold text-[#4E56FF] dark:text-[#889BFF] hover:bg-[#EEF2FF] dark:hover:bg-slate-800 border border-[#C7D2FE] dark:border-slate-700 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95 bg-white dark:bg-slate-800"
+              className="p-2 sm:px-3.5 sm:py-1.5 text-xs font-semibold text-[#25865A] dark:text-[#8ECFA8] hover:bg-[#EEF2FF] dark:hover:bg-slate-800 border border-[#C7D2FE] dark:border-slate-700 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95 bg-white dark:bg-slate-800"
               title="Nova conversa"
             >
               <Plus className="w-4 h-4 sm:w-3.5 sm:h-3.5 stroke-[2.5]" />
@@ -712,7 +712,7 @@ export const AssistantPage: React.FC = () => {
                   onClick={() => handleSendMessage('Me ajude a definir os próximos passos do meu principal objetivo.')}
                   className="group flex items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-[#111622] px-4 py-3 text-sm text-slate-700 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-white dark:hover:bg-slate-800 transition-colors"
                 >
-                  <Target className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-[#4E56FF]" />
+                  <Target className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-[#25865A]" />
                   <span className="flex-1">Organizar meu objetivo</span>
                   <ChevronRight className="w-4 h-4 shrink-0 text-slate-400" />
                 </button>
@@ -721,7 +721,7 @@ export const AssistantPage: React.FC = () => {
                   onClick={() => handleSendMessage('Me ajude a escolher minhas prioridades de hoje.')}
                   className="group flex items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-[#111622] px-4 py-3 text-sm text-slate-700 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-white dark:hover:bg-slate-800 transition-colors"
                 >
-                  <Zap className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-[#4E56FF]" />
+                  <Zap className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-[#25865A]" />
                   <span className="flex-1">Escolher minhas prioridades</span>
                   <ChevronRight className="w-4 h-4 shrink-0 text-slate-400" />
                 </button>
@@ -730,7 +730,7 @@ export const AssistantPage: React.FC = () => {
                   onClick={() => handleSendMessage('Me ajude a criar um hábito simples que eu consiga manter.')}
                   className="group flex items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-[#111622] px-4 py-3 text-sm text-slate-700 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-white dark:hover:bg-slate-800 transition-colors"
                 >
-                  <Flame className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-[#4E56FF]" />
+                  <Flame className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-[#25865A]" />
                   <span className="flex-1">Criar um hábito possível</span>
                   <ChevronRight className="w-4 h-4 shrink-0 text-slate-400" />
                 </button>
@@ -768,7 +768,7 @@ export const AssistantPage: React.FC = () => {
                     <div
                       className={`relative group max-w-[88%] sm:max-w-[82%] rounded-2xl ${
                         isUser
-                          ? 'px-4 py-3 sm:px-5 sm:py-3.5 bg-gradient-to-r from-[#7033FF] via-[#4E56FF] to-[#2563EB] text-white shadow-md shadow-[#4E56FF]/20 rounded-tr-xs text-xs sm:text-sm whitespace-pre-wrap leading-relaxed break-words'
+                          ? 'px-4 py-3 sm:px-5 sm:py-3.5 bg-gradient-to-r from-[#25865A] via-[#25865A] to-[#25865A] text-white shadow-md shadow-[#25865A]/20 rounded-tr-xs text-xs sm:text-sm whitespace-pre-wrap leading-relaxed break-words'
                           : 'p-3.5 sm:p-5 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 shadow-2xs rounded-tl-xs break-words'
                       }`}
                     >
@@ -832,9 +832,9 @@ export const AssistantPage: React.FC = () => {
                       Delux está formulando sua orientação executiva...
                     </span>
                     <div className="flex items-center gap-1 shrink-0">
-                      <span className="w-1.5 h-1.5 bg-[#4E56FF] rounded-full animate-bounce [animation-delay:0s]" />
-                      <span className="w-1.5 h-1.5 bg-[#2563EB] rounded-full animate-bounce [animation-delay:0.15s]" />
-                      <span className="w-1.5 h-1.5 bg-[#7033FF] rounded-full animate-bounce [animation-delay:0.3s]" />
+                      <span className="w-1.5 h-1.5 bg-[#25865A] rounded-full animate-bounce [animation-delay:0s]" />
+                      <span className="w-1.5 h-1.5 bg-[#25865A] rounded-full animate-bounce [animation-delay:0.15s]" />
+                      <span className="w-1.5 h-1.5 bg-[#25865A] rounded-full animate-bounce [animation-delay:0.3s]" />
                     </div>
                   </div>
                 </div>
@@ -889,7 +889,7 @@ export const AssistantPage: React.FC = () => {
                     key={idx}
                     type="button"
                     onClick={() => handleSendMessage(chip)}
-                    className="shrink-0 px-2.5 py-1 sm:px-3 sm:py-1 rounded-full bg-white dark:bg-slate-800 hover:bg-[#EEF2FF] dark:hover:bg-slate-700 hover:text-[#4E56FF] dark:hover:text-[#889BFF] border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-[11px] sm:text-xs font-medium transition-colors cursor-pointer shadow-2xs active:scale-95"
+                    className="shrink-0 px-2.5 py-1 sm:px-3 sm:py-1 rounded-full bg-white dark:bg-slate-800 hover:bg-[#EEF2FF] dark:hover:bg-slate-700 hover:text-[#25865A] dark:hover:text-[#8ECFA8] border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-[11px] sm:text-xs font-medium transition-colors cursor-pointer shadow-2xs active:scale-95"
                   >
                     {chip}
                   </button>
@@ -903,7 +903,7 @@ export const AssistantPage: React.FC = () => {
                 e.preventDefault();
                 handleSendMessage();
               }}
-              className="relative flex items-end gap-1.5 sm:gap-2 p-1.5 sm:p-2 bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 focus-within:border-[#4E56FF] rounded-2xl transition-colors"
+              className="relative flex items-end gap-1.5 sm:gap-2 p-1.5 sm:p-2 bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 focus-within:border-[#25865A] rounded-2xl transition-colors"
             >
               {/* Voice dictation microphone button */}
               {speechSupported && (
@@ -953,7 +953,7 @@ export const AssistantPage: React.FC = () => {
                 transition={{ type: 'spring', stiffness: 450, damping: 25 }}
                 disabled={!inputMessage.trim() || loading}
                 aria-label="Enviar mensagem"
-                className="h-9 sm:h-10 px-3 sm:px-4 rounded-xl bg-gradient-to-r from-[#7033FF] via-[#4E56FF] to-[#2563EB] hover:from-[#6228F0] hover:to-[#1D54D8] text-white flex items-center justify-center gap-1.5 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0 shadow-md shadow-[#4E56FF]/25 font-semibold text-xs mb-0.5 active:scale-95"
+                className="h-9 sm:h-10 px-3 sm:px-4 rounded-xl bg-gradient-to-r from-[#25865A] via-[#25865A] to-[#25865A] hover:from-[#1D7049] hover:to-[#1D7049] text-white flex items-center justify-center gap-1.5 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0 shadow-md shadow-[#25865A]/25 font-semibold text-xs mb-0.5 active:scale-95"
               >
                 <span className="hidden sm:inline">Enviar</span>
                 <Send className="w-3.5 h-3.5 stroke-[2.4]" />
