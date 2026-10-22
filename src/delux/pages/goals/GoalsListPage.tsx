@@ -80,7 +80,7 @@ export const GoalsListPage: React.FC = () => {
                 onClick={() => setStatusFilter(st)}
                 className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                   active
-                    ? 'bg-gradient-to-r from-[#7033FF] via-[#4E56FF] to-[#2563EB] text-white shadow-sm shadow-[#4E56FF]/25'
+                    ? 'bg-gradient-to-r from-[#25865A] via-[#25865A] to-[#25865A] text-white shadow-sm shadow-[#25865A]/25'
                     : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                 }`}
               >
