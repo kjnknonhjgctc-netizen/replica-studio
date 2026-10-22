@@ -166,7 +166,7 @@ export const PlannerPage: React.FC = () => {
       </div>
 
       {/* Daily Capacity and Conflict Alert */}
-      <div className="bg-card  p-5 rounded-3xl border border-border  shadow-xs transition-colors">
+      <div className="delux-section bg-card p-5 rounded-3xl border border-border  shadow-xs transition-colors">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
             <h3 className="text-base font-bold text-foreground ">

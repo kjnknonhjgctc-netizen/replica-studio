@@ -33,7 +33,7 @@ export const DesktopSidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="hidden md:flex flex-col w-64 lg:w-72 h-full bg-card  border-r border-border  p-5 shrink-0 select-none overflow-y-auto transition-colors">
+    <aside className="delux-sidebar hidden md:flex flex-col w-64 lg:w-72 h-full bg-card  border-r border-border  p-5 shrink-0 select-none overflow-y-auto transition-colors">
       {/* Brand Header */}
       <div className="flex items-center justify-between pb-6 mb-2 border-b border-muted ">
         <NavLink to="/app/inicio" className="cursor-pointer">
@@ -54,7 +54,7 @@ export const DesktopSidebar: React.FC = () => {
           whileHover={{ scale: 1.015 }}
           whileTap={{ scale: 0.97 }}
           transition={{ type: 'spring', stiffness: 450, damping: 28 }}
-          className="w-full h-11 px-4 bg-gradient-to-r from-primary via-primary to-primary hover:from-primary hover:via-primary hover:to-primary text-primary-foreground rounded-xl text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-primary/25 hover:shadow-lg hover:shadow-primary/35"
+          className="delux-primary-button w-full h-12 px-4 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer "
         >
           <Plus className="w-4 h-4 stroke-[2.5]" />
           <span>Novo Objetivo</span>
@@ -62,7 +62,7 @@ export const DesktopSidebar: React.FC = () => {
       </div>
 
       {/* Navigation List */}
-      <nav className="flex-1 space-y-1">
+      <nav className="flex-1 space-y-2">
         {navItems.map(item => {
           const Icon = item.icon;
           const isAssistant = item.to === '/app/assistente';
@@ -74,13 +74,13 @@ export const DesktopSidebar: React.FC = () => {
               onClick={() => playSelectSound()}
               className={({ isActive }) => {
                 if (isAssistant) {
-                  return `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm transition-all duration-150 ${
+                  return `delux-nav-item flex items-center justify-between px-3.5 py-3 rounded-xl text-sm transition-all duration-150 ${
                     isActive
                       ? 'bg-gradient-to-r from-primary/15 via-primary/15 to-primary/15   border border-primary/30 text-primary  font-bold shadow-xs'
                       : 'text-muted-foreground  hover:bg-accent  hover:text-foreground  font-medium'
                   }`;
                 }
-                return `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
+                return `delux-nav-item flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-medium transition-all duration-150 ${
                   isActive
                     ? 'bg-accent  text-primary  font-semibold'
                     : 'text-muted-foreground  hover:bg-background  hover:text-foreground '
@@ -91,7 +91,7 @@ export const DesktopSidebar: React.FC = () => {
                 {isAssistant ? (
                   <AssistantOrb size="xs" />
                 ) : (
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-5 h-5 shrink-0" />
                 )}
                 <span>{item.label}</span>
               </div>
@@ -123,7 +123,7 @@ export const DesktopSidebar: React.FC = () => {
           onClick={() => navigate('/app/perfil')}
           className="flex items-center gap-3 min-w-0 flex-1 cursor-pointer hover:opacity-80 transition-opacity"
         >
-          <div className="w-9 h-9 rounded-full bg-feature  text-primary-foreground font-bold text-xs flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 rounded-full bg-accent text-primary font-bold text-xs flex items-center justify-center shrink-0">
             {user?.full_name?.trim() ? (
               user.full_name.trim().charAt(0).toUpperCase()
             ) : (

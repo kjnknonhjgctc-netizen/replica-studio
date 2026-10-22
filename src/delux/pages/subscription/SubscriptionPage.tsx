@@ -131,7 +131,7 @@ export const SubscriptionPage: React.FC = () => {
       </div>
 
       {/* Feature Breakdown */}
-      <div className="bg-card  p-6 sm:p-7 rounded-3xl border border-border  shadow-xs transition-colors">
+      <div className="delux-section bg-card p-6 sm:p-7 rounded-3xl border border-border  shadow-xs transition-colors">
         <h3 className="text-base font-bold text-foreground  mb-4">
           Tudo o que está incluído no seu plano
         </h3>

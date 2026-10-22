@@ -279,11 +279,9 @@ export const OnboardingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-muted to-background    text-foreground  flex flex-col justify-between py-4 sm:py-6 px-3.5 sm:px-6 relative overflow-x-hidden transition-colors">
+    <div className="min-h-screen bg-background    text-foreground  flex flex-col justify-between py-4 sm:py-6 px-3.5 sm:px-6 relative overflow-x-hidden transition-colors">
       
       {/* Decorative ambient background glows */}
-      <div className="absolute -top-32 -left-32 w-80 sm:w-96 h-80 sm:h-96 bg-primary/8  rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-80 sm:w-96 h-80 sm:h-96 bg-primary/8  rounded-full blur-3xl pointer-events-none" />
 
       {/* Top Header with Delux Logo & Responsive Stepper */}
       <header className="max-w-2xl w-full mx-auto flex items-center justify-between pb-3 sm:pb-5 relative z-10">
@@ -321,7 +319,7 @@ export const OnboardingPage: React.FC = () => {
 
       {/* Main Container */}
       <main className="max-w-2xl w-full mx-auto my-auto relative z-10 pb-4">
-        <div className="bg-card/95  backdrop-blur-xl border border-border/80  rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-soft transition-all">
+        <div className="delux-section bg-card/95 backdrop-blur-xl border border-border/80 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-soft transition-all">
           
           {/* Finish Success State */}
           {finishSuccess ? (
@@ -386,7 +384,7 @@ export const OnboardingPage: React.FC = () => {
               </div>
 
               {/* Mobile-Ergonomic Action Bar */}
-              <div className="sticky bottom-0 -mx-4 -mb-4 sm:mx-0 sm:mb-0 p-3.5 sm:p-0 sm:pt-4 bg-card/95  backdrop-blur-md border-t border-border  sm:border-0 rounded-b-2xl sm:rounded-none flex justify-end items-center z-20">
+              <div className="delux-wizard-actions sticky bottom-0 -mx-4 -mb-4 sm:mx-0 sm:mb-0 p-3.5 sm:p-0 sm:pt-4 bg-card/95  backdrop-blur-md border-t border-border  sm:border-0 rounded-b-2xl sm:rounded-none flex justify-end items-center z-20">
                 <button
                   type="submit"
                   className="w-full sm:w-auto h-12 px-8 rounded-2xl bg-gradient-to-r from-primary via-primary to-primary hover:opacity-95 active:scale-[0.98] text-primary-foreground font-bold text-sm shadow-md shadow-primary/25 flex items-center justify-center gap-2 transition-all cursor-pointer min-h-[48px]"
@@ -461,7 +459,7 @@ export const OnboardingPage: React.FC = () => {
                   </div>
 
                   {/* Mobile Sticky Actions */}
-                  <div className="sticky bottom-0 -mx-4 -mb-4 sm:mx-0 sm:mb-0 p-3 sm:p-0 sm:pt-4 bg-card/95  backdrop-blur-md border-t border-border  sm:border-0 rounded-b-2xl sm:rounded-none flex justify-between items-center z-20">
+                  <div className="delux-wizard-actions sticky bottom-0 -mx-4 -mb-4 sm:mx-0 sm:mb-0 p-3 sm:p-0 sm:pt-4 bg-card/95  backdrop-blur-md border-t border-border  sm:border-0 rounded-b-2xl sm:rounded-none flex justify-between items-center z-20">
                     <button
                       type="button"
                       onClick={() => {
@@ -580,7 +578,7 @@ export const OnboardingPage: React.FC = () => {
                   </div>
 
                   {/* Mobile Sticky Actions */}
-                  <div className="sticky bottom-0 -mx-4 -mb-4 sm:mx-0 sm:mb-0 p-3 sm:p-0 sm:pt-4 bg-card/95  backdrop-blur-md border-t border-border  sm:border-0 rounded-b-2xl sm:rounded-none flex justify-between items-center z-20">
+                  <div className="delux-wizard-actions sticky bottom-0 -mx-4 -mb-4 sm:mx-0 sm:mb-0 p-3 sm:p-0 sm:pt-4 bg-card/95  backdrop-blur-md border-t border-border  sm:border-0 rounded-b-2xl sm:rounded-none flex justify-between items-center z-20">
                     <button
                       type="button"
                       onClick={() => {
@@ -758,7 +756,7 @@ export const OnboardingPage: React.FC = () => {
                   </div>
 
                   {/* Mobile Sticky Actions */}
-                  <div className="sticky bottom-0 -mx-4 -mb-4 sm:mx-0 sm:mb-0 p-3 sm:p-0 sm:pt-4 bg-card/95  backdrop-blur-md border-t border-border  sm:border-0 rounded-b-2xl sm:rounded-none flex justify-between items-center z-20">
+                  <div className="delux-wizard-actions sticky bottom-0 -mx-4 -mb-4 sm:mx-0 sm:mb-0 p-3 sm:p-0 sm:pt-4 bg-card/95  backdrop-blur-md border-t border-border  sm:border-0 rounded-b-2xl sm:rounded-none flex justify-between items-center z-20">
                     <button
                       type="button"
                       onClick={() => {
@@ -837,7 +835,7 @@ export const OnboardingPage: React.FC = () => {
                   </div>
 
                   {/* Mobile Sticky Actions */}
-                  <div className="sticky bottom-0 -mx-4 -mb-4 sm:mx-0 sm:mb-0 p-3 sm:p-0 sm:pt-4 bg-card/95  backdrop-blur-md border-t border-border  sm:border-0 rounded-b-2xl sm:rounded-none flex justify-between items-center z-20">
+                  <div className="delux-wizard-actions sticky bottom-0 -mx-4 -mb-4 sm:mx-0 sm:mb-0 p-3 sm:p-0 sm:pt-4 bg-card/95  backdrop-blur-md border-t border-border  sm:border-0 rounded-b-2xl sm:rounded-none flex justify-between items-center z-20">
                     <button
                       type="button"
                       onClick={() => {
@@ -906,7 +904,7 @@ export const OnboardingPage: React.FC = () => {
                   </div>
 
                   {/* Mobile Sticky Actions */}
-                  <div className="sticky bottom-0 -mx-4 -mb-4 sm:mx-0 sm:mb-0 p-3 sm:p-0 sm:pt-4 bg-card/95  backdrop-blur-md border-t border-border  sm:border-0 rounded-b-2xl sm:rounded-none flex justify-between items-center z-20">
+                  <div className="delux-wizard-actions sticky bottom-0 -mx-4 -mb-4 sm:mx-0 sm:mb-0 p-3 sm:p-0 sm:pt-4 bg-card/95  backdrop-blur-md border-t border-border  sm:border-0 rounded-b-2xl sm:rounded-none flex justify-between items-center z-20">
                     <button
                       type="button"
                       onClick={() => {

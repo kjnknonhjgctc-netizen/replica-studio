@@ -164,7 +164,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onClick }) => {
       whileHover={{ y: -2 }}
       whileTap={{ scale: 0.985 }}
       transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className="group bg-card  hover:bg-card/60  p-5 rounded-2xl border border-border/90  hover:border-primary/40  cursor-pointer shadow-xs hover:shadow-md transition-all"
+      className="delux-goal-card group bg-card  hover:bg-card/60  p-5 rounded-2xl border border-border/90  hover:border-primary/40  cursor-pointer shadow-xs hover:shadow-md transition-all"
     >
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-2">
@@ -180,7 +180,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onClick }) => {
         </span>
       </div>
 
-      <h3 className="text-base font-bold text-foreground  group-hover:text-primary  transition-colors leading-snug line-clamp-2 mb-2">
+      <h3 className="text-lg font-extrabold text-foreground group-hover:text-primary  transition-colors leading-snug line-clamp-2 mb-2">
         {goal.title}
       </h3>
 

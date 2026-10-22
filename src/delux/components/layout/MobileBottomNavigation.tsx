@@ -16,8 +16,8 @@ export const MobileBottomNavigation: React.FC = () => {
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-card/90  backdrop-blur-md border-t border-border  pb-[env(safe-area-inset-bottom,0px)] transition-colors">
-      <div className="flex items-center justify-around h-[4.25rem] max-w-md mx-auto px-2">
+    <nav className="delux-bottom-nav md:hidden fixed bottom-0 left-0 right-0 z-40 bg-card/90  backdrop-blur-md border-t border-border  pb-[env(safe-area-inset-bottom,0px)] transition-colors">
+      <div className="grid grid-cols-5 items-center h-[4.25rem] max-w-md mx-auto px-2">
         {navItems.map(item => {
           const Icon = item.icon;
           const isActive = location.pathname.startsWith(item.to);
@@ -27,7 +27,7 @@ export const MobileBottomNavigation: React.FC = () => {
               key={item.to}
               to={item.to}
               onClick={() => playSelectSound()}
-              className={`flex flex-col items-center justify-center flex-1 h-full py-1 text-center transition-all duration-150 relative ${
+              className={`flex flex-col items-center justify-center min-w-0 h-full py-1 text-center transition-all duration-150 relative ${
                 isActive
                   ? 'text-primary  font-semibold'
                   : 'text-muted-foreground  hover:text-foreground '
@@ -40,7 +40,7 @@ export const MobileBottomNavigation: React.FC = () => {
                   Icon && <Icon className={`w-5 h-5 transition-transform duration-150 ${isActive ? 'scale-110' : ''}`} />
                 )}
               </div>
-              <span className="text-[10px] mt-1 tracking-normal">{item.label}</span>
+              <span className="text-[11px] mt-1 tracking-normal">{item.label}</span>
               {isActive && (
                 <span className="absolute bottom-1 w-4 h-0.5 bg-gradient-to-r from-primary to-primary rounded-full" />
               )}

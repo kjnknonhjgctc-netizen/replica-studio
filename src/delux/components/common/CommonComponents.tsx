@@ -14,9 +14,9 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
   className = ''
 }) => {
   return (
-    <div className={`flex items-end justify-between mb-3.5 ${className}`}>
-      <div>
-        <h2 className="text-[17px] font-semibold text-foreground  tracking-normal">{title}</h2>
+    <div className={`grid grid-cols-[minmax(0,1fr)_auto] sm:flex sm:items-end sm:justify-between gap-3 mb-4 ${className}`}>
+      <div className="min-w-0">
+        <h2 className="text-lg font-extrabold text-foreground  tracking-normal">{title}</h2>
         {subtitle && <p className="text-xs text-muted-foreground  mt-0.5">{subtitle}</p>}
       </div>
       {action && <div>{action}</div>}
@@ -41,7 +41,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   return (
     <div
-      className={`flex flex-col items-center justify-center text-center p-8 bg-card  border border-border  rounded-2xl transition-colors ${className}`}
+      className={`flex flex-col items-center justify-center text-center py-10 px-4 bg-transparent border-0 rounded-none transition-colors ${className}`}
     >
       {icon && (
         <div className="w-12 h-12 rounded-2xl bg-accent  text-primary  flex items-center justify-center mb-3.5">
@@ -49,7 +49,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         </div>
       )}
       <h3 className="text-base font-semibold text-foreground  mb-1">{title}</h3>
-      <p className="text-xs text-muted-foreground  max-w-sm leading-relaxed mb-4">{description}</p>
+      <p className="text-sm text-muted-foreground max-w-sm leading-relaxed mb-4">{description}</p>
       {action && <div>{action}</div>}
     </div>
   );
@@ -159,7 +159,7 @@ export const FormField: React.FC<FormFieldProps> = ({
       </label>
       <input
         id={id}
-        className={`w-full h-11 px-3.5 bg-card  border rounded-xl text-sm text-foreground  placeholder:text-muted-foreground  focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all ${
+        className={`delux-field w-full h-12 px-3.5 bg-card border-2 rounded-xl text-sm text-foreground  placeholder:text-muted-foreground  focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all ${
           error ? 'border-destructive-border ' : 'border-border  focus:border-primary'
         } ${className}`}
         {...props}
@@ -186,20 +186,20 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   className = ''
 }) => {
   return (
-    <div className={`flex items-start justify-between gap-4 mb-6 ${className}`}>
-      <div className="flex items-start gap-3">
+    <div className={`delux-page-header grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 mb-7 ${className}`}>
+      <div className="flex min-w-0 items-start gap-3">
         {backAction && (
           <button
             onClick={backAction}
             aria-label="Voltar"
-            className="w-9 h-9 rounded-xl bg-card  border border-border  flex items-center justify-center text-foreground  hover:bg-card  transition-all cursor-pointer mt-0.5"
+            className="w-10 h-10 shrink-0 rounded-xl bg-card  border border-border  flex items-center justify-center text-foreground  hover:bg-card  transition-all cursor-pointer mt-0.5"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="m15 18-6-6 6-6"/>
             </svg>
           </button>
         )}
-        <div>
+        <div className="min-w-0">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-normal text-foreground ">{title}</h1>
           {subtitle && <p className="text-xs sm:text-sm text-muted-foreground  mt-1">{subtitle}</p>}
         </div>

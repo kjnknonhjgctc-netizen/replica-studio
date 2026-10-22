@@ -51,7 +51,7 @@ export const GoalsListPage: React.FC = () => {
       />
 
       {/* Filter and Search Bar */}
-      <div className="bg-card  p-4 rounded-2xl border border-border  space-y-3 shadow-xs transition-colors">
+      <div className="delux-section bg-card p-4 rounded-2xl border border-border  space-y-3 shadow-xs transition-colors">
         <div className="relative">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground " />
           <input

@@ -141,7 +141,7 @@ export const ProfilePage: React.FC = () => {
       {/* Personal Information Form */}
       <form onSubmit={handleSaveProfileAndPrefs} className="space-y-6">
         {/* Appearance Settings */}
-        <div className="bg-card  p-6 rounded-3xl border border-border  shadow-xs transition-colors">
+        <div className="delux-section bg-card p-6 rounded-3xl border border-border  shadow-xs transition-colors">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/10   flex items-center justify-center text-primary ">
@@ -161,7 +161,7 @@ export const ProfilePage: React.FC = () => {
         </div>
 
         {/* Sound Effects & Feedback Settings */}
-        <div className="bg-card  p-6 rounded-3xl border border-border  shadow-xs transition-colors">
+        <div className="delux-section bg-card p-6 rounded-3xl border border-border  shadow-xs transition-colors">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-colors ${
@@ -223,7 +223,7 @@ export const ProfilePage: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-card  p-6 rounded-3xl border border-border  space-y-4 shadow-xs transition-colors">
+        <div className="delux-section bg-card p-6 rounded-3xl border border-border  space-y-4 shadow-xs transition-colors">
           <h3 className="text-base font-bold text-foreground ">Dados da Conta</h3>
 
           <FormField
@@ -246,7 +246,7 @@ export const ProfilePage: React.FC = () => {
         </div>
 
         {/* Availability Settings */}
-        <div className="bg-card  p-6 rounded-3xl border border-border  space-y-5 shadow-xs transition-colors">
+        <div className="delux-section bg-card p-6 rounded-3xl border border-border  space-y-5 shadow-xs transition-colors">
           <div>
             <h3 className="text-base font-bold text-foreground ">Disponibilidade Semanal</h3>
             <p className="text-xs text-muted-foreground  mt-0.5">
@@ -326,7 +326,7 @@ export const ProfilePage: React.FC = () => {
         </div>
 
         {/* Notifications & Guidance Settings */}
-        <div className="bg-card  p-6 rounded-3xl border border-border  space-y-4 shadow-xs transition-colors">
+        <div className="delux-section bg-card p-6 rounded-3xl border border-border  space-y-4 shadow-xs transition-colors">
           <h3 className="text-base font-bold text-foreground ">Notificações & Orientação</h3>
 
           <div className="space-y-3">
@@ -366,7 +366,7 @@ export const ProfilePage: React.FC = () => {
       </form>
 
       {/* Account Safety and Actions */}
-      <div className="bg-card  p-6 rounded-3xl border border-border  space-y-4 shadow-xs transition-colors">
+      <div className="delux-section bg-card p-6 rounded-3xl border border-border  space-y-4 shadow-xs transition-colors">
         <h3 className="text-base font-bold text-foreground ">Ações da Conta</h3>
 
         <div className="flex flex-col sm:flex-row gap-3 pt-2">

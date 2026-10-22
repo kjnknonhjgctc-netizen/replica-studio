@@ -174,7 +174,7 @@ export const NewGoalPage: React.FC = () => {
       </div>
 
       {/* Step Container Card */}
-      <div className="bg-card  border border-border  rounded-3xl p-6 sm:p-8 shadow-xs transition-colors">
+      <div className="delux-section bg-card border border-border rounded-3xl p-6 sm:p-8 shadow-xs transition-colors">
         {/* ETAPA A: DEFINIR O OBJETIVO */}
         {step === 'A' && (
           <div className="space-y-5">
@@ -239,7 +239,7 @@ export const NewGoalPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex justify-end pt-4 border-t border-border ">
+            <div className="delux-wizard-actions flex justify-end pt-4 border-t border-border ">
               <PrimaryButton
                 size="md"
                 disabled={!title.trim()}
@@ -289,7 +289,7 @@ export const NewGoalPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-4 border-t border-border ">
+            <div className="delux-wizard-actions flex justify-between items-center pt-4 border-t border-border ">
               <SecondaryButton size="sm" onClick={() => setStep('A')}>
                 Voltar
               </SecondaryButton>
@@ -338,7 +338,7 @@ export const NewGoalPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-4 border-t border-border ">
+            <div className="delux-wizard-actions flex justify-between items-center pt-4 border-t border-border ">
               <SecondaryButton size="sm" onClick={() => setStep('B')}>
                 Voltar
               </SecondaryButton>
@@ -400,7 +400,7 @@ export const NewGoalPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-4 border-t border-border ">
+            <div className="delux-wizard-actions flex justify-between items-center pt-4 border-t border-border ">
               <SecondaryButton size="sm" onClick={() => setStep('C')}>
                 Voltar
               </SecondaryButton>
@@ -467,7 +467,7 @@ export const NewGoalPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-4 border-t border-border ">
+            <div className="delux-wizard-actions flex justify-between items-center pt-4 border-t border-border ">
               <SecondaryButton size="sm" onClick={() => setStep('D')}>
                 Voltar
               </SecondaryButton>
@@ -541,7 +541,7 @@ export const NewGoalPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-4 border-t border-border ">
+            <div className="delux-wizard-actions flex justify-between items-center pt-4 border-t border-border ">
               <SecondaryButton size="sm" onClick={() => setStep('E')}>
                 Voltar
               </SecondaryButton>

@@ -37,10 +37,10 @@ export const ResetPasswordPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background  flex flex-col justify-center items-center px-4 py-12 transition-colors">
-      <div className="w-full max-w-md bg-card  border border-border  rounded-3xl p-6 sm:p-8 shadow-sm transition-colors">
+      <div className="delux-auth-form w-full max-w-md bg-card  border border-border  rounded-3xl p-6 sm:p-8 shadow-sm transition-colors">
         <div className="flex flex-col items-center text-center mb-8">
-          <DeluxLogo size="lg" className="mb-4" />
-          <h1 className="text-xl sm:text-2xl font-bold tracking-normal text-foreground ">
+          <DeluxLogo size="xl" className="mb-6" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-normal text-foreground ">
             Criar nova senha
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground  mt-1 max-w-xs">

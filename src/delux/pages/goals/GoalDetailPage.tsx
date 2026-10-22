@@ -250,7 +250,6 @@ export const GoalDetailPage: React.FC = () => {
         <div className="space-y-6">
           {/* Mission & Roadmap Hero HUD */}
           <div className="bg-gradient-to-br from-feature via-feature to-feature text-primary-foreground p-5 sm:p-7 rounded-3xl border border-border shadow-lg relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-primary/20 via-primary/20 to-transparent rounded-full blur-3xl pointer-events-none" />
             
             <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
               <div className="space-y-2">
@@ -269,7 +268,7 @@ export const GoalDetailPage: React.FC = () => {
               <div className="flex sm:flex-col items-center sm:items-end justify-between gap-2 shrink-0 bg-card/5 sm:bg-transparent p-3 sm:p-0 rounded-2xl border sm:border-0 border-card/10">
                 <div className="text-left sm:text-right">
                   <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-normal block">Progresso do Mapa</span>
-                  <span className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary to-card">
+                  <span className="text-2xl sm:text-3xl font-black text-feature-foreground">
                     {Math.round(progressPercent)}%
                   </span>
                 </div>

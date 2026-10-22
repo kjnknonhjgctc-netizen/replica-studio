@@ -20,9 +20,9 @@ export const PrimaryButton: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const sizeClasses = {
-    sm: 'h-9 px-3.5 text-xs rounded-2xl font-medium',
-    md: 'h-11 px-5 text-sm rounded-2xl font-medium',
-    lg: 'h-12 px-6 text-base rounded-2xl font-semibold'
+    sm: 'min-h-10 px-4 py-2 text-xs rounded-xl',
+    md: 'min-h-12 px-5 py-2.5 text-sm rounded-2xl',
+    lg: 'min-h-14 px-6 py-3 text-base rounded-2xl'
   }[size];
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -39,7 +39,7 @@ export const PrimaryButton: React.FC<ButtonProps> = ({
       transition={{ type: 'spring', stiffness: 420, damping: 26 }}
       disabled={disabled || loading}
       onClick={handleClick}
-      className={`relative inline-flex items-center justify-center gap-2 text-primary-foreground bg-gradient-to-r from-primary via-primary to-primary hover:from-primary hover:via-primary hover:to-primary cursor-pointer shadow-md shadow-primary/25 hover:shadow-lg hover:shadow-primary/35 active:shadow-sm disabled:opacity-50 disabled:pointer-events-none overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-b before:from-card/20 before:to-transparent before:opacity-75 before:pointer-events-none ${sizeClasses} ${className}`}
+      className={`delux-primary-button relative inline-flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:pointer-events-none transition-colors ${sizeClasses} ${className}`}
       {...(props as any)}
     >
       {loading ? (
@@ -47,7 +47,7 @@ export const PrimaryButton: React.FC<ButtonProps> = ({
       ) : (
         icon
       )}
-      <span>{children}</span>
+      <span className="min-w-0 text-center leading-snug">{children}</span>
     </motion.button>
   );
 };
@@ -63,9 +63,9 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const sizeClasses = {
-    sm: 'h-9 px-3.5 text-xs rounded-2xl font-medium',
-    md: 'h-11 px-5 text-sm rounded-2xl font-medium',
-    lg: 'h-12 px-6 text-base rounded-2xl font-semibold'
+    sm: 'min-h-10 px-4 py-2 text-xs rounded-xl',
+    md: 'min-h-12 px-5 py-2.5 text-sm rounded-2xl',
+    lg: 'min-h-14 px-6 py-3 text-base rounded-2xl'
   }[size];
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -82,7 +82,7 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
       transition={{ type: 'spring', stiffness: 450, damping: 28 }}
       disabled={disabled || loading}
       onClick={handleClick}
-      className={`relative inline-flex items-center justify-center gap-2 text-foreground  bg-card  hover:bg-card  border border-border  hover:border-border  hover:text-primary  cursor-pointer disabled:opacity-50 disabled:pointer-events-none shadow-xs transition-colors ${sizeClasses} ${className}`}
+      className={`delux-secondary-button relative inline-flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:pointer-events-none transition-colors ${sizeClasses} ${className}`}
       {...(props as any)}
     >
       {loading ? (
@@ -90,7 +90,7 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
       ) : (
         icon
       )}
-      <span>{children}</span>
+      <span className="min-w-0 text-center leading-snug">{children}</span>
     </motion.button>
   );
 };

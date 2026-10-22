@@ -48,10 +48,10 @@ export const RegisterPage: React.FC = () => {
         <ThemeToggle variant="icon" size="sm" />
       </div>
 
-      <div className="w-full max-w-md bg-card  border border-border  rounded-3xl p-6 sm:p-8 shadow-xs transition-colors">
+      <div className="delux-auth-form w-full max-w-md bg-card  border border-border  rounded-3xl p-6 sm:p-8 shadow-xs transition-colors">
         <div className="flex flex-col items-center text-center mb-6">
-          <DeluxLogo size="lg" className="mb-4" />
-          <h1 className="text-xl sm:text-2xl font-bold tracking-normal text-foreground ">
+          <DeluxLogo size="xl" className="mb-6" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-normal text-foreground ">
             Comece no Delux
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground  mt-1 max-w-xs">
