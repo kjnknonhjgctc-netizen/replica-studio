@@ -150,7 +150,7 @@ export const NewGoalPage: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="w-full min-w-0 max-w-2xl mx-auto space-y-6">
       <PageHeader
         title="Mapear Novo Sonho ou Objetivo"
         subtitle="Transforme qualquer meta ou sonho em um mapa de estações e passos práticos no mínimo detalhe."

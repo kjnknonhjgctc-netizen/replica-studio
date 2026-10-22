@@ -167,7 +167,7 @@
 .delux-bottom-nav { box-shadow: 0 -4px 20px var(--shadow-color); }
 .delux-bottom-nav a { min-width: 0; }
 .delux-bottom-nav a[aria-current='page'] > div { background: var(--accent); border-radius: 12px; width: 46px; height: 30px; }
-.delux-feature { --foreground: var(--feature-foreground); --muted-foreground: oklch(0.82 0.028 145); --primary-foreground: var(--feature-foreground); }
+.delux-feature { --foreground: var(--feature-foreground); --muted-foreground: oklch(0.82 0.028 145); --primary-foreground: var(--feature-foreground); --primary: oklch(0.80 0.12 145); --success: oklch(0.80 0.12 155); }
 .delux-section { background: transparent; border: 0; box-shadow: none; border-radius: 0; padding-left: 0; padding-right: 0; }
 .delux-auth-form { background: transparent; border: 0; box-shadow: none; }
 .delux-auth-form input { background: var(--card); border-width: 2px; }

@@ -249,7 +249,7 @@ export const GoalDetailPage: React.FC = () => {
       {activeTab === 'map' && (
         <div className="space-y-6">
           {/* Mission & Roadmap Hero HUD */}
-          <div className="bg-gradient-to-br from-feature via-feature to-feature text-primary-foreground p-5 sm:p-7 rounded-3xl border border-border shadow-lg relative overflow-hidden">
+          <div className="delux-feature bg-feature text-feature-foreground p-5 sm:p-7 rounded-3xl border border-border shadow-lg relative overflow-hidden">
             
             <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
               <div className="space-y-2">
