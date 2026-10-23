@@ -63,9 +63,9 @@ function dayPattern() {
   return '(domingo|dom|segunda-feira|segunda|seg|terca-feira|terca|ter|quarta-feira|quarta|qua|quinta-feira|quinta|qui|sexta-feira|sexta|sex|sabado|sab)';
 }
 
-function canonicalDay(value: string) {
-  const normalized = normalizeDayText(value);
-  return WEEKDAY_ORDER.find((key) => WEEKDAY_ALIASES[key].includes(normalized)) || null;
+function canonicalDay(value: string | undefined) {
+  const normalized = normalizeDayText(value ?? '');
+  return WEEKDAY_ORDER.find((key) => WEEKDAY_ALIASES[key]?.includes(normalized)) || null;
 }
 
 /**
@@ -86,7 +86,9 @@ export function resolvePreferredDaysFromRequest(message: string, preferredDays: 
     days = [];
     if (startIndex >= 0 && endIndex >= 0) {
       for (let i = startIndex, count = 0; count < WEEKDAY_ORDER.length; count++, i = (i + 1) % WEEKDAY_ORDER.length) {
-        days.push(WEEKDAY_ORDER[i]);
+        const day = WEEKDAY_ORDER[i];
+        if (!day) break;
+        days.push(day);
         if (i === endIndex) break;
       }
     }
