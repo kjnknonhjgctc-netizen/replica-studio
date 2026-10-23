@@ -49,7 +49,8 @@ export function getNextPreferredDate(
   let matched = -1;
 
   for (let i = 0; i < 371; i++) {
-    if (allowed.has(WEEKDAY_KEYS[date.getDay()])) {
+    const weekday = WEEKDAY_KEYS[date.getDay()];
+    if (weekday && allowed.has(weekday)) {
       matched++;
       if (matched === target) return formatLocalDate(date);
     }
@@ -64,6 +65,8 @@ export function isPreferredDate(dateOnly: string, preferredDays: string[]): bool
   const date = new Date(dateOnly + 'T12:00:00');
   if (!Number.isFinite(date.getTime()) || formatLocalDate(date) !== dateOnly) return false;
   const allowed = new Set(preferredDays.filter((day) => WEEKDAY_KEYS.includes(day as typeof WEEKDAY_KEYS[number])));
-  if (!allowed.size) return ['seg', 'ter', 'qua', 'qui', 'sex'].includes(WEEKDAY_KEYS[date.getDay()]);
-  return allowed.has(WEEKDAY_KEYS[date.getDay()]);
+  const weekday = WEEKDAY_KEYS[date.getDay()];
+  if (!weekday) return false;
+  if (!allowed.size) return ['seg', 'ter', 'qua', 'qui', 'sex'].includes(weekday);
+  return allowed.has(weekday);
 }
