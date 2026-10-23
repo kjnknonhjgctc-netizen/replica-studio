@@ -732,8 +732,11 @@ export const AssistantPage: React.FC = () => {
                ACTIVE CONVERSATION THREAD - FULL RESPONSIVE STREAM
                ======================================================== */
             <div className="w-full max-w-4xl xl:max-w-5xl mx-auto space-y-4 sm:space-y-5">
-              {messages.map(msg => {
+              {(() => {
+                const latestAssistantMessageId = [...messages].reverse().find(message => message.role !== 'user')?.id;
+                return messages.map(msg => {
                 const isUser = msg.role === 'user';
+                const isLatestAssistantMessage = !isUser && msg.id === latestAssistantMessageId;
                 const isCopied = copiedMessageId === msg.id;
 
                 return (
@@ -745,13 +748,13 @@ export const AssistantPage: React.FC = () => {
                     className={`flex items-start gap-2.5 sm:gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}
                   >
                     {/* Assistant Message Avatar */}
-                    {!isUser && (
+                    {isLatestAssistantMessage && (
                       <div className="shrink-0 mt-1">
                         <AssistantOrb
                           size="sm"
                           isSpeaking={false}
                           isGenerating={false}
-                          isWaving={msg.id === messages[messages.length - 1]?.id}
+                          isWaving
                         />
                       </div>
                     )}
