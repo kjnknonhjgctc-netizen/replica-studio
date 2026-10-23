@@ -44,7 +44,6 @@ export const AssistantOrb: React.FC<AssistantOrbProps> = ({
         transition={waving
           ? { duration: 1.1, ease: 'easeInOut', repeat: Infinity, repeatDelay: 0.12 }
           : { duration: 0.2 }} />
-      {(size === 'lg' || size === 'xl') && <span className={`absolute -bottom-0.5 -right-0.5 z-30 h-3.5 w-3.5 rounded-full border-2 border-white shadow-sm ${isGenerating ? 'bg-blue-500' : 'bg-emerald-500'}`}/>}
     </motion.div>
   );
 };
