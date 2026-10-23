@@ -766,25 +766,16 @@ export const AssistantPage: React.FC = () => {
                     className={`flex items-start gap-2.5 sm:gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}
                   >
                     {/* Assistant Message Avatar */}
-                    <AnimatePresence initial={false}>
-                      {isLatestAssistantMessage && (
-                        <motion.div
-                          key={`assistant-avatar-${msg.id}`}
-                          initial={{ opacity: 0, x: -8, scale: 0.88, filter: 'blur(2px)' }}
-                          animate={{ opacity: 1, x: 0, scale: 1, filter: 'blur(0px)' }}
-                          exit={{ opacity: 0, x: -7, scale: 0.9, filter: 'blur(2px)' }}
-                          transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                          className="shrink-0 mt-1 origin-left"
-                        >
-                          <AssistantOrb
-                            size="sm"
-                            isSpeaking={false}
-                            isGenerating={false}
-                            isWaving
-                          />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                    {isLatestAssistantMessage && (
+                      <div className="shrink-0 mt-1">
+                        <AssistantOrb
+                          size="sm"
+                          isSpeaking={false}
+                          isGenerating={false}
+                          isWaving
+                        />
+                      </div>
+                    )}
 
                     <div
                       className={`relative group max-w-[88%] sm:max-w-[82%] rounded-2xl ${
