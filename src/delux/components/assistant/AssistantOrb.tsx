@@ -25,7 +25,8 @@ export const AssistantOrb: React.FC<AssistantOrbProps> = ({
     return () => window.clearTimeout(timer);
   }, [isWaving]);
   const sizeClass = ({ xs: 'w-6 h-6', sm: 'w-[34px] h-[34px]', md: 'w-12 h-12', lg: 'w-[76px] h-[76px]', xl: 'w-[104px] h-[104px]' } as const)[size];
-  const waving = waveActive || isSpeaking || isGenerating;
+  // Wave only when a response arrives (isWaving pulse), never while generating.
+  const waving = waveActive;
   const faceSrc = imageUrl || assistantFace;
   return (
     <motion.div {...(onClick ? { onClick, whileTap: { scale: 0.95 } } : {})} title={title}
