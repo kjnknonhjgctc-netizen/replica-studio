@@ -191,6 +191,7 @@ export const AssistantPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [historySearch, setHistorySearch] = useState('');
+  const [historyError, setHistoryError] = useState<string | null>(null);
   const [selectedMode, setSelectedMode] = useState<AssistantMode>('estrategia');
 
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
@@ -275,29 +276,36 @@ export const AssistantPage: React.FC = () => {
       const res = await api.getConversations();
       const list = Array.isArray(res?.conversations) ? res.conversations.filter(Boolean) : [];
       setConversations(list);
-      if (list.length > 0) {
-        const first = list[0];
-        setCurrentConvId(first.id);
-        const msgRes = await api.getMessages(first.id);
-        setMessages(Array.isArray(msgRes?.messages) ? msgRes.messages.filter(Boolean) : []);
+
+      if (list.length === 0) {
+        // An empty result only clears the visible thread; it does not delete anything in storage.
+        setCurrentConvId(null);
+        setMessages([]);
+        return;
       }
+
+      const selected = list.find(c => c.id === currentConvId) || list[0];
+      const msgRes = await api.getMessages(selected.id);
+      setCurrentConvId(selected.id);
+      setMessages(Array.isArray(msgRes?.messages) ? msgRes.messages.filter(Boolean) : []);
     } catch (err) {
-      console.error(err);
+      console.error('Não foi possível carregar o histórico do assistente:', err);
+      setHistoryError('Não foi possível carregar o histórico. Tente novamente.');
     }
   };
 
   const handleSelectConversation = async (convId: string) => {
     stopSpeaking();
-    // On mobile, close history drawer automatically
-    if (window.innerWidth < 768) {
-      setShowHistory(false);
-    }
+    setHistoryError(null);
     try {
-      setCurrentConvId(convId);
+      // Only switch the selected thread after its messages have loaded successfully.
       const msgRes = await api.getMessages(convId);
+      setCurrentConvId(convId);
       setMessages(Array.isArray(msgRes?.messages) ? msgRes.messages.filter(Boolean) : []);
+      if (window.innerWidth < 768) setShowHistory(false);
     } catch (err) {
-      console.error(err);
+      console.error('Não foi possível abrir a conversa:', err);
+      setHistoryError('Não foi possível abrir esta conversa. Sua conversa atual foi mantida.');
     }
   };
 
@@ -574,6 +582,12 @@ export const AssistantPage: React.FC = () => {
 
             {/* Conversation list */}
             <div className="flex-1 overflow-y-auto px-2 py-2 space-y-1">
+              {historyError && (
+                <div role="alert" className="mx-2 mb-2 rounded-lg border border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
+                  {historyError}
+                  <button type="button" onClick={() => { setHistoryError(null); loadConversations(); }} className="ml-2 font-semibold underline">Tentar novamente</button>
+                </div>
+              )}
               {filteredConversations.length === 0 ? (
                 <div className="p-6 text-center text-xs text-slate-400 dark:text-slate-500">
                   {historySearch ? 'Nenhuma conversa encontrada.' : 'Nenhuma conversa gravada ainda.'}
