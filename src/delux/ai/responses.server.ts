@@ -20,7 +20,6 @@ export function createResponsesCall(
     headers: { "Lovable-API-Key": config.apiKey, "X-Lovable-AIG-SDK": "vercel-ai-sdk" },
     fetch: runIdFetch.fetch,
   });
-  const reasoning = config.model !== "openai/chat-latest";
   const result = streamText({
     model: provider.responses(config.model),
     // AI SDK 6 lacks `instructions`: rename this key to `system` there.
@@ -30,14 +29,6 @@ export function createResponsesCall(
     providerOptions: {
       openai: {
         store: false,
-        ...(reasoning
-          ? {
-              forceReasoning: true,
-              reasoningEffort: "high",
-              reasoningSummary: "auto",
-              include: ["reasoning.encrypted_content"],
-            }
-          : {}),
       },
     },
   });
