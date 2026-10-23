@@ -507,7 +507,7 @@ export const AssistantPage: React.FC = () => {
   };
 
   return (
-    <div className="flex h-full w-full min-h-0 bg-[#FAFAFC] dark:bg-[#0B0E14] text-[#0F172A] dark:text-[#F1F5F9] overflow-hidden select-text relative transition-colors">
+    <div className="flex h-full w-full min-h-0 bg-[#FAFAFC] dark:bg-black text-[#0F172A] dark:text-[#F1F5F9] overflow-hidden select-text relative transition-colors">
       {/* Mobile Backdrop Overlay for History Drawer */}
       <AnimatePresence>
         {showHistory && (
@@ -618,9 +618,9 @@ export const AssistantPage: React.FC = () => {
       </AnimatePresence>
 
       {/* Main Chat Workstation - Occupies All Available Space */}
-      <div className="flex-1 min-h-0 flex flex-col h-full min-w-0 bg-transparent overflow-hidden relative z-10">
+      <div className="flex-1 min-h-0 flex flex-col h-full min-w-0 bg-transparent dark:bg-black overflow-hidden relative z-10">
         {/* Top Header Bar with Glassmorphic Apple Touch */}
-        <header className="h-14 sm:h-16 border-b border-slate-200 dark:border-slate-800 px-2.5 sm:px-6 lg:px-8 flex items-center justify-between shrink-0 bg-white/95 dark:bg-[#0F141E]/95 backdrop-blur-xl z-20 transition-colors">
+        <header className="h-12 sm:h-14 border-b border-slate-200 dark:border-neutral-800 px-2 sm:px-4 lg:px-6 flex items-center justify-between shrink-0 bg-white/95 dark:bg-black backdrop-blur-xl z-20 transition-colors">
           <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
             {/* Back Button to Início */}
             <button
@@ -652,30 +652,11 @@ export const AssistantPage: React.FC = () => {
               <span className="hidden sm:inline">Histórico</span>
             </button>
 
-            {/* Apple Motion Blue Orb Avatar */}
-            <div className="shrink-0">
-              <AssistantOrb
-                size="sm"
-                isSpeaking={false}
-                isGenerating={loading}
-                title="Assistente Delux"
-              />
-            </div>
-
-            <div className="min-w-0 truncate">
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                <h1 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white tracking-tight truncate">
-                  Assistente Delux
-                </h1>
-
-                {loading && (
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/50 text-[#2563EB] dark:text-[#60A5FA] border border-blue-200 dark:border-blue-800 animate-pulse hidden sm:inline-flex items-center gap-1 shrink-0">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-ping" />
-                    Processando...
-                  </span>
-                )}
-              </div>
-            </div>
+            {loading && (
+              <span className="text-[10px] font-semibold px-2 py-1 rounded-full bg-blue-50 dark:bg-neutral-900 text-[#2563EB] dark:text-blue-300 border border-blue-200 dark:border-neutral-700 animate-pulse">
+                Processando...
+              </span>
+            )}
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
@@ -769,7 +750,7 @@ export const AssistantPage: React.FC = () => {
                       className={`relative group max-w-[88%] sm:max-w-[82%] rounded-2xl ${
                         isUser
                           ? 'px-4 py-3 sm:px-5 sm:py-3.5 bg-gradient-to-r from-[#7033FF] via-[#4E56FF] to-[#2563EB] text-white shadow-md shadow-[#4E56FF]/20 rounded-tr-xs text-xs sm:text-sm whitespace-pre-wrap leading-relaxed break-words'
-                          : 'p-3.5 sm:p-5 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 shadow-2xs rounded-tl-xs break-words'
+                          : 'p-3.5 sm:p-5 bg-white dark:bg-neutral-950 border border-slate-200 dark:border-neutral-800 shadow-2xs rounded-tl-xs break-words'
                       }`}
                     >
                       {/* Message Content */}
@@ -847,7 +828,7 @@ export const AssistantPage: React.FC = () => {
         {/* ========================================================
             FIXED CHAT COMPOSER AT BOTTOM - APPLE STUDIO AESTHETIC
            ======================================================== */}
-        <div className="p-2.5 sm:p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0F141E] shrink-0 z-30 transition-colors">
+        <div className="p-2.5 sm:p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-black shrink-0 z-30 transition-colors">
           <div className="w-full max-w-4xl xl:max-w-5xl mx-auto space-y-2">
             {/* Listening indicator banner */}
             {isListening && (
