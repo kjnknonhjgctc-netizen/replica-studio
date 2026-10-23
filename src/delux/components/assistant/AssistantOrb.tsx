@@ -44,24 +44,26 @@ export const AssistantOrb: React.FC<AssistantOrbProps> = ({
         transition={waving
           ? { duration: 1.1, ease: 'easeInOut', repeat: Infinity, repeatDelay: 0.12 }
           : { duration: 0.2 }} />
-      {/* A brief closed-eye smile when a new assistant reply appears; no mouth is added. */}
+      {/* Animate the existing eye dots into narrow, smiling eyes; do not draw smile arcs or a mouth. */}
       {waving && (
-        <motion.svg
-          viewBox="0 0 100 40"
-          aria-hidden="true"
-          className="absolute z-20 left-[16%] top-[31%] w-[68%] h-[30%] pointer-events-none"
-          initial={{ opacity: 0, scaleY: 0.35 }}
-          animate={{ opacity: [0, 1, 1, 0], scaleY: [0.35, 1, 1, 0.35] }}
-          transition={{ duration: 1.35, times: [0, 0.16, 0.78, 1], ease: 'easeInOut' }}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="5"
-          strokeLinecap="round"
-          style={{ color: '#26334A' }}
-        >
-          <path d="M 8 13 Q 20 29 34 13" />
-          <path d="M 66 13 Q 80 29 92 13" />
-        </motion.svg>
+        <>
+          <motion.span
+            aria-hidden="true"
+            className="absolute z-20 left-[25%] top-[39%] w-[12%] h-[7%] rounded-full pointer-events-none"
+            style={{ backgroundColor: '#26334A', transformOrigin: 'center' }}
+            initial={{ scaleY: 1, scaleX: 1 }}
+            animate={{ scaleY: [1, 0.22, 0.22, 1], scaleX: [1, 1.08, 1.08, 1] }}
+            transition={{ duration: 1.35, times: [0, 0.22, 0.75, 1], ease: 'easeInOut' }}
+          />
+          <motion.span
+            aria-hidden="true"
+            className="absolute z-20 left-[63%] top-[39%] w-[12%] h-[7%] rounded-full pointer-events-none"
+            style={{ backgroundColor: '#26334A', transformOrigin: 'center' }}
+            initial={{ scaleY: 1, scaleX: 1 }}
+            animate={{ scaleY: [1, 0.22, 0.22, 1], scaleX: [1, 1.08, 1.08, 1] }}
+            transition={{ duration: 1.35, times: [0, 0.22, 0.75, 1], ease: 'easeInOut' }}
+          />
+        </>
       )}
       {(size === 'lg' || size === 'xl') && <span className={`absolute -bottom-0.5 -right-0.5 z-30 h-3.5 w-3.5 rounded-full border-2 border-white shadow-sm ${isGenerating ? 'bg-blue-500' : 'bg-emerald-500'}`}/>}
     </motion.div>
