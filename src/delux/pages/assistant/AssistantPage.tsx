@@ -809,7 +809,8 @@ export const AssistantPage: React.FC = () => {
                     </div>
                   </motion.div>
                 );
-              })}
+              });
+              })()}
 
               {/* Generating / Loading indicator */}
               {loading && (
