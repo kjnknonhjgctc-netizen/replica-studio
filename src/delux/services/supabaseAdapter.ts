@@ -778,13 +778,25 @@ export async function handleSupabaseRequest(method: string, endpoint: string, bo
   }
 
   if (area === 'assistant' && actionOrId === 'conversations' && method === 'GET') {
-    return { conversations: await selectRows('assistant_conversations', {}, 'updated_at.desc') };
+    const { user } = await getCurrentUser();
+    const conversations = await selectRows(
+      'assistant_conversations',
+      { user_id: 'eq.' + user.id },
+      'updated_at.desc,created_at.desc'
+    );
+    return { conversations };
   }
   if (area === 'assistant' && actionOrId === 'conversations' && nested && nestedId === 'messages' && method === 'GET') {
     const { user } = await getCurrentUser();
-    const rows = await selectRows('assistant_conversations', { id: 'eq.' + nested });
-    if (!rows[0] || rows[0].user_id !== user.id) throw new Error('Conversa não encontrada.');
-    const messages = await selectRows('assistant_messages', { conversation_id: 'eq.' + nested }, 'created_at.asc');
+    const rows = await selectRows('assistant_conversations', {
+      id: 'eq.' + nested,
+      user_id: 'eq.' + user.id,
+    });
+    if (!rows[0]) throw new Error('Conversa não encontrada ou sem acesso.');
+    const messages = await selectRows('assistant_messages', {
+      conversation_id: 'eq.' + nested,
+      user_id: 'eq.' + user.id,
+    }, 'created_at.asc');
     return { conversation: rows[0], messages };
   }
   if (area === 'assistant' && actionOrId === 'conversations' && nested && method === 'DELETE') {
