@@ -44,27 +44,6 @@ export const AssistantOrb: React.FC<AssistantOrbProps> = ({
         transition={waving
           ? { duration: 1.1, ease: 'easeInOut', repeat: Infinity, repeatDelay: 0.12 }
           : { duration: 0.2 }} />
-      {/* Animate the existing eye dots into narrow, smiling eyes; do not draw smile arcs or a mouth. */}
-      {waving && (
-        <>
-          <motion.span
-            aria-hidden="true"
-            className="absolute z-20 left-[25%] top-[39%] w-[12%] h-[7%] rounded-full pointer-events-none"
-            style={{ backgroundColor: '#26334A', transformOrigin: 'center' }}
-            initial={{ scaleY: 1, scaleX: 1 }}
-            animate={{ scaleY: [1, 0.22, 0.22, 1], scaleX: [1, 1.08, 1.08, 1] }}
-            transition={{ duration: 1.35, times: [0, 0.22, 0.75, 1], ease: 'easeInOut' }}
-          />
-          <motion.span
-            aria-hidden="true"
-            className="absolute z-20 left-[63%] top-[39%] w-[12%] h-[7%] rounded-full pointer-events-none"
-            style={{ backgroundColor: '#26334A', transformOrigin: 'center' }}
-            initial={{ scaleY: 1, scaleX: 1 }}
-            animate={{ scaleY: [1, 0.22, 0.22, 1], scaleX: [1, 1.08, 1.08, 1] }}
-            transition={{ duration: 1.35, times: [0, 0.22, 0.75, 1], ease: 'easeInOut' }}
-          />
-        </>
-      )}
       {(size === 'lg' || size === 'xl') && <span className={`absolute -bottom-0.5 -right-0.5 z-30 h-3.5 w-3.5 rounded-full border-2 border-white shadow-sm ${isGenerating ? 'bg-blue-500' : 'bg-emerald-500'}`}/>}
     </motion.div>
   );
