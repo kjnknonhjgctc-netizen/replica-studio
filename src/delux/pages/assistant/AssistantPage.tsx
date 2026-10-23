@@ -192,6 +192,7 @@ export const AssistantPage: React.FC = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [historySearch, setHistorySearch] = useState('');
   const [historyError, setHistoryError] = useState<string | null>(null);
+  const [visibleAvatarMessageId, setVisibleAvatarMessageId] = useState<string | null>(null);
   const [selectedMode, setSelectedMode] = useState<AssistantMode>('estrategia');
 
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
@@ -258,6 +259,23 @@ export const AssistantPage: React.FC = () => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (loading) {
+      setVisibleAvatarMessageId(null);
+      return;
+    }
+
+    const latestAssistantMessage = [...messages].reverse().find(message => message.role !== 'user');
+    if (!latestAssistantMessage) {
+      setVisibleAvatarMessageId(null);
+      return;
+    }
+
+    setVisibleAvatarMessageId(latestAssistantMessage.id);
+    const timer = window.setTimeout(() => setVisibleAvatarMessageId(null), 3000);
+    return () => window.clearTimeout(timer);
+  }, [messages, loading]);
 
   useEffect(() => {
     scrollToBottom();
@@ -736,7 +754,7 @@ export const AssistantPage: React.FC = () => {
                 const latestAssistantMessageId = [...messages].reverse().find(message => message.role !== 'user')?.id;
                 return messages.map(msg => {
                 const isUser = msg.role === 'user';
-                const isLatestAssistantMessage = !isUser && msg.id === latestAssistantMessageId;
+                const isLatestAssistantMessage = !isUser && msg.id === latestAssistantMessageId && msg.id === visibleAvatarMessageId;
                 const isCopied = copiedMessageId === msg.id;
 
                 return (
