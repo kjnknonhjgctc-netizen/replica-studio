@@ -652,11 +652,7 @@ export const AssistantPage: React.FC = () => {
               <span className="hidden sm:inline">Histórico</span>
             </button>
 
-            {loading && (
-              <span className="text-[10px] font-semibold px-2 py-1 rounded-full bg-blue-50 dark:bg-neutral-900 text-[#2563EB] dark:text-blue-300 border border-blue-200 dark:border-neutral-700 animate-pulse">
-                Processando...
-              </span>
-            )}
+
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
@@ -808,11 +804,12 @@ export const AssistantPage: React.FC = () => {
                       isGenerating={true}
                     />
                   </div>
-                  <div className="px-4 py-3 sm:px-5 sm:py-3.5 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-2xl rounded-tl-xs flex items-center gap-2.5 sm:gap-3 shadow-2xs max-w-[90%]">
-                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                      Delux está formulando sua orientação executiva...
-                    </span>
-                    <div className="flex items-center gap-1 shrink-0">
+                  <div
+                    role="status"
+                    aria-label="Assistente respondendo"
+                    className="px-4 py-3 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-2xl rounded-tl-xs flex items-center justify-center shadow-2xs"
+                  >
+                    <div className="flex items-center gap-1.5" aria-hidden="true">
                       <span className="w-1.5 h-1.5 bg-[#4E56FF] rounded-full animate-bounce [animation-delay:0s]" />
                       <span className="w-1.5 h-1.5 bg-[#2563EB] rounded-full animate-bounce [animation-delay:0.15s]" />
                       <span className="w-1.5 h-1.5 bg-[#7033FF] rounded-full animate-bounce [animation-delay:0.3s]" />
