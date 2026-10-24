@@ -11,6 +11,12 @@ function errorMessage(error: unknown): string {
   return String(error ?? 'erro desconhecido');
 }
 
+function isPaymentRequired(error: unknown): boolean {
+  const message = errorMessage(error).toLowerCase();
+  const status = (error as { statusCode?: number })?.statusCode;
+  return status === 402 || message.includes('payment required') || message.includes('not enough credits');
+}
+
 export async function runAi(prompt: string, history: ChatTurn[] = [], context = ''): Promise<string> {
   const apiKey = process.env['LOVABLE_API_KEY'];
   if (!apiKey) throw new Error('LOVABLE_API_KEY is not configured');
