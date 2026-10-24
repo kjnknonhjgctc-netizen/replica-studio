@@ -5,7 +5,7 @@ export type LocalPlan = {
   desired_outcome: string;
   current_state: string;
   steps: { title: string; description: string; success_criteria: string }[];
-  missions: { title: string; instructions: string; estimated_minutes: number; priority: 'high' | 'medium' | 'low'; day_offset: number; scheduled_time: string; step_index: number }[];
+  missions: { title: string; instructions: string; estimated_minutes: number; priority: 'high' | 'medium' | 'low'; day_offset: number; scheduled_time?: string; step_index: number }[];
 };
 
 function categoryFor(text: string): string {
@@ -103,7 +103,6 @@ export function buildLocalPlan(input: { title: string; current_state?: string; d
       estimated_minutes: Math.min(minutes, i < 2 ? Math.min(15, minutes) : minutes),
       priority: i === 0 ? 'high' : i === 5 ? 'medium' : 'medium',
       day_offset: i,
-      scheduled_time: '09:00',
       step_index,
     })),
   };
