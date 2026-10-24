@@ -39,15 +39,15 @@ export function buildLocalPlan(input: { title: string; current_state?: string; d
     { title: 'Praticar e ganhar consistência', description: 'Trabalhe em pequenas sessões regulares e aumente a dificuldade gradualmente conforme o progresso.', success_criteria: 'Concluir pelo menos 4 sessões e registrar o que aprendeu ou avançou.' },
     { title: 'Aplicar e avaliar o resultado', description: 'Use o que praticou em uma situação real, avalie o resultado e escolha o próximo marco.', success_criteria: 'Produzir uma evidência concreta de progresso e definir a próxima etapa.' },
   ];
-  const genericTasks = [
+  const genericTasks: readonly (readonly [string, string, number])[] = [
     ['Definir o resultado e o primeiro passo', 'Escreva como será o sucesso e escolha uma ação que possa iniciar hoje.', 0],
     ['Preparar o ambiente e os recursos', 'Separe materiais, ferramentas e um local para reduzir o atrito de começar.', 0],
     ['Fazer a primeira sessão prática', 'Execute uma sessão curta focada no fundamento mais importante para seu objetivo.', 1],
     ['Repetir e registrar o progresso', 'Pratique novamente e anote o que ficou mais fácil e o que ainda exige atenção.', 1],
     ['Aplicar o que aprendeu', 'Faça uma pequena aplicação real e registre o resultado observado.', 2],
     ['Revisar e planejar o próximo marco', 'Revise o progresso, identifique o principal obstáculo e escolha a próxima ação.', 2],
-  ] as const;
-  const categoryTasks: Record<string, typeof genericTasks> = {
+  ];
+  const categoryTasks: Record<string, readonly (readonly [string, string, number])[]> = {
     learning: [
       ['Definir o nível inicial e o material', 'Escolha um recurso adequado ao seu nível e identifique o primeiro fundamento a aprender.', 0],
       ['Preparar uma rotina curta de estudo', 'Deixe o material pronto e escolha uma sessão que caiba no tempo disponível.', 0],
