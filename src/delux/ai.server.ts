@@ -36,6 +36,9 @@ export async function runAi(prompt: string, history: ChatTurn[] = [], context = 
   } catch (error) {
     responsesError = errorMessage(error);
     console.error('[Delux AI] Responses API attempt failed:', error);
+    if (isPaymentRequired(error)) {
+      throw new Error('Os créditos de IA do projeto acabaram. Peça ao responsável para adicionar créditos em Configurações → Planos e créditos e tente novamente.');
+    }
   }
 
   // Retry through Chat Completions, preserving the original error for diagnosis.
