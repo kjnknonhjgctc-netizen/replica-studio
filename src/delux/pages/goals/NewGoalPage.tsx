@@ -24,7 +24,7 @@ export const NewGoalPage: React.FC = () => {
 
   const [step, setStep] = useState<'A' | 'B' | 'C' | 'D' | 'E' | 'F'>('A');
   const [loading, setLoading] = useState(false);
-  const [generatingAI, setGeneratingAI] = useState(false);
+  const [generatingAI, setGeneratingAI] = useState(false); // Builds a local plan; no AI service required.
 
   // Form Fields
   const [title, setTitle] = useState('');
@@ -79,7 +79,7 @@ export const NewGoalPage: React.FC = () => {
     setStep('B');
   };
 
-  const handleRunAIDiagnostic = async () => {
+  const handleBuildPlan = async () => {
     setGeneratingAI(true);
     try {
       const result = await api.generatePlan({
@@ -474,10 +474,10 @@ export const NewGoalPage: React.FC = () => {
               <PrimaryButton
                 size="md"
                 loading={generatingAI}
-                onClick={handleRunAIDiagnostic}
+                onClick={handleBuildPlan}
                 icon={<Sparkles className="w-4 h-4 text-white" />}
               >
-                Gerar Diagnóstico & Plano
+                Montar meu plano
               </PrimaryButton>
             </div>
           </div>
