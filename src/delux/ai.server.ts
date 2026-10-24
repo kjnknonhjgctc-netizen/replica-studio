@@ -11,6 +11,12 @@ function errorMessage(error: unknown): string {
   return String(error ?? 'erro desconhecido');
 }
 
+function isPaymentRequired(error: unknown): boolean {
+  const message = errorMessage(error).toLowerCase();
+  const status = (error as { statusCode?: number })?.statusCode;
+  return status === 402 || message.includes('payment required') || message.includes('not enough credits');
+}
+
 export async function runAi(prompt: string, history: ChatTurn[] = [], context = ''): Promise<string> {
   const apiKey = process.env['LOVABLE_API_KEY'];
   if (!apiKey) throw new Error('LOVABLE_API_KEY is not configured');
@@ -30,6 +36,9 @@ export async function runAi(prompt: string, history: ChatTurn[] = [], context = 
   } catch (error) {
     responsesError = errorMessage(error);
     console.error('[Delux AI] Responses API attempt failed:', error);
+    if (isPaymentRequired(error)) {
+      throw new Error('Os créditos de IA do projeto acabaram. Peça ao responsável para adicionar créditos em Configurações → Planos e créditos e tente novamente.');
+    }
   }
 
   // Retry through Chat Completions, preserving the original error for diagnosis.
@@ -40,6 +49,9 @@ export async function runAi(prompt: string, history: ChatTurn[] = [], context = 
     throw new Error('O modelo Chat Completions não retornou texto.');
   } catch (error) {
     console.error('[Delux AI] Chat Completions fallback failed:', error);
+    if (isPaymentRequired(error)) {
+      throw new Error('Os créditos de IA do projeto acabaram. Peça ao responsável para adicionar créditos em Configurações → Planos e créditos e tente novamente.');
+    }
     throw new Error('Falha nas duas tentativas de IA. Responses: ' + responsesError + ' | Chat Completions: ' + errorMessage(error));
   }
 }
