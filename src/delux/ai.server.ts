@@ -49,6 +49,9 @@ export async function runAi(prompt: string, history: ChatTurn[] = [], context = 
     throw new Error('O modelo Chat Completions não retornou texto.');
   } catch (error) {
     console.error('[Delux AI] Chat Completions fallback failed:', error);
+    if (isPaymentRequired(error)) {
+      throw new Error('Os créditos de IA do projeto acabaram. Peça ao responsável para adicionar créditos em Configurações → Planos e créditos e tente novamente.');
+    }
     throw new Error('Falha nas duas tentativas de IA. Responses: ' + responsesError + ' | Chat Completions: ' + errorMessage(error));
   }
 }
