@@ -435,7 +435,27 @@ async function sendChatMessage(message: string, conversationId?: string) {
       const daySummary = goal.missions.map((m: any) => m.scheduled_date + ' ' + (m.scheduled_time || '') + ' — ' + m.title + ' (' + m.estimated_minutes + ' min)').join('\n');
       assistantContent = 'Plano salvo no Delux! Criei o objetivo **"' + goal.title + '"**, ' + goal.steps.length + ' etapas e ' + goal.missions.length + ' tarefas no Planejamento.\n\n' + daySummary;
     } else {
-      assistantContent = localAssistantReply(text, relevantGoals, relevantMissions);
+      const actionKind = resolveAssistantAction(text);
+      const today = localDateString(new Date());
+      const open = relevantMissions.filter((m: any) => ['pending', 'in_progress', 'postponed'].includes(m.status));
+      const next = open[0];
+      if (actionKind === 'rebalance') {
+        const res = await rebalanceOverdue(user.id, preferences);
+        assistantContent = res.rescheduledCount
+          ? 'Pronto: ' + res.message + ' Respeitei seus dias disponíveis e o limite de ' + (preferences.daily_available_minutes || 30) + ' min por dia.'
+          : 'Não há missões atrasadas para reorganizar. Seu planejamento já está em dia.' + (res.unplaced ? ' (' + res.unplaced + ' não couberam na disponibilidade.)' : '');
+        action = { type: 'navigate', path: '/planejamento', label: 'Planejamento' };
+      } else if ((actionKind === 'complete_next' || actionKind === 'postpone_next') && !next) {
+        assistantContent = 'Não encontrei nenhuma missão pendente para ' + (actionKind === 'complete_next' ? 'concluir' : 'adiar') + '.';
+      } else if (actionKind === 'complete_next') {
+        await handleSupabaseRequest('PUT', '/api/missions/' + next.id, { status: 'completed' });
+        assistantContent = 'Feito! Marquei **"' + next.title + '"** como concluída. Excelente avanço.';
+      } else if (actionKind === 'postpone_next') {
+        const res = await handleSupabaseRequest('PUT', '/api/missions/' + next.id, { status: 'postponed' });
+        assistantContent = 'Adiei **"' + next.title + '"** para ' + res.mission.scheduled_date + ', um dia disponível com espaço na sua agenda.';
+      } else {
+        assistantContent = localAssistantReply(text, relevantGoals, relevantMissions, today);
+      }
     }
   } catch (error) {
     await deleteRows('assistant_messages', { id: 'eq.' + userMessage.id, user_id: 'eq.' + user.id });
@@ -628,7 +648,7 @@ export async function handleSupabaseRequest(method: string, endpoint: string, bo
         user_id: user.id, goal_id: payload.goal_id, goal_step_id: payload.goal_step_id || null,
         title: String(payload.title).trim(), instructions: payload.instructions || '',
         estimated_minutes: Math.max(1, Number(payload.estimated_minutes) || 30),
-        scheduled_date: payload.scheduled_date || localDateString(new Date()),
+        scheduled_date: await pickDateFor(user.id, payload.scheduled_date || localDateString(new Date()), Math.max(1, Number(payload.estimated_minutes) || 30)),
         scheduled_time: payload.scheduled_time || null, priority: payload.priority || 'medium', status: 'pending', position: 1,
       };
       const rows = await insertRows('missions', [values]);
@@ -638,6 +658,13 @@ export async function handleSupabaseRequest(method: string, endpoint: string, bo
       const oldRows = await selectRows('missions', { id: 'eq.' + actionOrId, user_id: 'eq.' + user.id });
       if (!oldRows[0]) throw new Error('Missão não encontrada.');
       const data = cleanObject(payload, ['id', 'user_id', 'goal_id', 'goal_step_id', 'created_at', 'updated_at']);
+      const dateChanged = data.scheduled_date !== undefined && data.scheduled_date !== oldRows[0].scheduled_date;
+      if (dateChanged || (data.status === 'postponed' && oldRows[0].status !== 'postponed')) {
+        // Always land on an allowed day that still has capacity.
+        const minutes = Number(data.estimated_minutes ?? oldRows[0].estimated_minutes) || 0;
+        const start = dateChanged ? String(data.scheduled_date || '') : addDaysToDateOnly(oldRows[0].scheduled_date > localDateString(new Date()) ? oldRows[0].scheduled_date : localDateString(new Date()), 1);
+        data.scheduled_date = await pickDateFor(user.id, start, minutes, actionOrId);
+      }
       if (data.status === 'completed' && oldRows[0].status !== 'completed') data.completed_at = new Date().toISOString();
       const updated = await updateRows('missions', { id: 'eq.' + actionOrId, user_id: 'eq.' + user.id }, data);
       if (data['status'] === 'completed' && oldRows[0].status !== 'completed') {
@@ -689,33 +716,7 @@ export async function handleSupabaseRequest(method: string, endpoint: string, bo
       return { days, goals, preferences };
     }
     if (method === 'POST' && actionOrId === 'rebalance') {
-      const today = localDateString(new Date());
-      const missions = await selectRows('missions', {}, 'scheduled_date.asc,scheduled_time.asc');
-      const overdue = missions.filter((m: any) => m.status === 'pending' && m.scheduled_date && m.scheduled_date < today);
-      const allowed = preferences.preferred_days || ['seg', 'ter', 'qua', 'qui', 'sex'];
-      const byDate: Record<string, number> = {};
-      missions.forEach((m: any) => {
-        if (m.scheduled_date && ['pending', 'in_progress', 'postponed'].includes(m.status)) byDate[m.scheduled_date] = (byDate[m.scheduled_date] || 0) + (Number(m.estimated_minutes) || 0);
-      });
-      let rescheduledCount = 0;
-      for (let i = 0; i < overdue.length; i++) {
-        const m = overdue[i];
-        let offset = i;
-        let target = nextAvailableDate(allowed, offset);
-        let tries = 0;
-        while ((byDate[target] || 0) + (Number(m.estimated_minutes) || 0) > (Number(preferences.daily_available_minutes) || 30) && tries < 35) {
-          offset++;
-          target = nextAvailableDate(allowed, offset);
-          tries++;
-        }
-        const updated = await updateRows('missions', { id: 'eq.' + m.id, user_id: 'eq.' + user.id }, { scheduled_date: target });
-        if (updated[0]) {
-          byDate[target] = (byDate[target] || 0) + (Number(m.estimated_minutes) || 0);
-          rescheduledCount++;
-        }
-      }
-      if (rescheduledCount) await insertRows('activity_events', [{ user_id: user.id, event_type: 'plan_adapted', metadata: { rescheduledCount } }]);
-      return { success: true, rescheduledCount, message: rescheduledCount + ' missões redistribuídas com equilíbrio pela sua semana.' };
+      return rebalanceOverdue(user.id, preferences);
     }
   }
 
