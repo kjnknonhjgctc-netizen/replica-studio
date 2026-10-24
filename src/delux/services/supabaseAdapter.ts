@@ -381,12 +381,10 @@ async function sendChatMessage(message: string, conversationId?: string) {
   const text = String(message || '').trim();
   if (!text) throw new Error('Mensagem vazia.');
   const { user } = await getCurrentUser();
-  const [preferences, goals, missions, diagnostics, steps, conversations] = await Promise.all([
+  const [preferences, goals, missions, conversations] = await Promise.all([
     getPreferencesFor(user.id),
     selectRows('goals', {}, 'created_at.desc'),
     selectRows('missions', {}, 'scheduled_date.asc,scheduled_time.asc'),
-    selectRows('goal_diagnostics'),
-    selectRows('goal_steps', {}, 'position.asc'),
     conversationId ? selectRows('assistant_conversations', { id: 'eq.' + conversationId }) : Promise.resolve([]),
   ]);
 
