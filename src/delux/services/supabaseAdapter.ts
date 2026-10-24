@@ -1,6 +1,8 @@
 import { buildLocalPlan, localAssistantReply } from './localPlanner';
 import { requestsSavedPlan, resolveNavigationIntent, resolvePreferredDaysFromRequest } from '../ai/intent';
-import { addDaysToDateOnly, formatLocalDate, getNextPreferredDate, isPreferredDate } from '../utils/date';
+import { addDaysToDateOnly, formatLocalDate, getNextPreferredDate } from '../utils/date';
+import { findAvailableDate, plannedLoad } from '../utils/schedule';
+import { resolveAssistantAction } from './localPlanner';
 
 type SessionUser = { id: string; email?: string; user_metadata?: Record<string, unknown> };
 type Session = {
@@ -319,17 +321,9 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
     const requestedDate = String(m.scheduled_date || '');
     const parsedRequestedDate = /^\d{4}-\d{2}-\d{2}$/.test(requestedDate) ? new Date(requestedDate + 'T12:00:00') : null;
     const validRequestedDate = parsedRequestedDate && Number.isFinite(parsedRequestedDate.getTime()) && formatLocalDate(parsedRequestedDate) === requestedDate && requestedDate >= localDateString(new Date());
-    let date = validRequestedDate ? requestedDate : nextAvailableDate(allowedDays, offset);
-    if (!isPreferredDate(date, allowedDays)) {
-      date = nextAvailableDate(allowedDays, 0, validRequestedDate ? parsedRequestedDate! : new Date());
-    }
-    let tries = 0;
-    while ((planned[date] || 0) + minutes > capacity && tries < 370) {
-      const nextCalendarDate = addDaysToDateOnly(date, 1, new Date(date + 'T12:00:00'));
-      date = nextAvailableDate(allowedDays, 0, new Date(nextCalendarDate + 'T12:00:00'));
-      tries++;
-    }
-    if ((planned[date] || 0) + minutes > capacity) {
+    const startDate = validRequestedDate ? requestedDate : nextAvailableDate(allowedDays, offset);
+    const date = findAvailableDate({ start: startDate, minutes, allowedDays, load: planned, capacity });
+    if (!date) {
       throw new Error('Não foi possível encaixar todas as tarefas na sua disponibilidade. Aumente o tempo diário ou libere dias no perfil.');
     }
     planned[date] = (planned[date] || 0) + minutes;
