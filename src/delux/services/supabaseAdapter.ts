@@ -296,6 +296,8 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
     : [];
   const activePrefs = await getPreferencesFor(userId);
   const capacity = Math.max(5, Number(activePrefs.daily_available_minutes) || 30);
+  const preferredTime = String(activePrefs.preferred_time || 'morning').toLowerCase();
+  const defaultScheduledTime = preferredTime.includes('afternoon') || preferredTime.includes('tarde') ? '14:00' : preferredTime.includes('evening') || preferredTime.includes('noite') ? '19:00' : '09:00';
   const allowedDays = preferredDays.length ? preferredDays : ['seg', 'ter', 'qua', 'qui', 'sex'];
   const planned: Record<string, number> = {};
   // Count existing unfinished work so a newly generated plan does not overload the user's calendar.
@@ -339,7 +341,7 @@ async function createGoal(payload: any, userId: string, preferredDays: string[] 
       instructions: String(m.instructions || ''),
       estimated_minutes: minutes,
       scheduled_date: date,
-      scheduled_time: m.scheduled_time || '09:00',
+      scheduled_time: m.scheduled_time || defaultScheduledTime,
       priority: ['low', 'medium', 'high'].includes(m.priority) ? m.priority : 'medium',
       status: 'pending',
       position: i + 1,
