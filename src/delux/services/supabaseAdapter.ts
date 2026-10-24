@@ -1,5 +1,4 @@
-import { generateAi } from '../ai.functions';
-import { buildAssistantContext, recentConversation } from '../ai/context';
+import { buildLocalPlan, localAssistantReply } from './localPlanner';
 import { requestsSavedPlan, resolveNavigationIntent, resolvePreferredDaysFromRequest } from '../ai/intent';
 import { addDaysToDateOnly, formatLocalDate, getNextPreferredDate, isPreferredDate } from '../utils/date';
 
@@ -374,16 +373,8 @@ function cleanObject(value: any, forbidden: string[] = ['id', 'user_id', 'create
 }
 
 async function generatePlan(title: string, current_state?: string, desired_outcome?: string, available_minutes?: number) {
-  if (!title?.trim()) throw new Error('Título do objetivo é obrigatório.');
-  const prompt = 'Crie um plano de ação estruturado para o objetivo "' + title.trim() + '".\n' +
-    'Contexto atual: "' + (current_state || 'Iniciante') + '".\n' +
-    'Resultado almejado: "' + (desired_outcome || title) + '".\n' +
-    'Tempo disponível por dia: ' + (available_minutes || 30) + ' minutos.\n' +
-    'Responda somente JSON: {"steps":[{"title":"...","description":"...","success_criteria":"..."}],"missions":[{"title":"...","instructions":"...","estimated_minutes":25,"priority":"high|medium|low"}]}. Exatamente 3 etapas e 3 missões concretas.';
-  const response = await generateAi({ data: { prompt, json: true, history: [], context: '' } });
-  const parsed = JSON.parse(response.text);
-  if (!Array.isArray(parsed.steps) || !Array.isArray(parsed.missions)) throw new Error('A resposta do assistente não veio em um formato válido.');
-  return { steps: parsed.steps, missions: parsed.missions };
+  const plan = buildLocalPlan({ title, current_state, desired_outcome, available_minutes });
+  return { steps: plan.steps, missions: plan.missions };
 }
 
 async function sendChatMessage(message: string, conversationId?: string) {
@@ -422,15 +413,7 @@ async function sendChatMessage(message: string, conversationId?: string) {
   let action: { type: 'navigate'; path: string; label: string } | null = null;
 
   const relevantGoals = goals.filter((g: any) => ['active', 'paused'].includes(g.status));
-  const relevantMissions = missions.filter((m: any) => ['pending', 'in_progress', 'postponed'].includes(m.status));
-  const context = JSON.stringify(buildAssistantContext({
-    userId: user.id, timezone: user.timezone || 'America/Sao_Paulo', preferences,
-    goals, diagnostics, steps, missions,
-  })).slice(0, 20000);
-  const priorRows = await selectRows('assistant_messages', {
-    conversation_id: 'eq.' + conversation.id,
-  }, 'created_at.asc');
-  const history = recentConversation(priorRows.filter((m: any) => m.id !== userMessage.id), user.id, conversation.id);
+  const relevantMissions = missions.filter((m: any) => ['pending', 'in_progress', 'postponed', 'completed'].includes(m.status));
 
   try {
     const navigation = resolveNavigationIntent(text);
@@ -438,31 +421,27 @@ async function sendChatMessage(message: string, conversationId?: string) {
       action = navigation;
       assistantContent = 'Claro — abrindo ' + navigation.label + ' agora.';
     } else if (requestsSavedPlan(text)) {
-      const prompt = 'Transforme o pedido abaixo em um plano REALISTA para salvar no Delux.\nPedido: "' + text + '"\n' +
-        'Tempo diário: ' + (preferences.daily_available_minutes || 30) + ' minutos.\n' +
-        'Horário preferido: ' + (preferences.preferred_time || 'flexible') + '.\n' +
-        'Dias disponíveis: ' + resolvePreferredDaysFromRequest(text, preferences.preferred_days || ['seg', 'ter', 'qua', 'qui', 'sex']).join(', ') + '.\n' +
-        'Metas existentes: ' + relevantGoals.map((g: any) => g.title).join('; ') + '.\n' +
-        'day_offset é o índice de dias DISPONÍVEIS, não dias corridos. Responda somente JSON: ' +
-        '{"goal_title":"...","goal_description":"...","category":"health|learning|career|finance|organization|personal_dev|other","desired_outcome":"...","current_state":"...","steps":[{"title":"...","description":"...","success_criteria":"..."}],"missions":[{"title":"...","instructions":"...","estimated_minutes":25,"priority":"high|medium|low","day_offset":0,"scheduled_time":"09:00","step_index":0}]}. Inclua 3 etapas e 5 a 7 missões.';
-      const ai = await generateAi({ data: { prompt, json: true, history, context } });
-      const plan = JSON.parse(ai.text);
-      if (!Array.isArray(plan.steps) || !Array.isArray(plan.missions) || !plan.missions.length) throw new Error('O assistente não gerou um plano válido.');
+      const preferredDays = resolvePreferredDaysFromRequest(text, preferences.preferred_days || ['seg', 'ter', 'qua', 'qui', 'sex']);
+      const plan = buildLocalPlan({
+        title: text.replace(/^(por favor[, ]*)?(crie|criar|monte|montar|fa[cç]a|fazer|gere|gerar)\s+(um\s+)?(plano|objetivo|roteiro)\s+(para|de|do|da)\s+/i, '').trim() || text,
+        current_state: 'Ponto de partida ainda não detalhado',
+        desired_outcome: text,
+        available_minutes: preferences.daily_available_minutes || 30,
+      });
       const goal = await createGoal({
         title: plan.goal_title || text.slice(0, 120),
-        description: plan.goal_description || 'Plano criado a partir de: ' + text,
-        category: plan.category || 'personal_dev',
-        desired_outcome: plan.desired_outcome || plan.goal_title || text,
-        current_state: plan.current_state || '',
-        diagnostic: { current_situation: plan.current_state || '', obstacles: [], available_resources: [], constraints: '' },
+        description: plan.goal_description,
+        category: plan.category,
+        desired_outcome: plan.desired_outcome,
+        current_state: plan.current_state,
+        diagnostic: { current_situation: plan.current_state, obstacles: [], available_resources: [(preferences.daily_available_minutes || 30) + ' minutos por dia'], constraints: '' },
         steps: plan.steps,
         missions: plan.missions,
-      }, user.id, resolvePreferredDaysFromRequest(text, preferences.preferred_days || ['seg', 'ter', 'qua', 'qui', 'sex']));
+      }, user.id, preferredDays);
       const daySummary = goal.missions.map((m: any) => m.scheduled_date + ' ' + (m.scheduled_time || '') + ' — ' + m.title + ' (' + m.estimated_minutes + ' min)').join('\n');
       assistantContent = 'Plano salvo no Delux! Criei o objetivo **"' + goal.title + '"**, ' + goal.steps.length + ' etapas e ' + goal.missions.length + ' tarefas no Planejamento.\n\n' + daySummary;
     } else {
-      const ai = await generateAi({ data: { prompt: text, json: false, history, context } });
-      assistantContent = ai.text || 'Estou à disposição para apoiar seus objetivos no Delux. Como posso ajudar com sua próxima missão?';
+      assistantContent = localAssistantReply(text, relevantGoals, relevantMissions);
     }
   } catch (error) {
     await deleteRows('assistant_messages', { id: 'eq.' + userMessage.id, user_id: 'eq.' + user.id });
