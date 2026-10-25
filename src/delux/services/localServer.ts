@@ -1,7 +1,7 @@
 // @ts-nocheck -- ported as-is from the original project
 // Browser-side port of the original Express server. Data persists in localStorage;
 // AI calls go through a server function.
-import { buildLocalPlan, localAssistantReply } from './localPlanner';
+import { buildLocalPlan } from './localPlanner';
 import { buildAssistantContext, recentConversation } from '../ai/context';
 import { requestsSavedPlan, resolveNavigationIntent } from '../ai/intent';
 import {
@@ -1599,97 +1599,22 @@ Como prefere avançar hoje?`;
 }
 
 // Generate smart plan API
-app.post('/api/assistant/generate-plan', requireAuth, async (req: Request, res: Response) => {
-  const user = req.user as UserProfile;
-  const personalContext = JSON.stringify(buildAssistantContext({ userId: user.id, timezone: user.timezone, preferences: db.preferences.find(p => p.user_id === user.id), goals: db.goals, diagnostics: db.diagnostics, steps: db.steps, missions: db.missions })).slice(0, 20000);
-  const { title, current_state, desired_outcome, available_minutes } = req.body;
-
-  if (!title) {
+app.post('/api/assistant/generate-plan', requireAuth, (req: Request, res: Response) => {
+  const { title, current_state, desired_outcome, available_minutes } = req.body || {};
+  if (!title || !String(title).trim()) {
     return res.status(400).json({ error: 'Título do objetivo é obrigatório.' });
   }
 
-  let generatedSteps = [
-    {
-      title: 'Etapa 1: Diagnóstico e Primeiros Hábitos',
-      description: 'Mapear a situação atual, eliminar barreiras e estabelecer rotina mínima.',
-      success_criteria: 'Completar 7 dias de execução sem interrupção.'
-    },
-    {
-      title: 'Etapa 2: Construção da Base Técnica',
-      description: 'Praticar os fundamentos centrais com repetição deliberada.',
-      success_criteria: 'Atingir 70% de domínio nas habilidades principais da meta.'
-    },
-    {
-      title: 'Etapa 3: Aplicação em Projetos Reais',
-      description: 'Executar simulações ou projetos práticos com validação de resultados.',
-      success_criteria: 'Concluir a primeira entrega mensurável pretendida.'
-    }
-  ];
-
-  let generatedMissions = [
-    {
-      title: `Sessão de Alinhamento Inicial: ${title}`,
-      instructions: 'Definir o ambiente de prática, materiais necessários e horário reservado.',
-      estimated_minutes: available_minutes || 30,
-      priority: 'high'
-    },
-    {
-      title: 'Prática Deliberada dos Primeiros Fundamentos',
-      instructions: 'Realizar os primeiros exercícios concentrados anotando dúvidas.',
-      estimated_minutes: available_minutes || 30,
-      priority: 'medium'
-    }
-  ];
-
-  if (genAI) {
-    try {
-      const prompt = `Crie um plano de ação estruturado para o objetivo "${title}".
-Contexto atual informado: "${current_state || 'Iniciante'}".
-Resultado almejado: "${desired_outcome || title}".
-Tempo disponível diário: ${available_minutes || 30} minutos.
-
-Responda ESTRITAMENTE em formato JSON com o seguinte schema:
-{
-  "steps": [
-    {
-      "title": "string curto da etapa",
-      "description": "explicação concisa de até 2 linhas",
-      "success_criteria": "critério claro de conclusão"
-    }
-  ],
-  "missions": [
-    {
-      "title": "nome da missão prática",
-      "instructions": "instruções objetivas do que executar",
-      "estimated_minutes": number,
-      "priority": "high" | "medium" | "low"
-    }
-  ]
-}
-Forneça exatamente 3 etapas progressivas e 3 missões iniciais práticas.`;
-
-      const response = await genAI.models.generateContent({
-        model: 'gemini-3.8-flash',
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        context: personalContext,
-        config: {
-          responseMimeType: 'application/json'
-        }
-      });
-
-      if (response.text) {
-        const parsed = JSON.parse(response.text);
-        if (parsed.steps && Array.isArray(parsed.steps)) generatedSteps = parsed.steps;
-        if (parsed.missions && Array.isArray(parsed.missions)) generatedMissions = parsed.missions;
-      }
-    } catch (e) {
-      return res.status(502).json({ error: e?.message || 'Não foi possível gerar o plano.' });
-    }
+  try {
+    const plan = buildLocalPlan({
+      title: String(title),
+      current_state: current_state ? String(current_state) : undefined,
+      desired_outcome: desired_outcome ? String(desired_outcome) : undefined,
+      available_minutes: Number(available_minutes) || 30,
+    });
+    return res.json({ steps: plan.steps, missions: plan.missions });
+  } catch (error: any) {
+    return res.status(400).json({ error: error?.message || 'Não foi possível montar o plano.' });
   }
-
-  return res.json({
-    steps: generatedSteps,
-    missions: generatedMissions
-  });
 });
 
