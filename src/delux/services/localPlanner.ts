@@ -21,7 +21,10 @@ function categoryFor(text: string): string {
 function cleanGoalTitle(input: string): string {
   let title = input.trim()
     .replace(/^(por favor[, ]*)?(eu quero|quero|gostaria de|me ajuda a|ajude-me a|preciso|quero muito|meu sonho [eé]?)\s+/i, '')
-    .replace(/^(criar|montar|fazer|construir|alcan[cç]ar|come[cç]ar a)\s+/i, '')
+    .replace(/^(?:criar|montar|fazer|construir|alcan[cç]ar|come[cç]ar a|planejar|organizar)\s+/i, '')
+    .replace(/^(?:um|uma|meu|minha)\s+(?:plano|planejamento|cronograma|rotina|agenda)\s+(?:de\s+(?:estudos?|pr[aá]tica|treino|trabalho)\s+)?(?:para|pra|de)\s+/i, '')
+    .replace(/^(?:plano|planejamento|cronograma|rotina|agenda)\s+(?:de\s+(?:estudos?|pr[aá]tica|treino|trabalho)\s+)?(?:para|pra|de)\s+/i, '')
+    .replace(/^(?:aprender|estudar|praticar|melhorar|desenvolver|come[cç]ar a)\s+/i, (match) => match.toLowerCase())
     .replace(/[.!?]+$/, '')
     .trim();
   if (!title) title = input.trim();
