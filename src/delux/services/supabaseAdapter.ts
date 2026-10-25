@@ -469,6 +469,37 @@ async function sendChatMessage(message: string, conversationId?: string) {
   return { conversation, userMessage, assistantMessage, action };
 }
 
+async function pickDateFor(userId: string, start: string, minutes: number, excludeId?: string) {
+  const prefs = await getPreferencesFor(userId);
+  const missions = await selectRows('missions', { user_id: 'eq.' + userId });
+  const date = findAvailableDate({
+    start, minutes, allowedDays: prefs.preferred_days || ['seg', 'ter', 'qua', 'qui', 'sex'],
+    load: plannedLoad(missions, excludeId), capacity: Math.max(5, Number(prefs.daily_available_minutes) || 30),
+  });
+  if (!date) throw new Error('Não há dia disponível com espaço na sua agenda. Libere dias ou aumente o tempo diário no perfil.');
+  return date;
+}
+
+async function rebalanceOverdue(userId: string, preferences: any) {
+  const today = localDateString(new Date());
+  const missions = await selectRows('missions', { user_id: 'eq.' + userId }, 'scheduled_date.asc,scheduled_time.asc');
+  const overdue = missions.filter((m: any) => ['pending', 'in_progress', 'postponed'].includes(m.status) && m.scheduled_date && m.scheduled_date < today);
+  const allowed = preferences.preferred_days || ['seg', 'ter', 'qua', 'qui', 'sex'];
+  const capacity = Math.max(5, Number(preferences.daily_available_minutes) || 30);
+  const overdueIds = new Set(overdue.map((m: any) => m.id));
+  const load = plannedLoad(missions.filter((m: any) => !overdueIds.has(m.id)));
+  let rescheduledCount = 0, unplaced = 0;
+  for (const m of overdue) {
+    const minutes = Number(m.estimated_minutes) || 0;
+    const target = findAvailableDate({ start: today, minutes, allowedDays: allowed, load, capacity });
+    if (!target) { unplaced++; continue; }
+    const updated = await updateRows('missions', { id: 'eq.' + m.id, user_id: 'eq.' + userId }, { scheduled_date: target });
+    if (updated[0]) { load[target] = (load[target] || 0) + minutes; rescheduledCount++; }
+  }
+  if (rescheduledCount) await insertRows('activity_events', [{ user_id: userId, event_type: 'plan_adapted', metadata: { rescheduledCount } }]);
+  return { success: true, rescheduledCount, unplaced, message: rescheduledCount + ' missões redistribuídas com equilíbrio pela sua semana.' };
+}
+
 export async function handleSupabaseRequest(method: string, endpoint: string, body: any): Promise<any> {
   const url = new URL(endpoint, 'http://delux.local');
   const path = url.pathname.replace(/\/+$/, '') || '/';
