@@ -28,7 +28,7 @@ function cleanGoalTitle(input: string): string {
   return title.charAt(0).toLocaleUpperCase('pt-BR') + title.slice(1);
 }
 
-export function buildLocalPlan(input: { title: string; current_state?: string; desired_outcome?: string; available_minutes?: number }): LocalPlan {
+export function buildLocalPlan(input: { title: string; current_state?: string | undefined; desired_outcome?: string | undefined; available_minutes?: number | undefined }): LocalPlan {
   const rawTitle = input.title.trim();
   if (!rawTitle) throw new Error('Escreva o objetivo que deseja alcançar.');
   const title = cleanGoalTitle(rawTitle).slice(0, 120);
@@ -108,7 +108,17 @@ export function buildLocalPlan(input: { title: string; current_state?: string; d
   };
 }
 
-export function localAssistantReply(message: string, goals: any[] = [], missions: any[] = []): string {
+export type AssistantActionKind = 'rebalance' | 'complete_next' | 'postpone_next' | null;
+
+export function resolveAssistantAction(message: string): AssistantActionKind {
+  const t = message.toLocaleLowerCase('pt-BR');
+  if (/(reorganiz|redistribu|rebalance)/.test(t)) return 'rebalance';
+  if (/(conclu[ií]|terminei|finalizei|marque|marcar).*(pr[oó]xima|miss[aã]o|tarefa)/.test(t)) return 'complete_next';
+  if (/(adi[ae]r?|adie|adiar|empurr).*(pr[oó]xima|miss[aã]o|tarefa)/.test(t)) return 'postpone_next';
+  return null;
+}
+
+export function localAssistantReply(message: string, goals: any[] = [], missions: any[] = [], _today?: string): string {
   const text = message.toLocaleLowerCase('pt-BR');
   const pending = missions.filter((m) => ['pending', 'in_progress', 'postponed'].includes(m.status));
   const done = missions.filter((m) => m.status === 'completed');
