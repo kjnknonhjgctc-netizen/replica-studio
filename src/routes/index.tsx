@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent, type CSSProperties } from "react";
 import { CalendarDays, Check, ChevronLeft, ChevronRight, CirclePlus, Clock3, Flame, Goal, LayoutDashboard, ListChecks, Settings2, Sparkles, Trophy, Trash2, WandSparkles } from "lucide-react";
 import "@/delux2.css";
 
@@ -54,7 +54,7 @@ function App() {
   const activeGoals = goals.length;
   const greeting = new Intl.DateTimeFormat("pt-BR",{weekday:"long",day:"numeric",month:"long"}).format(new Date());
   const week = useMemo(()=>Array.from({length:7},(_,i)=>plusDays(weekStart,i)),[weekStart]);
-  function addGoal(e: React.FormEvent) {
+  function addGoal(e: FormEvent) {
     e.preventDefault(); if (!goalTitle.trim()) return;
     const goal: GoalItem = { id:newId(), title:goalTitle.trim(), why:goalWhy.trim(), mode, createdAt:today };
     setGoals(prev=>[goal,...prev]);
@@ -83,7 +83,7 @@ function App() {
       <header className="d2-topbar"><div className="d2-mobile-brand"><span className="d2-logo">d.</span> delux</div><div className="d2-breadcrumb">Meu espaço <span>/</span> <b>{page}</b></div><div className="d2-top-right"><span className="d2-date">{greeting}</span><div className="d2-mini-avatar">D</div></div></header>
       <div className="d2-content">
       {page==="Início"&&<><div className="d2-welcome"><div><div className="d2-eyebrow">SEU ESPAÇO, SEU RITMO</div><h1>Um passo de cada vez<span>.</span></h1><p>Você não precisa fazer tudo hoje. Só precisa continuar.</p></div><button className="d2-primary" onClick={()=>setPage("Metas")}><CirclePlus size={18}/> Nova meta</button></div>
-        <section className="d2-hero"><div className="d2-hero-copy"><div className="d2-pill"><Sparkles size={14}/> SEU PROGRESSO</div><h2>O futuro que você quer<br/>começa no que faz <em>hoje.</em></h2><p>Transforme intenção em pequenas ações que cabem na sua rotina.</p><button className="d2-hero-button" onClick={()=>setPage("Metas")}>Continuar evoluindo <ChevronRight size={17}/></button></div><div className="d2-progress-visual"><div className="d2-progress-ring" style={{"--progress":progress+"%"} as React.CSSProperties}><div><strong>{progress}%</strong><span>concluído</span></div></div><div className="d2-progress-caption"><Trophy size={16}/> Cada passo conta</div></div><div className="d2-hero-orb orb-one"/><div className="d2-hero-orb orb-two"/></section>
+        <section className="d2-hero"><div className="d2-hero-copy"><div className="d2-pill"><Sparkles size={14}/> SEU PROGRESSO</div><h2>O futuro que você quer<br/>começa no que faz <em>hoje.</em></h2><p>Transforme intenção em pequenas ações que cabem na sua rotina.</p><button className="d2-hero-button" onClick={()=>setPage("Metas")}>Continuar evoluindo <ChevronRight size={17}/></button></div><div className="d2-progress-visual"><div className="d2-progress-ring" style={{"--progress":progress+"%"} as CSSProperties}><div><strong>{progress}%</strong><span>concluído</span></div></div><div className="d2-progress-caption"><Trophy size={16}/> Cada passo conta</div></div><div className="d2-hero-orb orb-one"/><div className="d2-hero-orb orb-two"/></section>
         <div className="d2-section-heading"><div><h2>Seu panorama</h2><p>Pequenas vitórias constroem grandes mudanças.</p></div></div>
         <div className="d2-stats"><div className="d2-stat"><div className="d2-stat-icon purple"><Goal size={19}/></div><span>Metas ativas</span><strong>{activeGoals}</strong><small>objetivos em andamento</small></div><div className="d2-stat"><div className="d2-stat-icon green"><ListChecks size={19}/></div><span>Passos concluídos</span><strong>{completed}</strong><small>um avanço de cada vez</small></div><div className="d2-stat"><div className="d2-stat-icon orange"><Flame size={19}/></div><span>Para hoje</span><strong>{todayTasks.filter(t=>!t.done).length}</strong><small>tarefas esperando por você</small></div></div>
         <div className="d2-home-grid"><section className="d2-panel"><div className="d2-panel-head"><div><h3>Plano de hoje</h3><p>Seu próximo passo está aqui.</p></div><button className="d2-text-button" onClick={()=>setPage("Calendário")}>Ver calendário <ChevronRight size={15}/></button></div>{todayTasks.length?todayTasks.map(t=><TaskRow key={t.id} task={t} onToggle={toggleTask}/>):<div className="d2-empty"><div className="d2-empty-icon"><CalendarDays size={22}/></div><b>Um dia aberto para começar</b><p>Crie uma meta e seu plano aparece aqui.</p><button className="d2-secondary" onClick={()=>setPage("Metas")}>Criar minha primeira meta</button></div>}</section>
