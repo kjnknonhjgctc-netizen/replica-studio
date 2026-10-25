@@ -1,7 +1,7 @@
 // @ts-nocheck -- ported as-is from the original project
 // Browser-side port of the original Express server. Data persists in localStorage;
 // AI calls go through a server function.
-import { generateAi } from '@/delux/ai.functions';
+import { buildLocalPlan, localAssistantReply } from './localPlanner';
 import { buildAssistantContext, recentConversation } from '../ai/context';
 import { requestsSavedPlan, resolveNavigationIntent } from '../ai/intent';
 import {
@@ -18,15 +18,8 @@ const reg = (method: string) => (path: string, ...handlers: Handler[]) => {
 };
 const app = { get: reg('GET'), post: reg('POST'), put: reg('PUT'), delete: reg('DELETE') };
 
-const genAI = {
-  models: {
-    async generateContent(opts: any): Promise<{ text: string }> {
-      const prompt = opts.contents.map((c: any) => c.parts.map((p: any) => p.text).join('\n')).join('\n');
-      const r = await generateAi({ data: { prompt, json: opts.config?.responseMimeType === 'application/json', history: opts.history || [], context: opts.context || '' } });
-      return { text: r.text };
-    }
-  }
-};
+// Delux assistant and plan generation run locally; no external AI service is called.
+const genAI = null;
 
 export async function handleLocalRequest(method: string, url: string, body: any, token: string | null) {
   const u = new URL(url, 'http://local');
