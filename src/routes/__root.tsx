@@ -78,8 +78,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "Delux — Desenvolvimento Pessoal & Execução de Metas" },
-      { name: "description", content: "Transforme objetivos em caminhos práticos com planejamento inteligente e assistente de IA." },
+      { title: "Delux 2.0 — Metas e Planejamento" },
+      { name: "description", content: "Transforme objetivos em planos práticos, organize sua rotina e acompanhe seu progresso." },
       { name: "theme-color", content: "#0B0E14" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "mobile-web-app-capable", content: "yes" },
