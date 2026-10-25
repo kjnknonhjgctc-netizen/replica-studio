@@ -42,8 +42,11 @@ export const api = {
       return JSON.parse(JSON.stringify(payload));
     }
 
-    const { handleSupabaseRequest } = await import('./supabaseAdapter');
-    return await handleSupabaseRequest(method, endpoint, body) as T;
+    // Delux runs without an external database: all app data is persisted in this browser.
+    const { handleLocalRequest } = await import('./localServer');
+    const { status, payload } = await handleLocalRequest(method, endpoint, body, this.getToken());
+    if (status >= 400) throw new Error(payload?.error || 'Erro na requisição.');
+    return JSON.parse(JSON.stringify(payload)) as T;
   },
 
   // Auth
